@@ -50,7 +50,7 @@ module Mixlib
           #
           # Set cwd, environment, appname, etc.
           #
-          app_name, command_line = command_to_run
+          app_name, command_line = command_to_run(self.command)
           create_process_args = {
             :app_name => app_name,
             :command_line => command_line,
@@ -154,9 +154,9 @@ module Mixlib
         return true
       end
 
-      IS_BATCH_FILE = /\.bat|\.cmd$/i
+      IS_BATCH_FILE = /\.bat"?$|\.cmd"?$/i
 
-      def command_to_run
+      def command_to_run(command)
         if command =~ /^\s*"(.*?)"/
           # If we have quotes, do an exact match
           candidate = $1
