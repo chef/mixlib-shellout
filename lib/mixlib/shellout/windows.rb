@@ -157,7 +157,7 @@ module Mixlib
       IS_BATCH_FILE = /\.bat|\.cmd$/i
 
       def command_to_run
-        if command =~ /^\s*"(.*)"/
+        if command =~ /^\s*"(.*?)"/
           # If we have quotes, do an exact match
           candidate = $1
         else
