@@ -76,10 +76,6 @@ module Mixlib
     # The umask that will be set for the subcommand.
     attr_reader :umask
 
-    # Environment variables that will be set for the subcommand. Refer to the
-    # documentation of new to understand how ShellOut interprets this.
-    attr_reader :environment
-
     # The maximum time this command is allowed to run. Usually set via options
     # to new
     attr_writer :timeout
@@ -177,6 +173,18 @@ module Mixlib
     def gid
       return nil unless group
       group.kind_of?(Integer) ? group : Etc.getgrnam(group.to_s).gid
+    end
+
+    # Environment variables that will be set for the subcommand. Refer to the
+    # documentation of new to understand how ShellOut interprets this.
+    def environment
+      return @environment if @environment.empty? || !uid
+
+      unless @environment.has_key?('HOME')
+        pwuid = Etc.getpwuid(uid)
+        @environment['HOME'] ||= pwuid.dir if pwuid
+      end
+      @environment
     end
 
     def timeout
