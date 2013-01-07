@@ -104,7 +104,7 @@ module Process
       # The argument format is a series of null-terminated strings, with an additional null terminator.
       env = env.map { |e| e + "\0" }.join("") + "\0"
       if hash['with_logon']
-        env = env.multi_to_wide(e)
+        env = multi_to_wide(env)
       end
       env = [env].pack('p*').unpack('L').first
     else
@@ -188,7 +188,7 @@ module Process
       cmd    = hash['command_line'].nil? ? nil : multi_to_wide(hash['command_line'])
       cwd    = multi_to_wide(hash['cwd'])
       passwd = multi_to_wide(hash['password'])
-
+      
       hash['creation_flags'] |= CREATE_UNICODE_ENVIRONMENT
 
       process_ran = CreateProcessWithLogonW(
