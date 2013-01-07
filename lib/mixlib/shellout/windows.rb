@@ -66,6 +66,9 @@ module Mixlib
             :close_handles => false
           }
           create_process_args[:cwd] = cwd if cwd
+          create_process_args[:domain] = domain if domain
+          create_process_args[:with_logon] = with_logon if with_logon
+          create_process_args[:password] = password if password
 
           #
           # Start the process
