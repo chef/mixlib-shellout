@@ -69,6 +69,7 @@ module Mixlib
           create_process_args[:domain] = domain if domain
           create_process_args[:with_logon] = with_logon if with_logon
           create_process_args[:password] = password if password
+          create_process_args[:logon_with_profile] = logon_with_profile if logon_with_profile
 
           #
           # Start the process

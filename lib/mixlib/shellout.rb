@@ -42,6 +42,7 @@ module Mixlib
     attr_accessor :domain
     attr_accessor :password
     attr_accessor :with_logon
+    attr_accessor :logon_with_profile
 
     # Group the command will run as. Normally set via options passed to new
     attr_accessor :group
@@ -271,6 +272,8 @@ module Mixlib
         when 'user'
           self.user = setting
           self.with_logon = setting
+        when 'logon_with_profile'
+          self.logon_with_profile = setting
         when 'group'
           self.group = setting
         when 'umask'
