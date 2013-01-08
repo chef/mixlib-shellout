@@ -188,21 +188,20 @@ module Process
       cmd    = hash['command_line'].nil? ? nil : multi_to_wide(hash['command_line'])
       cwd    = multi_to_wide(hash['cwd'])
       passwd = multi_to_wide(hash['password'])
-      
       hash['creation_flags'] |= CREATE_UNICODE_ENVIRONMENT
 
       process_ran = CreateProcessWithLogonW(
-        logon,                  # User
-        domain,                 # Domain
-        passwd,                 # Password
-        LOGON_WITH_PROFILE,     # Logon flags
-        app,                    # App name
-        cmd,                    # Command line
-        hash['creation_flags'], # Creation flags
-        env,                    # Environment
-        cwd,                    # Working directory
-        startinfo,              # Startup Info
-        procinfo                # Process Info
+        logon,                      # User
+        domain,                     # Domain
+        passwd,                     # Password
+        LOGON_NETCREDENTIALS_ONLY,  # Logon flags
+        app,                        # App name
+        cmd,                        # Command line
+        hash['creation_flags'],     # Creation flags
+        env,                        # Environment
+        cwd,                        # Working directory
+        startinfo,                  # Startup Info
+        procinfo                    # Process Info
       )
     else
       process_ran = CreateProcess(
