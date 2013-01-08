@@ -45,7 +45,7 @@ module Process
     valid_keys = %w/
       app_name command_line inherit creation_flags cwd environment
       startup_info thread_inherit process_inherit close_handles with_logon
-      domain password
+      domain password logon_with_profile
     /
 
     valid_si_keys = %/
@@ -102,10 +102,11 @@ module Process
         env = hash['environment'].split(File::PATH_SEPARATOR)
       end
       # The argument format is a series of null-terminated strings, with an additional null terminator.
-      env = env.map { |e| e + "\0" }.join("") + "\0"
-      if hash['with_logon']
-        env = multi_to_wide(env)
-      end
+      # If calling CreateProcessWithLogonW must put the hash in a wide format
+      env = env.map do |e|
+        hash['with_logon'].nil? ? e + "\0" : multi_to_wide(e)
+      end.join("") + "\0"
+
       env = [env].pack('p*').unpack('L').first
     else
       env = nil
@@ -182,19 +183,20 @@ module Process
     end
 
     if hash['with_logon']
-      logon  = multi_to_wide(hash['with_logon'])
-      domain = multi_to_wide(hash['domain'])
-      app    = hash['app_name'].nil? ? nil : multi_to_wide(hash['app_name'])
-      cmd    = hash['command_line'].nil? ? nil : multi_to_wide(hash['command_line'])
-      cwd    = multi_to_wide(hash['cwd'])
-      passwd = multi_to_wide(hash['password'])
+      logon       = multi_to_wide(hash['with_logon'])
+      domain      = multi_to_wide(hash['domain'])
+      app         = hash['app_name'].nil? ? nil : multi_to_wide(hash['app_name'])
+      cmd         = hash['command_line'].nil? ? nil : multi_to_wide(hash['command_line'])
+      cwd         = multi_to_wide(hash['cwd'])
+      passwd      = multi_to_wide(hash['password'])
+      logon_flags = hash['logon_with_profile'] ? LOGON_WITH_PROFILE : LOGON_NETCREDENTIALS_ONLY
       hash['creation_flags'] |= CREATE_UNICODE_ENVIRONMENT
 
       process_ran = CreateProcessWithLogonW(
         logon,                      # User
         domain,                     # Domain
         passwd,                     # Password
-        LOGON_NETCREDENTIALS_ONLY,  # Logon flags
+        logon_flags,                # Logon flags
         app,                        # App name
         cmd,                        # Command line
         hash['creation_flags'],     # Creation flags
