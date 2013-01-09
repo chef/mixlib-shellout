@@ -70,7 +70,7 @@ module Process
     valid_keys = %w/
       app_name command_line inherit creation_flags cwd environment
       startup_info thread_inherit process_inherit close_handles with_logon
-      domain password logon_with_profile
+      domain password remote_call
     /
 
     valid_si_keys = %/
@@ -86,7 +86,7 @@ module Process
     }
 
     #See if running as local service
-    is_local_service = ENV["USERNAME"].downcase == "local service"
+    is_local_service = ENV["USERNAME"].downcase == "local service" 
 
     # Validate the keys, and convert symbols and case to lowercase strings.
     args.each{ |key, val|
@@ -132,7 +132,7 @@ module Process
       # The argument format is a series of null-terminated strings, with an additional null terminator.
       # If calling CreateProcessWithLogonW must put the hash in a wide format
       env = env.map do |e|
-        hash['with_logon'].nil? || is_local_service ? e + "\0" : multi_to_wide(e)
+        hash['with_logon'].nil? || is_local_service || hash['remote_call'] ? e + "\0" : multi_to_wide(e)
       end.join("") + "\0"
 
       env = [env].pack('p*').unpack('L').first
@@ -212,7 +212,7 @@ module Process
 
     if hash['with_logon']
       # Need to do a LogonUser and CreateProcessAsUser to work on all windows platforms
-      if is_local_service
+      if is_local_service || hash['remote_call']
         include Process::Constants
         extend Process::Functions
 
