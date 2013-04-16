@@ -85,6 +85,8 @@ module Mixlib
           #
           process = Process.create(create_process_args)
           begin
+            @execution_time = 0
+            
             # Start pushing data into input
             stdin_write << input if input
 
@@ -106,7 +108,8 @@ module Mixlib
                 end
                 @status = ThingThatLooksSortOfLikeAProcessStatus.new
                 @status.exitstatus = exit_code.unpack('l').first
-
+                @execution_time = Time.now - start_wait
+                
                 return self
               when WAIT_TIMEOUT
                 # Kill the process
@@ -114,6 +117,7 @@ module Mixlib
                   raise Mixlib::ShellOut::CommandTimeout, "command timed out:\n#{format_for_exception}"
                 end
 
+                @execution_time = Time.now - start_wait
                 consume_output(open_streams, stdout_read, stderr_read)
               else
                 raise "Unknown response from WaitForSingleObject(#{process.process_handle}, #{timeout*1000}): #{wait_status}"
