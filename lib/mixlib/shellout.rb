@@ -313,6 +313,8 @@ module Mixlib
       http_proxy_user = Chef::Config["http_proxy_user"]
       http_proxy_pass = Chef::Config["http_proxy_pass"]
       no_proxy = Chef::Config[:no_proxy]
+      https_proxy_user = Chef::Config["https_proxy_user"]
+      https_proxy_pass = Chef::Config["https_proxy_pass"]
 
       proxy_settings = Hash::new
       unless http_proxy.nil? then
@@ -326,6 +328,12 @@ module Mixlib
       end
       unless http_proxy_pass.nil? then
         proxy_settings['http_proxy_pass'] = http_proxy_pass
+      end
+      unless https_proxy_user.nil? then
+        proxy_settings['https_proxy_user'] = https_proxy_user
+      end
+      unless https_proxy_pass.nil? then
+        proxy_settings['https_proxy_pass'] = https_proxy_pass
       end
       unless no_proxy.nil? then
         proxy_settings['no_proxy'] = no_proxy
