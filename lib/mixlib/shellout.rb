@@ -126,7 +126,9 @@ module Mixlib
     #   to prevent issues with multibyte characters in Ruby 1.8. To avoid this,
     #   use :environment => nil for *no* extra environment settings, or
     #   :environment => {'LC_ALL'=>nil, ...} to set other environment settings
-    #   without changing the locale.
+    #   without changing the locale.If you have proxy related settings in chef 
+    #   configuration (i.e. solo.rb), these values will be set to enviromment 
+    #   variables. 
     # * +timeout+: a Numeric value for the number of seconds to wait on the
     #   child process before raising an Exception. This is calculated as the
     #   total amount of time that ShellOut waited on the child process without
@@ -158,6 +160,7 @@ module Mixlib
       if command_args.last.is_a?(Hash)
         parse_options(command_args.pop)
       end
+      apply_chef_proxy_configs
 
       @command = command_args.size == 1 ? command_args.first : command_args
     end
@@ -302,6 +305,32 @@ module Mixlib
 
     def validate_options(opts)
       super
+    end
+
+    def apply_chef_proxy_configs
+      http_proxy = Chef::Config["http_proxy"]
+      https_proxy = Chef::Config["https_proxy"]
+      http_proxy_user = Chef::Config["http_proxy_user"]
+      http_proxy_pass = Chef::Config["http_proxy_pass"]
+      no_proxy = Chef::Config[:no_proxy]
+
+      proxy_settings = Hash::new
+      unless http_proxy.nil? then
+        proxy_settings['http_proxy'] = http_proxy
+      end
+      unless https_proxy.nil? then
+        proxy_settings['https_proxy'] = https_proxy
+      end
+      unless http_proxy_user.nil? then
+        proxy_settings['http_proxy_user'] = http_proxy_user
+      end
+      unless http_proxy_pass.nil? then
+        proxy_settings['http_proxy_pass'] = http_proxy_pass
+      end
+      unless no_proxy.nil? then
+        proxy_settings['no_proxy'] = no_proxy
+      end
+      @environment = proxy_settings.merge(@environment)
     end
   end
 end
