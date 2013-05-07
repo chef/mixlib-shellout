@@ -233,9 +233,17 @@ module Mixlib
     # === Raises
     # ::ShellCommandFailed::: via +invalid!+
     def error!
-      unless Array(valid_exit_codes).include?(exitstatus)
+      if failure?
         invalid!("Expected process to exit with #{valid_exit_codes.inspect}, but received '#{exitstatus}'")
       end
+    end
+
+    def success?
+      Array(valid_exit_codes).include?(exitstatus)
+    end
+
+    def failure?
+      !success?
     end
 
     # Raises a ShellCommandFailed exception, appending the

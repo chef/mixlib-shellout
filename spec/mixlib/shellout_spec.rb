@@ -648,6 +648,14 @@ describe Mixlib::ShellOut do
         it "should set the exit status of the command" do
           exit_status.should eql(exit_code)
         end
+
+        it "should be successful" do
+          executed_cmd.should     be_success
+        end
+
+        it "should not be failure" do
+          executed_cmd.should_not be_failure
+        end
       end
 
       context 'with nonzero exit status' do
@@ -669,6 +677,14 @@ describe Mixlib::ShellOut do
         it "should set the exit status of the command" do
           exit_status.should eql(exit_code)
         end
+
+        it "should be a failure" do
+          executed_cmd.should be_failure
+        end
+
+        it "should not be successful" do
+          executed_cmd.should_not be_success
+        end
       end
 
       context 'with valid exit codes' do
@@ -686,6 +702,14 @@ describe Mixlib::ShellOut do
           it "should set the exit status of the command" do
             exit_status.should eql(exit_code)
           end
+
+          it "should be successful" do
+            executed_cmd.should     be_success
+          end
+
+          it "should not be failure" do
+            executed_cmd.should_not be_failure
+          end
         end
 
         context 'when exiting with invalid code' do
@@ -700,6 +724,14 @@ describe Mixlib::ShellOut do
             exit_status.should eql(exit_code)
           end
 
+          it "should be a failure" do
+            executed_cmd.should be_failure
+          end
+
+          it "should not be successful" do
+            executed_cmd.should_not be_success
+          end
+
           context 'with input data' do
             let(:options) { { :returns => valid_exit_codes, :input => input } }
             let(:input) { "Random data #{rand(1000000)}" }
@@ -710,6 +742,14 @@ describe Mixlib::ShellOut do
 
             it "should set the exit status of the command" do
               exit_status.should eql(exit_code)
+            end
+
+            it "should be a failure" do
+              executed_cmd.should be_failure
+            end
+
+            it "should not be successful" do
+              executed_cmd.should_not be_success
             end
           end
         end
@@ -724,6 +764,14 @@ describe Mixlib::ShellOut do
 
           it "should set the exit status of the command" do
             exit_status.should eql(exit_code)
+          end
+
+          it "should be a failure" do
+            executed_cmd.should be_failure
+          end
+
+          it "should not be successful" do
+            executed_cmd.should_not be_success
           end
         end
       end
