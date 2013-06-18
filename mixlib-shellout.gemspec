@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
 
 
   %w(rspec ap).each { |gem| s.add_development_dependency gem }
+  s.add_development_dependency "windows-pr" if ENV['OS'] == 'Windows_NT'
 
   s.bindir       = "bin"
   s.executables  = []
