@@ -1,6 +1,10 @@
 require 'rspec/core/rake_task'
 require 'rubygems/package_task'
 
+task :clean do
+  rm_rf "pkg/*"
+end
+
 Dir[File.expand_path("../*gemspec", __FILE__)].reverse.each do |gemspec_path|
   gemspec = eval(IO.read(gemspec_path))
   Gem::PackageTask.new(gemspec).define
