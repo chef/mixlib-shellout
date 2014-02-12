@@ -41,6 +41,9 @@ describe Mixlib::ShellOut do
       its(:valid_exit_codes) { should eql([0]) }
       its(:live_stream) { should be_nil }
       its(:input) { should be_nil }
+      its(:sudo) { should eql(false) }
+      its(:sudo_user) { should eql("root") }
+      its(:sudo_group) { should be_nil }
 
       it "should set default environmental variables" do
         shell_cmd.environment.should == {"LC_ALL" => "C"}
@@ -133,6 +136,33 @@ describe Mixlib::ShellOut do
           it "should compute the gid of the user", :unix_only do
             shell_cmd.gid.should eql(expected_gid)
           end
+        end
+      end
+
+      context 'when using sudo' do
+        let(:accessor) { :sudo }
+        let(:value) { true }
+
+        it 'sets itself to true' do
+          should eql(value)
+        end
+      end
+
+      context 'when using sudo_user' do
+        let(:accessor) { :sudo_user }
+        let(:value) { "poop" }
+
+        it 'sets itself to poop' do
+          should eql('poop')
+        end
+      end
+
+      context 'when using sudo_group' do
+        let(:accessor) { :sudo_group }
+        let(:value) { "poop" }
+
+        it 'sets itself to poop' do
+          should eql('poop')
         end
       end
 
@@ -328,6 +358,42 @@ describe Mixlib::ShellOut do
           shell_cmd.cwd.should eql('/tmp')
           shell_cmd.user.should eql('nobody')
           shell_cmd.password.should eql('something')
+        end
+      end
+    end
+  end
+
+  context 'when retriving the command with sudo enabled' do
+    context 'and command is a string' do
+      let(:cmd) { "apt-get install chef" }
+      let(:options) { {:sudo => true, :sudo_user => "root"} }
+
+      it "prepends sudo on the command" do
+        expect(shell_cmd.command).to eql("sudo -u root apt-get install chef")
+      end
+
+      context 'and a sudo group is provided' do
+        let(:options) { {:sudo => true, :sudo_user => "root", :sudo_group => "wooty"} }
+
+        it "prepends sudo on the command with a group" do
+          expect(shell_cmd.command).to eql("sudo -u root -g wooty apt-get install chef")
+        end
+      end
+    end
+
+    context 'and command is an array' do
+      let(:cmd) { ["apt-get", "install", "chef"] }
+      let(:options) { {:sudo => true, :sudo_user => "root"} }
+
+      it "prepends sudo on the command" do
+        expect(shell_cmd.command).to eql(["sudo", "-u", "root", "apt-get", "install", "chef"])
+      end
+
+      context 'and a sudo group is provided' do
+        let(:options) { {:sudo => true, :sudo_user => "root", :sudo_group => "wooty"} }
+
+        it "prepends sudo on the command with a group" do
+          expect(shell_cmd.command).to eql(["sudo", "-u", "root", "-g", "wooty", "apt-get", "install", "chef"])
         end
       end
     end
