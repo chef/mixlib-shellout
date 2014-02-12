@@ -43,6 +43,11 @@ module Mixlib
     attr_accessor :password
     attr_accessor :with_logon
 
+    # Sudo support
+    attr_accessor :sudo
+    attr_accessor :sudo_user
+    attr_accessor :sudo_group
+
     # Group the command will run as. Normally set via options passed to new
     attr_accessor :group
 
@@ -72,9 +77,6 @@ module Mixlib
 
     # A string which will be prepended to the log message.
     attr_accessor :log_tag
-
-    # The command to be executed.
-    attr_reader :command
 
     # The umask that will be set for the subcommand.
     attr_reader :umask
@@ -151,6 +153,9 @@ module Mixlib
       @input = nil
       @log_level = :debug
       @log_tag = nil
+      @sudo = false
+      @sudo_user = "root"
+      @sudo_group = nil
       @environment = DEFAULT_ENVIRONMENT
       @cwd = nil
       @valid_exit_codes = [0]
@@ -161,6 +166,33 @@ module Mixlib
       end
 
       @command = command_args.size == 1 ? command_args.first : command_args
+    end
+
+    # Return the command, with sudo magic applied if needed
+    def command
+      if sudo
+        if @command.kind_of?(Array)
+          @command = sudo_prepend_array(@command)
+        else
+          @command = sudo_prepend_string(@command)
+        end
+      else
+        @command
+      end
+    end
+
+    def sudo_prepend_array(cmd)
+      sudo_command = [ "sudo", "-u", @sudo_user ]
+      if @sudo_group
+        sudo_command << "-g"
+        sudo_command << @sudo_group
+      end
+      cmd.unshift(*sudo_command)
+      cmd
+    end
+
+    def sudo_prepend_string(cmd)
+      "sudo -u #{@sudo_user} #{@sudo_group ? "-g #{@sudo_group} " : ""}#{cmd}"
     end
 
     # Set the umask that the subprocess will have. If given as a string, it
@@ -295,6 +327,12 @@ module Mixlib
           self.log_level = setting
         when 'log_tag'
           self.log_tag = setting
+        when 'sudo'
+          self.sudo = setting
+        when 'sudo_user'
+          self.sudo_user = setting
+        when 'sudo_group'
+          self.sudo_group = setting
         when 'environment', 'env'
           # Set the LC_ALL from the parent process if the user wanted
           # to use the default.
