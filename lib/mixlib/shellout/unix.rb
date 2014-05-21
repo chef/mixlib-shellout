@@ -40,7 +40,7 @@ module Mixlib
       # * Errno::ENOENT  when the command is not available on the system (or not
       #   in the current $PATH)
       # * Chef::Exceptions::CommandTimeout  when the command does not complete
-      #   within +timeout+ seconds (default: 600s). When this happens, ShellOut
+      #   within +timeout+ seconds (default: 1200). When this happens, ShellOut
       #   will send a TERM and then KILL to the entire process group to ensure
       #   that any grandchild processes are terminated. If the invocation of
       #   the child process spawned multiple child processes (which commonly

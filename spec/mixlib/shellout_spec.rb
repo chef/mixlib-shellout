@@ -37,7 +37,7 @@ describe Mixlib::ShellOut do
       its(:password) { should be_nil }
       its(:group) { should be_nil }
       its(:umask) { should be_nil }
-      its(:timeout) { should eql(600) }
+      its(:timeout) { should eql(1200) }
       its(:valid_exit_codes) { should eql([0]) }
       its(:live_stream) { should be_nil }
       its(:input) { should be_nil }
