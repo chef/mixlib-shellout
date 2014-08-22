@@ -1345,7 +1345,7 @@ describe Mixlib::ShellOut do
     end
 
     context "when user is specified" do
-      let(:user) { 'cheftestuser' }
+      let(:user) { 'ctuser' }
 
       let(:options) { { :user => user } }
 
