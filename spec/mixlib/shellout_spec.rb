@@ -1345,18 +1345,9 @@ describe Mixlib::ShellOut do
     end
 
     context "when user is specified" do
-      let(:user) { 'ctuser' }
+      let(:user) { 'nobody' }
 
       let(:options) { { :user => user } }
-
-      before do
-        system("userdel -r #{user}")
-        system("useradd #{user}").should == true
-      end
-
-      after do
-        system("userdel -r #{user}").should == true
-      end
 
       it "should run as specified user" do
         running_user.should eql("#{user}")
