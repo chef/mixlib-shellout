@@ -927,7 +927,7 @@ describe Mixlib::ShellOut do
         let(:ruby_code) { "fd = File.for_fd(#{@test_file.to_i}) rescue nil; puts fd.nil?" }
 
         it "should not see file descriptors of the parent" do
-          stdout.chomp.should eql("true")
+          stdout.chomp.should eql("false")
         end
       end
 
