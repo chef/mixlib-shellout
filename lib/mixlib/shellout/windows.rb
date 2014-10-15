@@ -111,6 +111,7 @@ module Mixlib
               when WAIT_TIMEOUT
                 # Kill the process
                 if (Time.now - start_wait) > timeout
+                  TerminateProcess(process.process_handle, 1) # Terminate with a non-zero error code
                   raise Mixlib::ShellOut::CommandTimeout, "command timed out:\n#{format_for_exception}"
                 end
 
