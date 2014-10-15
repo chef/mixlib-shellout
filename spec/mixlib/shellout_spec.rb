@@ -979,7 +979,7 @@ describe Mixlib::ShellOut do
           shell_cmd.exitstatus.should == 123
         end
 
-        context "and the child is unresponsive" do
+        RSpec.shared_examples "unresponsive child" do
           let(:cmd) do
             ruby_wo_shell(<<-CODE)
               STDOUT.sync = true
@@ -1012,6 +1012,18 @@ describe Mixlib::ShellOut do
               log_output.string.should include("Command exceeded allowed execution time, sending KILL")
             end
 
+          end
+        end
+
+        context "and the child is unresponsive" do
+          include_examples "unresponsive child"
+
+          context "and the child is a zombie" do
+            before(:each) do
+              Process.stub(:getpgid) { raise Errno::EPERM }
+            end
+
+            include_examples "unresponsive child"
           end
         end
 
