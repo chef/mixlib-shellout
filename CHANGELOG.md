@@ -2,6 +2,8 @@
 
 ## Release: 2.0.0
 
+## Release: 2.0.0
+
 * remove LC_ALL=C default setting, consumers should now set this if they
   still need it.
 * Change the minimum required version of Ruby to >= 1.9.3.
