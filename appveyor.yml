@@ -15,6 +15,7 @@ skip_tags: true
 branches:
   only:
     - master
+    - 2-stable
 
 install:
   - SET PATH=C:\Ruby%ruby_version%\bin;%PATH%
