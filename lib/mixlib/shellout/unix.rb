@@ -131,6 +131,9 @@ module Mixlib
           Process.egid = gid
           Process.gid = gid
         end
+
+        # Set all groups user has access to
+        Process.initgroups(username, Process.gid)
       end
 
       def set_environment
@@ -288,7 +291,7 @@ module Mixlib
           # support the "ONESHOT" optimization (where sh -c does exec without
           # forking). To support cleaning up all the children, we need to
           # ensure they're in a unique process group.
-          # We cannot use setsid here since getpgid fails on AIX with EPERM 
+          # We cannot use setsid here since getpgid fails on AIX with EPERM
           # when parent and child have different sessions and the parent tries to get the process group,
           # hence we just create a new process group, and have the same session.
           Process.setpgrp
