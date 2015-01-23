@@ -204,6 +204,11 @@ module Mixlib
       group.kind_of?(Integer) ? group : Etc.getgrnam(group.to_s).gid
     end
 
+    def username
+      return nil unless user
+      user.kind_of?(Integer) ? Etc.getpwuid(user).name : user
+    end
+
     def timeout
       @timeout || DEFAULT_READ_TIMEOUT
     end
