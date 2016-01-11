@@ -1,7 +1,8 @@
 module Mixlib
   class ShellOut
-    class ShellCommandFailed < RuntimeError; end
-    class CommandTimeout < RuntimeError; end
-    class InvalidCommandOption < RuntimeError; end
+    class Error < RuntimeError; end
+    class ShellCommandFailed < Error; end
+    class CommandTimeout < Error; end
+    class InvalidCommandOption < Error; end
   end
 end
