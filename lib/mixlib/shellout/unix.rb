@@ -68,7 +68,8 @@ module Mixlib
 
       # Merges the two environments for the process
       def process_environment
-        logon_environment.merge(self.environment)
+        env = logon_environment.merge(self.environment)
+        env.each{ |k,v| env[k] = v.to_s }
       end
 
       # Run the command, writing the command's standard out and standard error

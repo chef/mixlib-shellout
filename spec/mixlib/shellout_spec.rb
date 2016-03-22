@@ -379,26 +379,29 @@ describe Mixlib::ShellOut do
           end
         end
         # Setting the user should set the env variables
-	describe '#process_environment' do
-	  subject { super().process_environment }
-	  it { is_expected.to eq ({'HOME'=>dir, 'SHELL'=>shell, 'USER'=>'catbert', 'LOGNAME'=>'catbert', 'PATH'=>path, 'IFS'=>"\t\n"}) }
-	end
+        describe '#process_environment' do
+          subject { super().process_environment }
+          it { is_expected.to eq ({'HOME'=>dir, 'SHELL'=>shell, 'USER'=>'catbert', 'LOGNAME'=>'catbert', 'PATH'=>path, 'IFS'=>"\t\n"}) }
+        end
         # Setting the user with overriding env variables should override
-	context 'when adding environment variables' do
-	  before(:each){shell_cmd.environment={'PATH'=>'/lord:/of/the/dance', 'CUSTOM'=>'costume'}}
-	  it 'should preserve custom variables' do
-	    expect(shell_cmd.process_environment['PATH']).to eq('/lord:/of/the/dance')
-	  end
+        context 'when adding environment variables' do
+          before(:each){shell_cmd.environment={'PATH'=>'/lord:/of/the/dance', 'CUSTOM'=>'costume', 'PORT'=>22}}
+          it 'should preserve custom variables' do
+            expect(shell_cmd.process_environment['PATH']).to eq('/lord:/of/the/dance')
+          end
           # Setting the user with additional env variables should have both
-	  it 'should allow new variables' do
-	    expect(shell_cmd.process_environment['CUSTOM']).to eq('costume')
-	  end
-	end
+          it 'should allow new variables' do
+            expect(shell_cmd.process_environment['CUSTOM']).to eq('costume')
+          end
+          it 'should convert variables to strings' do
+            expect(shell_cmd.process_environment['PORT']).to eq('22')
+          end
+        end
         # Setting the user should set secondary groups
-	describe '#sgids' do
-	  subject { super().sgids }
-	  it { is_expected.to match_array([52,700]) }
-	end
+        describe '#sgids' do
+          subject { super().sgids }
+          it { is_expected.to match_array([52,700]) }
+        end
       end
       # Setting login with user should throw errors
       context 'when not setting a user id' do
