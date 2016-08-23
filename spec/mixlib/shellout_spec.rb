@@ -17,10 +17,7 @@ describe Mixlib::ShellOut do
   let(:ruby_code) { raise 'define let(:ruby_code)' }
   let(:options) { nil }
 
-  # On some testing environments, we have gems that creates a deprecation notice sent
-  # out on STDERR. To fix that, we disable gems on Ruby 1.9.2
-  let(:ruby_eval) { lambda { |code| "ruby #{disable_gems} -e '#{code}'" } }
-  let(:disable_gems) { ( ruby_19? ? '--disable-gems' : '') }
+  let(:ruby_eval) { lambda { |code| "ruby -e '#{code}'" } }
 
   context 'when instantiating' do
     subject { shell_cmd }
@@ -1144,7 +1141,6 @@ describe Mixlib::ShellOut do
         context 'on unix', :unix_only do
           def ruby_wo_shell(code)
             parts = %w[ruby]
-            parts << "--disable-gems" if ruby_19?
             parts << "-e"
             parts << code
           end
