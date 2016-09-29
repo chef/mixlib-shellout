@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.email = "info@chef.io"
   s.homepage = "https://www.chef.io/"
 
-  s.required_ruby_version = ">= 2.1"
+  s.required_ruby_version = ">= 2.2"
 
   s.add_development_dependency "rspec", "~> 3.0"
 
