@@ -65,8 +65,12 @@ Invoke "whoami.exe" to demonstrate running a command as another user:
 Mixlib::ShellOut does a standard fork/exec on Unix, and uses the Win32 API on Windows. There is not currently support for JRuby.
 
 ## See Also
-- `Process.spawn` in Ruby 1.9
+- `Process.spawn` in Ruby 1.9+
 - [https://github.com/rtomayko/posix-spawn](https://github.com/rtomayko/posix-spawn)
+
+## Contributing
+
+For information on contributing to this project see <https://github.com/chef/chef/blob/master/CONTRIBUTING.md>
 
 ## License
 - Copyright:: Copyright (c) 2011-2016 Chef Software, Inc.
