@@ -1,8 +1,8 @@
-$:.unshift(File.dirname(__FILE__) + '/lib')
-require 'mixlib/shellout/version'
+$:.unshift(File.dirname(__FILE__) + "/lib")
+require "mixlib/shellout/version"
 
 Gem::Specification.new do |s|
-  s.name = 'mixlib-shellout'
+  s.name = "mixlib-shellout"
   s.version = Mixlib::ShellOut::VERSION
   s.platform = Gem::Platform::RUBY
   s.extra_rdoc_files = ["README.md", "LICENSE" ]
@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
 
   s.bindir       = "bin"
   s.executables  = []
-  s.require_path = 'lib'
-  s.files = %w(Gemfile Rakefile LICENSE README.md) + Dir.glob("*.gemspec") +
-      Dir.glob("lib/**/*", File::FNM_DOTMATCH).reject {|f| File.directory?(f) }
+  s.require_path = "lib"
+  s.files = %w{Gemfile Rakefile LICENSE README.md} + Dir.glob("*.gemspec") +
+    Dir.glob("lib/**/*", File::FNM_DOTMATCH).reject { |f| File.directory?(f) }
 end

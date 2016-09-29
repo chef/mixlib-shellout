@@ -39,7 +39,7 @@ module Mixlib
       def all_seconderies
         ret = []
         Etc.endgrent
-        while ( g = Etc.getgrent ) do
+        while ( g = Etc.getgrent )
           ret << g
         end
         Etc.endgrent
@@ -52,7 +52,7 @@ module Mixlib
       def sgids
         return nil unless using_login?
         user_name = Etc.getpwuid(uid).name
-        all_seconderies.select{|g| g.mem.include?(user_name)}.map{|g|g.gid}
+        all_seconderies.select { |g| g.mem.include?(user_name) }.map { |g| g.gid }
       end
 
       # The environment variables that are deduced from simulating logon
@@ -63,7 +63,7 @@ module Mixlib
         # According to `man su`, the set fields are:
         #  $HOME, $SHELL, $USER, $LOGNAME, $PATH, and $IFS
         # Values are copied from "shadow" package in Ubuntu 14.10
-        {'HOME'=>entry.dir, 'SHELL'=>entry.shell, 'USER'=>entry.name, 'LOGNAME'=>entry.name, 'PATH'=>'/sbin:/bin:/usr/sbin:/usr/bin', 'IFS'=>"\t\n"}
+        { "HOME" => entry.dir, "SHELL" => entry.shell, "USER" => entry.name, "LOGNAME" => entry.name, "PATH" => "/sbin:/bin:/usr/sbin:/usr/bin", "IFS" => "\t\n" }
       end
 
       # Merges the two environments for the process
@@ -170,7 +170,7 @@ module Mixlib
 
       def set_environment
         # user-set variables should override the login ones
-        process_environment.each do |env_var,value|
+        process_environment.each do |env_var, value|
           ENV[env_var] = value
         end
       end
@@ -335,14 +335,14 @@ module Mixlib
           set_cwd
 
           begin
-            command.kind_of?(Array) ? exec(*command, :close_others=>true) : exec(command, :close_others=>true)
+            command.kind_of?(Array) ? exec(*command, :close_others => true) : exec(command, :close_others => true)
 
-            raise 'forty-two' # Should never get here
+            raise "forty-two" # Should never get here
           rescue Exception => e
             Marshal.dump(e, process_status_pipe.last)
             process_status_pipe.last.flush
           end
-          process_status_pipe.last.close unless (process_status_pipe.last.closed?)
+          process_status_pipe.last.close unless process_status_pipe.last.closed?
           exit!
         end
       end

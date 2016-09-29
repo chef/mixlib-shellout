@@ -1,15 +1,15 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
 gemspec :name => "mixlib-shellout"
 
 group(:test) do
   gem "rspec_junit_formatter"
-  gem 'rake'
+  gem "rake"
 end
 
 group(:development) do
-  gem 'pry'
-  gem 'pry-byebug'
-  gem 'pry-stack_explorer'
-  gem 'rb-readline'
+  gem "pry"
+  gem "pry-byebug"
+  gem "pry-stack_explorer"
+  gem "rb-readline"
 end

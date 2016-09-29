@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-require 'win32/process'
+require "win32/process"
 
 # Add new constants for Logon
 module Process::Constants
@@ -65,78 +65,78 @@ module Process
   class << self
     def create(args)
       unless args.kind_of?(Hash)
-        raise TypeError, 'hash keyword arguments expected'
+        raise TypeError, "hash keyword arguments expected"
       end
 
-      valid_keys = %w[
+      valid_keys = %w{
         app_name command_line inherit creation_flags cwd environment
         startup_info thread_inherit process_inherit close_handles with_logon
         domain password
-      ]
+      }
 
-      valid_si_keys = %w[
+      valid_si_keys = %w{
         startf_flags desktop title x y x_size y_size x_count_chars
         y_count_chars fill_attribute sw_flags stdin stdout stderr
-      ]
+      }
 
       # Set default values
       hash = {
-        'app_name'       => nil,
-        'creation_flags' => 0,
-        'close_handles'  => true
+        "app_name"       => nil,
+        "creation_flags" => 0,
+        "close_handles"  => true,
       }
 
       # Validate the keys, and convert symbols and case to lowercase strings.
-      args.each{ |key, val|
+      args.each do |key, val|
         key = key.to_s.downcase
         unless valid_keys.include?(key)
           raise ArgumentError, "invalid key '#{key}'"
         end
         hash[key] = val
-      }
+      end
 
       si_hash = {}
 
       # If the startup_info key is present, validate its subkeys
-      if hash['startup_info']
-        hash['startup_info'].each{ |key, val|
+      if hash["startup_info"]
+        hash["startup_info"].each do |key, val|
           key = key.to_s.downcase
           unless valid_si_keys.include?(key)
             raise ArgumentError, "invalid startup_info key '#{key}'"
           end
           si_hash[key] = val
-        }
+        end
       end
 
       # The +command_line+ key is mandatory unless the +app_name+ key
       # is specified.
-      unless hash['command_line']
-        if hash['app_name']
-          hash['command_line'] = hash['app_name']
-          hash['app_name'] = nil
+      unless hash["command_line"]
+        if hash["app_name"]
+          hash["command_line"] = hash["app_name"]
+          hash["app_name"] = nil
         else
-          raise ArgumentError, 'command_line or app_name must be specified'
+          raise ArgumentError, "command_line or app_name must be specified"
         end
       end
 
       env = nil
 
       # The env string should be passed as a string of ';' separated paths.
-      if hash['environment']
-        env = hash['environment']
+      if hash["environment"]
+        env = hash["environment"]
 
         unless env.respond_to?(:join)
-          env = hash['environment'].split(File::PATH_SEPARATOR)
+          env = hash["environment"].split(File::PATH_SEPARATOR)
         end
 
-        env = env.map{ |e| e + 0.chr }.join('') + 0.chr
-        env.to_wide_string! if hash['with_logon']
+        env = env.map { |e| e + 0.chr }.join("") + 0.chr
+        env.to_wide_string! if hash["with_logon"]
       end
 
       # Process SECURITY_ATTRIBUTE structure
       process_security = nil
 
-      if hash['process_inherit']
+      if hash["process_inherit"]
         process_security = SECURITY_ATTRIBUTES.new
         process_security[:nLength] = 12
         process_security[:bInheritHandle] = 1
@@ -145,7 +145,7 @@ module Process
       # Thread SECURITY_ATTRIBUTE structure
       thread_security = nil
 
-      if hash['thread_inherit']
+      if hash["thread_inherit"]
         thread_security = SECURITY_ATTRIBUTES.new
         thread_security[:nLength] = 12
         thread_security[:bInheritHandle] = 1
@@ -156,7 +156,7 @@ module Process
       # will not work on JRuby because of the way it handles internal file
       # descriptors.
       #
-      ['stdin', 'stdout', 'stderr'].each{ |io|
+      %w{stdin stdout stderr}.each do |io|
         if si_hash[io]
           if si_hash[io].respond_to?(:fileno)
             handle = get_osfhandle(si_hash[io].fileno)
@@ -187,66 +187,66 @@ module Process
           raise SystemCallError.new("SetHandleInformation", FFI.errno) unless bool
 
           si_hash[io] = handle
-          si_hash['startf_flags'] ||= 0
-          si_hash['startf_flags'] |= STARTF_USESTDHANDLES
-          hash['inherit'] = true
+          si_hash["startf_flags"] ||= 0
+          si_hash["startf_flags"] |= STARTF_USESTDHANDLES
+          hash["inherit"] = true
         end
-      }
+      end
 
       procinfo  = PROCESS_INFORMATION.new
       startinfo = STARTUPINFO.new
 
       unless si_hash.empty?
         startinfo[:cb]              = startinfo.size
-        startinfo[:lpDesktop]       = si_hash['desktop'] if si_hash['desktop']
-        startinfo[:lpTitle]         = si_hash['title'] if si_hash['title']
-        startinfo[:dwX]             = si_hash['x'] if si_hash['x']
-        startinfo[:dwY]             = si_hash['y'] if si_hash['y']
-        startinfo[:dwXSize]         = si_hash['x_size'] if si_hash['x_size']
-        startinfo[:dwYSize]         = si_hash['y_size'] if si_hash['y_size']
-        startinfo[:dwXCountChars]   = si_hash['x_count_chars'] if si_hash['x_count_chars']
-        startinfo[:dwYCountChars]   = si_hash['y_count_chars'] if si_hash['y_count_chars']
-        startinfo[:dwFillAttribute] = si_hash['fill_attribute'] if si_hash['fill_attribute']
-        startinfo[:dwFlags]         = si_hash['startf_flags'] if si_hash['startf_flags']
-        startinfo[:wShowWindow]     = si_hash['sw_flags'] if si_hash['sw_flags']
+        startinfo[:lpDesktop]       = si_hash["desktop"] if si_hash["desktop"]
+        startinfo[:lpTitle]         = si_hash["title"] if si_hash["title"]
+        startinfo[:dwX]             = si_hash["x"] if si_hash["x"]
+        startinfo[:dwY]             = si_hash["y"] if si_hash["y"]
+        startinfo[:dwXSize]         = si_hash["x_size"] if si_hash["x_size"]
+        startinfo[:dwYSize]         = si_hash["y_size"] if si_hash["y_size"]
+        startinfo[:dwXCountChars]   = si_hash["x_count_chars"] if si_hash["x_count_chars"]
+        startinfo[:dwYCountChars]   = si_hash["y_count_chars"] if si_hash["y_count_chars"]
+        startinfo[:dwFillAttribute] = si_hash["fill_attribute"] if si_hash["fill_attribute"]
+        startinfo[:dwFlags]         = si_hash["startf_flags"] if si_hash["startf_flags"]
+        startinfo[:wShowWindow]     = si_hash["sw_flags"] if si_hash["sw_flags"]
         startinfo[:cbReserved2]     = 0
-        startinfo[:hStdInput]       = si_hash['stdin'] if si_hash['stdin']
-        startinfo[:hStdOutput]      = si_hash['stdout'] if si_hash['stdout']
-        startinfo[:hStdError]       = si_hash['stderr'] if si_hash['stderr']
+        startinfo[:hStdInput]       = si_hash["stdin"] if si_hash["stdin"]
+        startinfo[:hStdOutput]      = si_hash["stdout"] if si_hash["stdout"]
+        startinfo[:hStdError]       = si_hash["stderr"] if si_hash["stderr"]
       end
 
       app = nil
       cmd = nil
 
       # Convert strings to wide character strings if present
-      if hash['app_name']
-        app = hash['app_name'].to_wide_string
+      if hash["app_name"]
+        app = hash["app_name"].to_wide_string
       end
 
-      if hash['command_line']
-        cmd = hash['command_line'].to_wide_string
+      if hash["command_line"]
+        cmd = hash["command_line"].to_wide_string
       end
 
-      if hash['cwd']
-        cwd = hash['cwd'].to_wide_string
+      if hash["cwd"]
+        cwd = hash["cwd"].to_wide_string
       end
 
-      inherit = hash['inherit'] ? 1 : 0
+      inherit = hash["inherit"] ? 1 : 0
 
-      if hash['with_logon']
-        logon = hash['with_logon'].to_wide_string
+      if hash["with_logon"]
+        logon = hash["with_logon"].to_wide_string
 
-        if hash['password']
-          passwd = hash['password'].to_wide_string
+        if hash["password"]
+          passwd = hash["password"].to_wide_string
         else
-          raise ArgumentError, 'password must be specified if with_logon is used'
+          raise ArgumentError, "password must be specified if with_logon is used"
         end
 
-        if hash['domain']
-          domain = hash['domain'].to_wide_string
+        if hash["domain"]
+          domain = hash["domain"].to_wide_string
         end
 
-        hash['creation_flags'] |= CREATE_UNICODE_ENVIRONMENT
+        hash["creation_flags"] |= CREATE_UNICODE_ENVIRONMENT
 
         winsta_name = FFI::MemoryPointer.new(:char, 256)
         return_size = FFI::MemoryPointer.new(:ulong)
@@ -297,7 +297,7 @@ module Process
               process_security,       # Process attributes
               thread_security,        # Thread attributes
               inherit,                # Inherit handles
-              hash['creation_flags'], # Creation Flags
+              hash["creation_flags"], # Creation Flags
               env,                    # Environment
               cwd,                    # Working directory
               startinfo,              # Startup Info
@@ -318,7 +318,7 @@ module Process
             LOGON_WITH_PROFILE,     # Logon flags
             app,                    # App name
             cmd,                    # Command line
-            hash['creation_flags'], # Creation flags
+            hash["creation_flags"], # Creation flags
             env,                    # Environment
             cwd,                    # Working directory
             startinfo,              # Startup Info
@@ -336,7 +336,7 @@ module Process
           process_security,       # Process attributes
           thread_security,        # Thread attributes
           inherit,                # Inherit handles?
-          hash['creation_flags'], # Creation flags
+          hash["creation_flags"], # Creation flags
           env,                    # Environment
           cwd,                    # Working directory
           startinfo,              # Startup Info
@@ -350,7 +350,7 @@ module Process
 
       # Automatically close the process and thread handles in the
       # PROCESS_INFORMATION struct unless explicitly told not to.
-      if hash['close_handles']
+      if hash["close_handles"]
         CloseHandle(procinfo[:hProcess])
         CloseHandle(procinfo[:hThread])
         # Clear these fields so callers don't attempt to close the handle

@@ -18,8 +18,8 @@
 # limitations under the License.
 #
 
-require 'win32/process'
-require 'mixlib/shellout/windows/core_ext'
+require "win32/process"
+require "mixlib/shellout/windows/core_ext"
 
 module Mixlib
   class ShellOut
@@ -63,10 +63,10 @@ module Mixlib
             :startup_info => {
               :stdout => stdout_write,
               :stderr => stderr_write,
-              :stdin => stdin_read
+              :stdin => stdin_read,
             },
-            :environment => inherit_environment.map { |k,v| "#{k}=#{v}" },
-            :close_handles => false
+            :environment => inherit_environment.map { |k, v| "#{k}=#{v}" },
+            :close_handles => false,
           }
           create_process_args[:cwd] = cwd if cwd
           # default to local account database if domain is not specified
@@ -90,24 +90,24 @@ module Mixlib
             # Wait for the process to finish, consuming output as we go
             #
             start_wait = Time.now
-            while true
+            loop do
               wait_status = WaitForSingleObject(process.process_handle, 0)
               case wait_status
               when WAIT_OBJECT_0
                 # Get process exit code
-                exit_code = [0].pack('l')
+                exit_code = [0].pack("l")
                 unless GetExitCodeProcess(process.process_handle, exit_code)
                   raise get_last_error
                 end
                 @status = ThingThatLooksSortOfLikeAProcessStatus.new
-                @status.exitstatus = exit_code.unpack('l').first
+                @status.exitstatus = exit_code.unpack("l").first
 
                 return self
               when WAIT_TIMEOUT
                 # Kill the process
                 if (Time.now - start_wait) > timeout
                   begin
-                    require 'wmi-lite/wmi'
+                    require "wmi-lite/wmi"
                     wmi = WmiLite::Wmi.new
                     Utils.kill_process_tree(process.process_id, wmi, logger)
                     Process.kill(:KILL, process.process_id)
@@ -118,13 +118,13 @@ module Mixlib
                   raise Mixlib::ShellOut::CommandTimeout, [
                     "command timed out:",
                     format_for_exception,
-                    Utils.format_process(process, app_name, command_line, timeout)
+                    Utils.format_process(process, app_name, command_line, timeout),
                   ].join("\n")
                 end
 
                 consume_output(open_streams, stdout_read, stderr_read)
               else
-                raise "Unknown response from WaitForSingleObject(#{process.process_handle}, #{timeout*1000}): #{wait_status}"
+                raise "Unknown response from WaitForSingleObject(#{process.process_handle}, #{timeout * 1000}): #{wait_status}"
               end
 
             end
@@ -212,7 +212,7 @@ module Mixlib
       # https://github.com/opscode/mixlib-shellout/pull/2#issuecomment-4837859
       # http://ss64.com/nt/syntax-esc.html
       def _run_under_cmd(command)
-        [ ENV['COMSPEC'], "cmd /c \"#{command}\"" ]
+        [ ENV["COMSPEC"], "cmd /c \"#{command}\"" ]
       end
 
       def _run_directly(command, exe)
@@ -220,7 +220,7 @@ module Mixlib
       end
 
       def unquoted_executable_path(command)
-        command[0,command.index(/\s/) || command.length]
+        command[0, command.index(/\s/) || command.length]
       end
 
       def candidate_executable_for_command(command)
@@ -235,11 +235,11 @@ module Mixlib
 
       def inherit_environment
         result = {}
-        ENV.each_pair do |k,v|
+        ENV.each_pair do |k, v|
           result[k] = v
         end
 
-        environment.each_pair do |k,v|
+        environment.each_pair do |k, v|
           if v == nil
             result.delete(k)
           else
@@ -266,15 +266,15 @@ module Mixlib
           command.dup.each_char do |c|
             case c
             when "'", '"'
-              if (!quote)
+              if !quote
                 quote = c
               elsif quote == c
                 quote = nil
               end
               next
-            when '>', '<', '|', '&', "\n"
+            when ">", "<", "|", "&", "\n"
               return true unless quote
-            when '%'
+            when "%"
               return true if env
               env = env_first_char = true
               next
@@ -282,7 +282,7 @@ module Mixlib
               next unless env
               if env_first_char
                 env_first_char = false
-                env = false and next if c !~ /[A-Za-z_]/
+                (env = false) && next if c !~ /[A-Za-z_]/
               end
               env = false if c !~ /[A-Za-z1-9_]/
             end
@@ -291,13 +291,13 @@ module Mixlib
         end
 
         def self.pathext
-          @pathext ||= ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') + [''] : ['']
+          @pathext ||= ENV["PATHEXT"] ? ENV["PATHEXT"].split(";") + [""] : [""]
         end
 
         # which() mimicks the Unix which command
         # FIXME: it is not working
         def self.which(cmd)
-          ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
+          ENV["PATH"].split(File::PATH_SEPARATOR).each do |path|
             exe = find_executable("#{path}/#{cmd}")
             return exe if exe
           end
@@ -323,13 +323,13 @@ module Mixlib
 
         def self.system_required_processes
           [
-            'System Idle Process',
-            'System',
-            'spoolsv.exe',
-            'lsass.exe',
-            'csrss.exe',
-            'smss.exe',
-            'svchost.exe'
+            "System Idle Process",
+            "System",
+            "spoolsv.exe",
+            "lsass.exe",
+            "csrss.exe",
+            "smss.exe",
+            "svchost.exe",
           ]
         end
 
@@ -358,13 +358,13 @@ module Mixlib
           child_pid = instance.wmi_ole_object.processid
           logger.debug([
             "killing child process #{child_pid}::",
-            "#{instance.wmi_ole_object.Name} of parent #{pid}"
+            "#{instance.wmi_ole_object.Name} of parent #{pid}",
             ].join) if logger
           Process.kill(:KILL, instance.wmi_ole_object.processid)
         rescue Errno::EIO, SystemCallError
           logger.debug([
             "Failed to kill child process #{child_pid}::",
-            "#{instance.wmi_ole_object.Name} of parent #{pid}"
+            "#{instance.wmi_ole_object.Name} of parent #{pid}",
           ].join) if logger
         end
 

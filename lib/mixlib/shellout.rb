@@ -16,10 +16,10 @@
 # limitations under the License.
 #
 
-require 'etc'
-require 'tmpdir'
-require 'fcntl'
-require 'mixlib/shellout/exceptions'
+require "etc"
+require "tmpdir"
+require "fcntl"
+require "mixlib/shellout/exceptions"
 
 module Mixlib
 
@@ -29,10 +29,10 @@ module Mixlib
     DEFAULT_READ_TIMEOUT = 600
 
     if RUBY_PLATFORM =~ /mswin|mingw32|windows/
-      require 'mixlib/shellout/windows'
+      require "mixlib/shellout/windows"
       include ShellOut::Windows
     else
-      require 'mixlib/shellout/unix'
+      require "mixlib/shellout/unix"
       include ShellOut::Unix
     end
 
@@ -162,7 +162,7 @@ module Mixlib
     #   cmd = Mixlib::ShellOut.new("apachectl", "start", :user => 'www', :env => nil, :cwd => '/tmp')
     #   cmd.run_command # etc.
     def initialize(*command_args)
-      @stdout, @stderr, @process_status = '', '', ''
+      @stdout, @stderr, @process_status = "", "", ""
       @live_stdout = @live_stderr = nil
       @input = nil
       @log_level = :debug
@@ -284,15 +284,15 @@ module Mixlib
     # is highly encouraged.
     # === Raises
     # ShellCommandFailed  always
-    def invalid!(msg=nil)
+    def invalid!(msg = nil)
       msg ||= "Command produced unexpected results"
       raise ShellCommandFailed, msg + "\n" + format_for_exception
     end
 
     def inspect
       "<#{self.class.name}##{object_id}: command: '#@command' process_status: #{@status.inspect} " +
-      "stdout: '#{stdout.strip}' stderr: '#{stderr.strip}' child_pid: #{@child_pid.inspect} " +
-      "environment: #{@environment.inspect} timeout: #{timeout} user: #@user group: #@group working_dir: #@cwd >"
+        "stdout: '#{stdout.strip}' stderr: '#{stderr.strip}' child_pid: #{@child_pid.inspect} " +
+        "environment: #{@environment.inspect} timeout: #{timeout} user: #@user group: #@group working_dir: #@cwd >"
     end
 
     private
@@ -300,44 +300,44 @@ module Mixlib
     def parse_options(opts)
       opts.each do |option, setting|
         case option.to_s
-        when 'cwd'
+        when "cwd"
           self.cwd = setting
-        when 'domain'
+        when "domain"
           self.domain = setting
-        when 'password'
+        when "password"
           self.password = setting
-        when 'user'
+        when "user"
           self.user = setting
           self.with_logon = setting
-        when 'group'
+        when "group"
           self.group = setting
-        when 'umask'
+        when "umask"
           self.umask = setting
-        when 'timeout'
+        when "timeout"
           self.timeout = setting
-        when 'returns'
+        when "returns"
           self.valid_exit_codes = Array(setting)
-        when 'live_stream'
+        when "live_stream"
           self.live_stdout = self.live_stderr = setting
-        when 'live_stdout'
+        when "live_stdout"
           self.live_stdout = setting
-        when 'live_stderr'
+        when "live_stderr"
           self.live_stderr = setting
-        when 'input'
+        when "input"
           self.input = setting
-        when 'logger'
+        when "logger"
           self.logger = setting
-        when 'log_level'
+        when "log_level"
           self.log_level = setting
-        when 'log_tag'
+        when "log_tag"
           self.log_tag = setting
-        when 'environment', 'env'
+        when "environment", "env"
           if setting
-            self.environment = Hash[setting.map{|(k,v)| [k.to_s,v]}]
+            self.environment = Hash[setting.map { |(k, v)| [k.to_s, v] }]
           else
             self.environment = {}
           end
-        when 'login'
+        when "login"
           self.login = setting
         else
           raise InvalidCommandOption, "option '#{option.inspect}' is not a valid option for #{self.class.name}"
