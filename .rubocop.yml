@@ -1,0 +1,8 @@
+Lint/UnderscorePrefixedVariableName:
+  Exclude:
+    - 'spec/mixlib/shellout/windows_spec.rb'
+
+# Configuration parameters: ContextCreatingMethods.
+Lint/UselessAccessModifier:
+  Exclude:
+    - 'lib/mixlib/shellout/windows/core_ext.rb'

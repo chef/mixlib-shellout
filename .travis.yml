@@ -1,18 +1,13 @@
 language: ruby
 cache: bundler
-
 sudo: false
-
 rvm:
-  - 2.1.9
   - 2.2.5
   - 2.3.1
-
-before_install:
-  - gem update bundler
-
 branches:
   only:
     - master
+before_install:
+  - gem update bundler
 
-script: bundle exec rspec --color --format progress
+script: bundle exec rake
