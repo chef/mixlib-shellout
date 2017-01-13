@@ -133,7 +133,7 @@ module Mixlib
     # * +timeout+: a Numeric value for the number of seconds to wait on the
     #   child process before raising an Exception. This is calculated as the
     #   total amount of time that ShellOut waited on the child process without
-    #   receiving any output (i.e., IO.select returned nil). Default is 60
+    #   receiving any output (i.e., IO.select returned nil). Default is 600
     #   seconds. Note: the stdlib Timeout library is not used.
     # * +input+: A String of data to be passed to the subcommand. This is
     #   written to the child process' stdin stream before the process is
