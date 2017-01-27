@@ -22,6 +22,7 @@ install:
   - echo %PATH%
   - ruby --version
   - gem --version
+  - gem update --system
   - gem install bundler --quiet --no-ri --no-rdoc
   - bundler --version
 

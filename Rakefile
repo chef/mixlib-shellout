@@ -13,4 +13,4 @@ RSpec::Core::RakeTask.new(:spec) do |t|
   t.pattern = FileList["spec/**/*_spec.rb"]
 end
 
-task default: [:style, :spec]
+task default: [:spec, :style]

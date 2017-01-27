@@ -4,7 +4,7 @@ describe "Mixlib::ShellOut::Windows", :windows_only do
 
   describe "Utils" do
     describe ".should_run_under_cmd?" do
-      subject { Mixlib::ShellOut::Windows::Utils.should_run_under_cmd?(command) }
+      subject { Mixlib::ShellOut.new.send(:should_run_under_cmd?, command) }
 
       def self.with_command(_command, &example)
         context "with command: #{_command}" do
@@ -110,7 +110,7 @@ describe "Mixlib::ShellOut::Windows", :windows_only do
     end
 
     describe ".kill_process_tree" do
-      let(:utils) { Mixlib::ShellOut::Windows::Utils }
+      let(:shell_out) { Mixlib::ShellOut.new }
       let(:wmi) { Object.new }
       let(:wmi_ole_object) { Object.new }
       let(:wmi_process) { Object.new }
@@ -129,8 +129,8 @@ describe "Mixlib::ShellOut::Windows", :windows_only do
         end
 
         it "does not attempt to kill csrss.exe" do
-          expect(utils).to_not receive(:kill_process)
-          utils.kill_process_tree(200, wmi, logger)
+          expect(shell_out).to_not receive(:kill_process)
+          shell_out.send(:kill_process_tree, 200, wmi, logger)
         end
       end
 
@@ -141,10 +141,10 @@ describe "Mixlib::ShellOut::Windows", :windows_only do
         end
 
         it "does attempt to kill blah.exe" do
-          expect(utils).to receive(:kill_process).with(wmi_process, logger)
-          expect(utils).to receive(:kill_process_tree).with(200, wmi, logger).and_call_original
-          expect(utils).to receive(:kill_process_tree).with(300, wmi, logger)
-          utils.kill_process_tree(200, wmi, logger)
+          expect(shell_out).to receive(:kill_process).with(wmi_process, logger)
+          expect(shell_out).to receive(:kill_process_tree).with(200, wmi, logger).and_call_original
+          expect(shell_out).to receive(:kill_process_tree).with(300, wmi, logger)
+          shell_out.send(:kill_process_tree, 200, wmi, logger)
         end
       end
     end
@@ -186,9 +186,8 @@ describe "Mixlib::ShellOut::Windows", :windows_only do
       let(:stubbed_shell_out) { raise NotImplemented, "Must declare let(:stubbed_shell_out)" }
       let(:shell_out) { Mixlib::ShellOut.new(cmd) }
 
-      let(:utils) { Mixlib::ShellOut::Windows::Utils }
-      let(:with_valid_exe_at_location) { lambda { |s| allow(utils).to receive(:find_executable).and_return(executable_path) } }
-      let(:with_invalid_exe_at_location) { lambda { |s| allow(utils).to receive(:find_executable).and_return(nil) } }
+      let(:with_valid_exe_at_location) { lambda { |s| allow(shell_out).to receive(:find_executable).and_return(executable_path) } }
+      let(:with_invalid_exe_at_location) { lambda { |s| allow(shell_out).to receive(:find_executable).and_return(nil) } }
 
       context "with empty command" do
         let(:stubbed_shell_out) { shell_out }

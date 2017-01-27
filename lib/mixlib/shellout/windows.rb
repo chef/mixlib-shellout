@@ -78,7 +78,7 @@ module Mixlib
           # Start the process
           #
           process = Process.create(create_process_args)
-          logger.debug(Utils.format_process(process, app_name, command_line, timeout)) if logger
+          logger.debug(format_process(process, app_name, command_line, timeout)) if logger
           begin
             # Start pushing data into input
             stdin_write << input if input
@@ -109,7 +109,7 @@ module Mixlib
                   begin
                     require "wmi-lite/wmi"
                     wmi = WmiLite::Wmi.new
-                    Utils.kill_process_tree(process.process_id, wmi, logger)
+                    kill_process_tree(process.process_id, wmi, logger)
                     Process.kill(:KILL, process.process_id)
                   rescue Errno::EIO, SystemCallError
                     logger.warn("Failed to kill timed out process #{process.process_id}") if logger
@@ -118,7 +118,7 @@ module Mixlib
                   raise Mixlib::ShellOut::CommandTimeout, [
                     "command timed out:",
                     format_for_exception,
-                    Utils.format_process(process, app_name, command_line, timeout),
+                    format_process(process, app_name, command_line, timeout),
                   ].join("\n")
                 end
 
@@ -146,14 +146,14 @@ module Mixlib
         end
       end
 
-      private
-
       class ThingThatLooksSortOfLikeAProcessStatus
         attr_accessor :exitstatus
         def success?
           exitstatus == 0
         end
       end
+
+      private
 
       def consume_output(open_streams, stdout_read, stderr_read)
         return false if open_streams.length == 0
@@ -188,7 +188,7 @@ module Mixlib
       IS_BATCH_FILE = /\.bat"?$|\.cmd"?$/i
 
       def command_to_run(command)
-        return _run_under_cmd(command) if Utils.should_run_under_cmd?(command)
+        return _run_under_cmd(command) if should_run_under_cmd?(command)
 
         candidate = candidate_executable_for_command(command)
 
@@ -196,8 +196,8 @@ module Mixlib
         return [ nil, command ] if candidate.length == 0
 
         # Check if the exe exists directly.  Otherwise, search PATH.
-        exe = Utils.find_executable(candidate)
-        exe = Utils.which(unquoted_executable_path(command)) if exe.nil? && exe !~ /[\\\/]/
+        exe = find_executable(candidate)
+        exe = which(unquoted_executable_path(command)) if exe.nil? && exe !~ /[\\\/]/
 
         # Batch files MUST use cmd; and if we couldn't find the command we're looking for,
         # we assume it must be a cmd builtin.
@@ -240,7 +240,7 @@ module Mixlib
         end
 
         environment.each_pair do |k, v|
-          if v == nil
+          if v.nil?
             result.delete(k)
           else
             result[k] = v
@@ -249,134 +249,140 @@ module Mixlib
         result
       end
 
-      module Utils
-        # api: semi-private
-        # If there are special characters parsable by cmd.exe (such as file redirection), then
-        # this method should return true.
-        #
-        # This parser is based on
-        # https://github.com/ruby/ruby/blob/9073db5cb1d3173aff62be5b48d00f0fb2890991/win32/win32.c#L1437
-        def self.should_run_under_cmd?(command)
-          return true if command =~ /^@/
+      # api: semi-private
+      # If there are special characters parsable by cmd.exe (such as file redirection), then
+      # this method should return true.
+      #
+      # This parser is based on
+      # https://github.com/ruby/ruby/blob/9073db5cb1d3173aff62be5b48d00f0fb2890991/win32/win32.c#L1437
+      def should_run_under_cmd?(command)
+        return true if command =~ /^@/
 
-          quote = nil
-          env = false
-          env_first_char = false
+        quote = nil
+        env = false
+        env_first_char = false
 
-          command.dup.each_char do |c|
-            case c
-            when "'", '"'
-              if !quote
-                quote = c
-              elsif quote == c
-                quote = nil
-              end
-              next
-            when ">", "<", "|", "&", "\n"
-              return true unless quote
-            when "%"
-              return true if env
-              env = env_first_char = true
-              next
-            else
-              next unless env
-              if env_first_char
-                env_first_char = false
-                (env = false) && next if c !~ /[A-Za-z_]/
-              end
-              env = false if c !~ /[A-Za-z1-9_]/
+        command.dup.each_char do |c|
+          case c
+          when "'", '"'
+            if !quote
+              quote = c
+            elsif quote == c
+              quote = nil
             end
-          end
-          return false
-        end
-
-        def self.pathext
-          @pathext ||= ENV["PATHEXT"] ? ENV["PATHEXT"].split(";") + [""] : [""]
-        end
-
-        # which() mimicks the Unix which command
-        # FIXME: it is not working
-        def self.which(cmd)
-          ENV["PATH"].split(File::PATH_SEPARATOR).each do |path|
-            exe = find_executable("#{path}/#{cmd}")
-            return exe if exe
-          end
-          return nil
-        end
-
-        # Windows has a different notion of what "executable" means
-        # The OS will search through valid the extensions and look
-        # for a binary there.
-        def self.find_executable(path)
-          return path if executable? path
-
-          pathext.each do |ext|
-            exe = "#{path}#{ext}"
-            return exe if executable? exe
-          end
-          return nil
-        end
-
-        def self.executable?(path)
-          File.executable?(path) && !File.directory?(path)
-        end
-
-        def self.system_required_processes
-          [
-            "System Idle Process",
-            "System",
-            "spoolsv.exe",
-            "lsass.exe",
-            "csrss.exe",
-            "smss.exe",
-            "svchost.exe",
-          ]
-        end
-
-        def self.unsafe_process?(name, logger)
-          return false unless system_required_processes.include? name
-          logger.debug(
-            "A request to kill a critical system process - #{name} - was received and skipped."
-          )
-          true
-        end
-
-        # recursively kills all child processes of given pid
-        # calls itself querying for children child procs until
-        # none remain. Important that a single WmiLite instance
-        # is passed in since each creates its own WMI rpc process
-        def self.kill_process_tree(pid, wmi, logger)
-          wmi.query("select * from Win32_Process where ParentProcessID=#{pid}").each do |instance|
-            next if unsafe_process?(instance.wmi_ole_object.name, logger)
-            child_pid = instance.wmi_ole_object.processid
-            kill_process_tree(child_pid, wmi, logger)
-            kill_process(instance, logger)
+            next
+          when ">", "<", "|", "&", "\n"
+            return true unless quote
+          when "%"
+            return true if env
+            env = env_first_char = true
+            next
+          else
+            next unless env
+            if env_first_char
+              env_first_char = false
+              (env = false) && next if c !~ /[A-Za-z_]/
+            end
+            env = false if c !~ /[A-Za-z1-9_]/
           end
         end
+        return false
+      end
 
-        def self.kill_process(instance, logger)
+      def pathext
+        @pathext ||= ENV["PATHEXT"] ? ENV["PATHEXT"].split(";") + [""] : [""]
+      end
+
+      # which() mimicks the Unix which command
+      # FIXME: it is not working
+      def which(cmd)
+        ENV["PATH"].split(File::PATH_SEPARATOR).each do |path|
+          exe = find_executable("#{path}/#{cmd}")
+          return exe if exe
+        end
+        return nil
+      end
+
+      # Windows has a different notion of what "executable" means
+      # The OS will search through valid the extensions and look
+      # for a binary there.
+      def find_executable(path)
+        return path if executable? path
+
+        pathext.each do |ext|
+          exe = "#{path}#{ext}"
+          return exe if executable? exe
+        end
+        return nil
+      end
+
+      def executable?(path)
+        File.executable?(path) && !File.directory?(path)
+      end
+
+      def system_required_processes
+        [
+          "System Idle Process",
+          "System",
+          "spoolsv.exe",
+          "lsass.exe",
+          "csrss.exe",
+          "smss.exe",
+          "svchost.exe",
+        ]
+      end
+
+      def unsafe_process?(name, logger)
+        return false unless system_required_processes.include? name
+        logger.debug(
+          "A request to kill a critical system process - #{name} - was received and skipped."
+        )
+        true
+      end
+
+      # recursively kills all child processes of given pid
+      # calls itself querying for children child procs until
+      # none remain. Important that a single WmiLite instance
+      # is passed in since each creates its own WMI rpc process
+      def kill_process_tree(pid, wmi, logger)
+        wmi.query("select * from Win32_Process where ParentProcessID=#{pid}").each do |instance|
+          next if unsafe_process?(instance.wmi_ole_object.name, logger)
           child_pid = instance.wmi_ole_object.processid
-          logger.debug([
-            "killing child process #{child_pid}::",
-            "#{instance.wmi_ole_object.Name} of parent #{pid}",
-            ].join) if logger
-          Process.kill(:KILL, instance.wmi_ole_object.processid)
-        rescue Errno::EIO, SystemCallError
-          logger.debug([
-            "Failed to kill child process #{child_pid}::",
-            "#{instance.wmi_ole_object.Name} of parent #{pid}",
-          ].join) if logger
-        end
-
-        def self.format_process(process, app_name, command_line, timeout)
-          msg = []
-          msg << "ProcessId: #{process.process_id}"
-          msg << "app_name: #{app_name}"
-          msg << "command_line: #{command_line}"
-          msg << "timeout: #{timeout}"
-          msg.join("\n")
+          kill_process_tree(child_pid, wmi, logger)
+          kill_process(instance, logger)
         end
       end
-    end # class
+
+      def kill_process(instance, logger)
+        child_pid = instance.wmi_ole_object.processid
+        logger.debug([
+          "killing child process #{child_pid}::",
+          "#{instance.wmi_ole_object.Name} of parent #{pid}",
+        ].join) if logger
+        Process.kill(:KILL, instance.wmi_ole_object.processid)
+      rescue Errno::EIO, SystemCallError
+        logger.debug([
+          "Failed to kill child process #{child_pid}::",
+          "#{instance.wmi_ole_object.Name} of parent #{pid}",
+        ].join) if logger
+      end
+
+      def format_process(process, app_name, command_line, timeout)
+        msg = []
+        msg << "ProcessId: #{process.process_id}"
+        msg << "app_name: #{app_name}"
+        msg << "command_line: #{command_line}"
+        msg << "timeout: #{timeout}"
+        msg.join("\n")
+      end
+
+      # DEPRECATED do not use
+      class Utils
+        include Mixlib::ShellOut::Windows
+        def self.should_run_under_cmd?(cmd)
+          Mixlib::ShellOut::Windows::Utils.new.send(:should_run_under_cmd?, cmd)
+        end
+      end
+    end
   end
 end

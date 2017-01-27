@@ -1130,7 +1130,7 @@ describe Mixlib::ShellOut do
 
           context "and child processes should be killed" do
             it "kills the child processes" do
-              expect(Mixlib::ShellOut::Windows::Utils).to receive(:kill_process) do |instance|
+              expect(shell_cmd).to receive(:kill_process) do |instance|
                 expect(instance.wmi_ole_object.Name).to match(/powershell/)
                 Process.kill(:KILL, instance.wmi_ole_object.processid)
               end
