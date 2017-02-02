@@ -32,10 +32,8 @@ module Mixlib
 
       # Option validation that is windows specific
       def validate_options(opts)
-        if opts[:user]
-          unless opts[:password]
-            raise InvalidCommandOption, "You must supply both a username and password when supplying a user in windows"
-          end
+        if opts[:user] && !opts[:password]
+          raise InvalidCommandOption, "You must supply a password when supplying a user in windows"
         end
       end
 
@@ -185,51 +183,45 @@ module Mixlib
         return true
       end
 
-      IS_BATCH_FILE = /\.bat"?$|\.cmd"?$/i
-
       def command_to_run(command)
-        return _run_under_cmd(command) if should_run_under_cmd?(command)
+        return run_under_cmd(command) if should_run_under_cmd?(command)
 
         candidate = candidate_executable_for_command(command)
 
-        # Don't do searching for empty commands.  Let it fail when it runs.
-        return [ nil, command ] if candidate.length == 0
+        if candidate.length == 0
+          raise Mixlib::ShellOut::EmptyWindowsCommand, "could not parse script/executable out of command: `#{command}`"
+        end
 
         # Check if the exe exists directly.  Otherwise, search PATH.
-        exe = find_executable(candidate)
-        exe = which(unquoted_executable_path(command)) if exe.nil? && exe !~ /[\\\/]/
-
-        # Batch files MUST use cmd; and if we couldn't find the command we're looking for,
-        # we assume it must be a cmd builtin.
-        if exe.nil? || exe =~ IS_BATCH_FILE
-          _run_under_cmd(command)
+        exe = which(candidate)
+        if exe_needs_cmd?(exe)
+          run_under_cmd(command)
         else
-          _run_directly(command, exe)
+          [ exe, command ]
         end
+      end
+
+      # Batch files MUST use cmd; and if we couldn't find the command we're looking for,
+      # we assume it must be a cmd builtin.
+      def exe_needs_cmd?(exe)
+        !exe || exe =~ /\.bat"?$|\.cmd"?$/i
       end
 
       # cmd does not parse multiple quotes well unless the whole thing is wrapped up in quotes.
       # https://github.com/opscode/mixlib-shellout/pull/2#issuecomment-4837859
       # http://ss64.com/nt/syntax-esc.html
-      def _run_under_cmd(command)
+      def run_under_cmd(command)
         [ ENV["COMSPEC"], "cmd /c \"#{command}\"" ]
       end
 
-      def _run_directly(command, exe)
-        [ exe, command ]
-      end
-
-      def unquoted_executable_path(command)
-        command[0, command.index(/\s/) || command.length]
-      end
-
+      # FIXME: this extracts ARGV[0] but is it correct?
       def candidate_executable_for_command(command)
         if command =~ /^\s*"(.*?)"/
           # If we have quotes, do an exact match
           $1
         else
           # Otherwise check everything up to the first space
-          unquoted_executable_path(command).strip
+          command[0, command.index(/\s/) || command.length].strip
         end
       end
 
@@ -289,35 +281,25 @@ module Mixlib
         return false
       end
 
-      def pathext
-        @pathext ||= ENV["PATHEXT"] ? ENV["PATHEXT"].split(";") + [""] : [""]
-      end
-
-      # which() mimicks the Unix which command
-      # FIXME: it is not working
+      # FIXME: reduce code duplication with chef/chef
       def which(cmd)
-        ENV["PATH"].split(File::PATH_SEPARATOR).each do |path|
-          exe = find_executable("#{path}/#{cmd}")
-          return exe if exe
+        exts = ENV["PATHEXT"] ? ENV["PATHEXT"].split(";") + [""] : [""]
+        # windows always searches '.' first
+        exts.each do |ext|
+          filename = "#{cmd}#{ext}"
+          return filename if File.executable?(filename) && !File.directory?(filename)
         end
-        return nil
-      end
-
-      # Windows has a different notion of what "executable" means
-      # The OS will search through valid the extensions and look
-      # for a binary there.
-      def find_executable(path)
-        return path if executable? path
-
-        pathext.each do |ext|
-          exe = "#{path}#{ext}"
-          return exe if executable? exe
+        # only search through the path if the Filename does not contain separators
+        if File.basename(cmd) == cmd
+          paths = ENV["PATH"].split(File::PATH_SEPARATOR)
+          paths.each do |path|
+            exts.each do |ext|
+              filename = File.join(path, "#{cmd}#{ext}")
+              return filename if File.executable?(filename) && !File.directory?(filename)
+            end
+          end
         end
-        return nil
-      end
-
-      def executable?(path)
-        File.executable?(path) && !File.directory?(path)
+        false
       end
 
       def system_required_processes

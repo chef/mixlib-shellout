@@ -4,5 +4,6 @@ module Mixlib
     class ShellCommandFailed < Error; end
     class CommandTimeout < Error; end
     class InvalidCommandOption < Error; end
+    class EmptyWindowsCommand < Error; end
   end
 end
