@@ -253,7 +253,7 @@ module Mixlib
     #   within +timeout+ seconds (default: 600s)
     def run_command
       if logger
-        log_message = (log_tag.nil? ? "" : "#@log_tag ") << "sh(#@command)"
+        log_message = (log_tag.nil? ? "" : "#{@log_tag} ") << "sh(#{@command})"
         logger.send(log_level, log_message)
       end
       super
@@ -290,9 +290,9 @@ module Mixlib
     end
 
     def inspect
-      "<#{self.class.name}##{object_id}: command: '#@command' process_status: #{@status.inspect} " +
+      "<#{self.class.name}##{object_id}: command: '#{@command}' process_status: #{@status.inspect} " +
         "stdout: '#{stdout.strip}' stderr: '#{stderr.strip}' child_pid: #{@child_pid.inspect} " +
-        "environment: #{@environment.inspect} timeout: #{timeout} user: #@user group: #@group working_dir: #@cwd >"
+        "environment: #{@environment.inspect} timeout: #{timeout} user: #{@user} group: #{@group} working_dir: #{@cwd} >"
     end
 
     private

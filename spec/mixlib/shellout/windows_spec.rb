@@ -1,5 +1,7 @@
 require "spec_helper"
 
+# FIXME: these are stubby enough unit tests that they almost run under unix, but the
+# Mixlib::ShellOut object does not mixin the Windows behaviors when running on unix.
 describe "Mixlib::ShellOut::Windows", :windows_only do
 
   describe "Utils" do
@@ -152,203 +154,156 @@ describe "Mixlib::ShellOut::Windows", :windows_only do
 
   # Caveat: Private API methods are subject to change without notice.
   # Monkeypatch at your own risk.
-  context "for private API methods" do
+  context "#command_to_run" do
 
-    describe "::IS_BATCH_FILE" do
-      subject { candidate =~ Mixlib::ShellOut::Windows::IS_BATCH_FILE }
+    describe "#command_to_run" do
+      subject { shell_out.send(:command_to_run, command) }
 
-      def self.with_candidate(_context, _options = {}, &example)
-        context "with #{_context}" do
-          let(:candidate) { _options[:candidate] }
+      # @param cmd [String] command string
+      # @param filename [String] the pathname to the executable that will be found (nil to have no pathname match)
+      # @param search [Boolean] false: will setup expectation not to search PATH, true: will setup expectations that it searches the PATH
+      # @param directory [Boolean] true: will setup an expectation that the search strategy will find a directory
+      def self.with_command(cmd, filename: nil, search: false, directory: false, &example)
+        context "with #{cmd}" do
+          let(:shell_out) { Mixlib::ShellOut.new }
+          let(:comspec) { 'C:\Windows\system32\cmd.exe' }
+          let(:command) { cmd }
+          before do
+            if search
+              expect(ENV).to receive(:[]).with("PATH").and_return('C:\Windows\system32')
+            else
+              expect(ENV).not_to receive(:[]).with("PATH")
+            end
+            allow(ENV).to receive(:[]).with("PATHEXT").and_return(".COM;.EXE;.BAT;.CMD")
+            allow(ENV).to receive(:[]).with("COMSPEC").and_return(comspec)
+            allow(File).to receive(:executable?).and_return(false)
+            if filename
+              expect(File).to receive(:executable?).with(filename).and_return(true)
+              expect(File).to receive(:directory?).with(filename).and_return(false)
+            end
+            if directory
+              expect(File).to receive(:executable?).with(cmd).and_return(true)
+              expect(File).to receive(:directory?).with(cmd).and_return(true)
+            end
+          end
           it(&example)
         end
       end
 
-      with_candidate("valid .bat file", :candidate => "autoexec.bat") { is_expected.to be_truthy }
-      with_candidate("valid .cmd file", :candidate => "autoexec.cmd") { is_expected.to be_truthy }
-      with_candidate("valid quoted .bat file", :candidate => '"C:\Program Files\autoexec.bat"') { is_expected.to be_truthy }
-      with_candidate("valid quoted .cmd file", :candidate => '"C:\Program Files\autoexec.cmd"') { is_expected.to be_truthy }
-
-      with_candidate("invalid .bat file", :candidate => "autoexecbat") { is_expected.not_to be_truthy }
-      with_candidate("invalid .cmd file", :candidate => "autoexeccmd") { is_expected.not_to be_truthy }
-      with_candidate("bat in filename", :candidate => "abattoir.exe") { is_expected.not_to be_truthy }
-      with_candidate("cmd in filename", :candidate => "parse_cmd.exe") { is_expected.not_to be_truthy }
-
-      with_candidate("invalid quoted .bat file", :candidate => '"C:\Program Files\autoexecbat"') { is_expected.not_to be_truthy }
-      with_candidate("invalid quoted .cmd file", :candidate => '"C:\Program Files\autoexeccmd"') { is_expected.not_to be_truthy }
-      with_candidate("quoted bat in filename", :candidate => '"C:\Program Files\abattoir.exe"') { is_expected.not_to be_truthy }
-      with_candidate("quoted cmd in filename", :candidate => '"C:\Program Files\parse_cmd.exe"') { is_expected.not_to be_truthy }
-    end
-
-    describe "#command_to_run" do
-      subject { stubbed_shell_out.send(:command_to_run, cmd) }
-
-      let(:stubbed_shell_out) { raise NotImplemented, "Must declare let(:stubbed_shell_out)" }
-      let(:shell_out) { Mixlib::ShellOut.new(cmd) }
-
-      let(:with_valid_exe_at_location) { lambda { |s| allow(shell_out).to receive(:find_executable).and_return(executable_path) } }
-      let(:with_invalid_exe_at_location) { lambda { |s| allow(shell_out).to receive(:find_executable).and_return(nil) } }
-
-      context "with empty command" do
-        let(:stubbed_shell_out) { shell_out }
-        let(:cmd) { " " }
-
-        it "should return with a nil executable" do
-          is_expected.to eql([nil, cmd])
-        end
+      # quoted and unqouted commands that have correct bat and cmd extensions
+      with_command("autoexec.bat", filename: "autoexec.bat") do
+        is_expected.to eql([ comspec, 'cmd /c "autoexec.bat"'])
+      end
+      with_command("autoexec.cmd", filename: "autoexec.cmd") do
+        is_expected.to eql([ comspec, 'cmd /c "autoexec.cmd"'])
+      end
+      with_command('"C:\Program Files\autoexec.bat"', filename: 'C:\Program Files\autoexec.bat') do
+        is_expected.to eql([ comspec, 'cmd /c ""C:\Program Files\autoexec.bat""'])
+      end
+      with_command('"C:\Program Files\autoexec.cmd"', filename: 'C:\Program Files\autoexec.cmd') do
+        is_expected.to eql([ comspec, 'cmd /c ""C:\Program Files\autoexec.cmd""'])
       end
 
-      context "with extensionless executable" do
-        let(:stubbed_shell_out) { shell_out }
-        let(:executable_path) { 'C:\Windows\system32/ping.EXE' }
-        let(:cmd) { "ping" }
-
-        before do
-          allow(ENV).to receive(:[]).with("PATH").and_return('C:\Windows\system32')
-          allow(ENV).to receive(:[]).with("PATHEXT").and_return(".EXE")
-          allow(ENV).to receive(:[]).with("COMSPEC").and_return('C:\Windows\system32\cmd.exe')
-          allow(File).to receive(:executable?).and_return(false)
-          allow(File).to receive(:executable?).with(executable_path).and_return(true)
-          allow(File).to receive(:directory?).and_return(false)
-        end
-
-        it "should return with full path with extension" do
-          is_expected.to eql([executable_path, cmd])
-        end
-
-        context "there is a directory named after command" do
-          before do
-            # File.executable? returns true for directories
-            allow(File).to receive(:executable?).with(cmd).and_return(true)
-            allow(File).to receive(:directory?).with(cmd).and_return(true)
-          end
-
-          it "should return with full path with extension" do
-            is_expected.to eql([executable_path, cmd])
-          end
-        end
+      # lookups via PATHEXT
+      with_command("autoexec", filename: "autoexec.BAT") do
+        is_expected.to eql([ comspec, 'cmd /c "autoexec"'])
+      end
+      with_command("autoexec", filename: "autoexec.CMD") do
+        is_expected.to eql([ comspec, 'cmd /c "autoexec"'])
       end
 
-      context "with batch files" do
-        let(:stubbed_shell_out) { shell_out.tap(&with_valid_exe_at_location) }
-        let(:cmd_invocation) { "cmd /c \"#{cmd}\"" }
-        let(:cmd_exe) { "C:\\Windows\\system32\\cmd.exe" }
-        let(:cmd) { "#{executable_path}" }
-
-        before { ENV["ComSpec"] = 'C:\Windows\system32\cmd.exe' }
-
-        context "with .bat file" do
-          let(:executable_path) { '"C:\Program Files\Application\Start.bat"' }
-
-          # Examples taken from: https://github.com/opscode/mixlib-shellout/pull/2#issuecomment-4825574
-          context "with executable path enclosed in double quotes" do
-
-            it "should use specified batch file" do
-              is_expected.to eql([cmd_exe, cmd_invocation])
-            end
-
-            context "with arguments" do
-              let(:cmd) { "#{executable_path} arguments" }
-
-              it "should use specified executable" do
-                is_expected.to eql([cmd_exe, cmd_invocation])
-              end
-            end
-
-            context "with quoted arguments" do
-              let(:cmd) { "#{executable_path} /i \"C:\Program Files (x86)\NUnit 2.6\bin\framework\nunit.framework.dll\"" }
-
-              it "should use specified executable" do
-                is_expected.to eql([cmd_exe, cmd_invocation])
-              end
-            end
-          end
-        end
-
-        context "with .cmd file" do
-          let(:executable_path) { '"C:\Program Files\Application\Start.cmd"' }
-
-          # Examples taken from: https://github.com/opscode/mixlib-shellout/pull/2#issuecomment-4825574
-          context "with executable path enclosed in double quotes" do
-
-            it "should use specified batch file" do
-              is_expected.to eql([cmd_exe, cmd_invocation])
-            end
-
-            context "with arguments" do
-              let(:cmd) { "#{executable_path} arguments" }
-
-              it "should use specified executable" do
-                is_expected.to eql([cmd_exe, cmd_invocation])
-              end
-            end
-
-            context "with quoted arguments" do
-              let(:cmd) { "#{executable_path} /i \"C:\Program Files (x86)\NUnit 2.6\bin\framework\nunit.framework.dll\"" }
-
-              it "should use specified executable" do
-                is_expected.to eql([cmd_exe, cmd_invocation])
-              end
-            end
-          end
-
-        end
+      # unquoted commands that have "bat" or "cmd" in the wrong place
+      with_command("autoexecbat", filename: "autoexecbat") do
+        is_expected.to eql(%w{autoexecbat autoexecbat})
+      end
+      with_command("autoexeccmd", filename: "autoexeccmd") do
+        is_expected.to eql(%w{autoexeccmd autoexeccmd})
+      end
+      with_command("abattoir.exe", filename: "abattoir.exe") do
+        is_expected.to eql([ "abattoir.exe", "abattoir.exe" ])
+      end
+      with_command("parse_cmd.exe", filename: "parse_cmd.exe") do
+        is_expected.to eql([ "parse_cmd.exe", "parse_cmd.exe" ])
       end
 
-      context "with valid executable at location" do
-        let(:stubbed_shell_out) { shell_out.tap(&with_valid_exe_at_location) }
+      # quoted commands that have "bat" or "cmd" in the wrong place
+      with_command('"C:\Program Files\autoexecbat"', filename: 'C:\Program Files\autoexecbat') do
+        is_expected.to eql([ 'C:\Program Files\autoexecbat', '"C:\Program Files\autoexecbat"' ])
+      end
+      with_command('"C:\Program Files\autoexeccmd"', filename: 'C:\Program Files\autoexeccmd') do
+        is_expected.to eql([ 'C:\Program Files\autoexeccmd', '"C:\Program Files\autoexeccmd"'])
+      end
+      with_command('"C:\Program Files\abattoir.exe"', filename: 'C:\Program Files\abattoir.exe') do
+        is_expected.to eql([ 'C:\Program Files\abattoir.exe', '"C:\Program Files\abattoir.exe"' ])
+      end
+      with_command('"C:\Program Files\parse_cmd.exe"', filename: 'C:\Program Files\parse_cmd.exe') do
+        is_expected.to eql([ 'C:\Program Files\parse_cmd.exe', '"C:\Program Files\parse_cmd.exe"' ])
+      end
 
-        context "with executable path" do
-          let(:cmd) { "#{executable_path}" }
-          let(:executable_path) { 'C:\RUBY192\bin\ruby.exe' }
+      # empty command
+      with_command(" ") do
+        expect { subject }.to raise_error(Mixlib::ShellOut::EmptyWindowsCommand)
+      end
 
-          it "should use specified executable" do
-            is_expected.to eql([executable_path, cmd])
-          end
+      # extensionless executable
+      with_command("ping", filename: 'C:\Windows\system32/ping.EXE', search: true) do
+        is_expected.to eql([ 'C:\Windows\system32/ping.EXE', "ping" ])
+      end
 
-          context "with arguments" do
-            let(:cmd) { "#{executable_path} arguments" }
+      # it ignores directories
+      with_command("ping", filename: 'C:\Windows\system32/ping.EXE', directory: true, search: true) do
+        is_expected.to eql([ 'C:\Windows\system32/ping.EXE', "ping" ])
+      end
 
-            it "should use specified executable" do
-              is_expected.to eql([executable_path, cmd])
-            end
-          end
+      # https://github.com/opscode/mixlib-shellout/pull/2 with bat file
+      with_command('"C:\Program Files\Application\Start.bat"', filename: 'C:\Program Files\Application\Start.bat') do
+        is_expected.to eql([ comspec, 'cmd /c ""C:\Program Files\Application\Start.bat""' ])
+      end
+      with_command('"C:\Program Files\Application\Start.bat" arguments', filename: 'C:\Program Files\Application\Start.bat') do
+        is_expected.to eql([ comspec, 'cmd /c ""C:\Program Files\Application\Start.bat" arguments"' ])
+      end
+      with_command('"C:\Program Files\Application\Start.bat" /i "C:\Program Files (x86)\NUnit 2.6\bin\framework\nunit.framework.dll"', filename: 'C:\Program Files\Application\Start.bat') do
+        is_expected.to eql([ comspec, 'cmd /c ""C:\Program Files\Application\Start.bat" /i "C:\Program Files (x86)\NUnit 2.6\bin\framework\nunit.framework.dll""' ])
+      end
 
-          context "with quoted arguments" do
-            let(:cmd) { "#{executable_path} -e \"print 'fee fie foe fum'\"" }
+      # https://github.com/opscode/mixlib-shellout/pull/2 with cmd file
+      with_command('"C:\Program Files\Application\Start.cmd"', filename: 'C:\Program Files\Application\Start.cmd') do
+        is_expected.to eql([ comspec, 'cmd /c ""C:\Program Files\Application\Start.cmd""' ])
+      end
+      with_command('"C:\Program Files\Application\Start.cmd" arguments', filename: 'C:\Program Files\Application\Start.cmd') do
+        is_expected.to eql([ comspec, 'cmd /c ""C:\Program Files\Application\Start.cmd" arguments"' ])
+      end
+      with_command('"C:\Program Files\Application\Start.cmd" /i "C:\Program Files (x86)\NUnit 2.6\bin\framework\nunit.framework.dll"', filename: 'C:\Program Files\Application\Start.cmd') do
+        is_expected.to eql([ comspec, 'cmd /c ""C:\Program Files\Application\Start.cmd" /i "C:\Program Files (x86)\NUnit 2.6\bin\framework\nunit.framework.dll""' ])
+      end
 
-            it "should use specified executable" do
-              is_expected.to eql([executable_path, cmd])
-            end
-          end
-        end
+      # https://github.com/opscode/mixlib-shellout/pull/2 with unquoted exe file
+      with_command('C:\RUBY192\bin\ruby.exe', filename: 'C:\RUBY192\bin\ruby.exe') do
+        is_expected.to eql([ 'C:\RUBY192\bin\ruby.exe', 'C:\RUBY192\bin\ruby.exe' ])
+      end
+      with_command('C:\RUBY192\bin\ruby.exe arguments', filename: 'C:\RUBY192\bin\ruby.exe') do
+        is_expected.to eql([ 'C:\RUBY192\bin\ruby.exe', 'C:\RUBY192\bin\ruby.exe arguments' ])
+      end
+      with_command('C:\RUBY192\bin\ruby.exe -e "print \'fee fie foe fum\'"', filename: 'C:\RUBY192\bin\ruby.exe') do
+        is_expected.to eql([ 'C:\RUBY192\bin\ruby.exe', 'C:\RUBY192\bin\ruby.exe -e "print \'fee fie foe fum\'"' ])
+      end
 
-        # Examples taken from: https://github.com/opscode/mixlib-shellout/pull/2#issuecomment-4825574
-        context "with executable path enclosed in double quotes" do
-          let(:cmd) { "#{executable_path}" }
-          let(:executable_path) { '"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin\NETFX 4.0 Tools\gacutil.exe"' }
+      # https://github.com/opscode/mixlib-shellout/pull/2 with quoted exe file
+      exe_with_spaces = 'C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin\NETFX 4.0 Tools\gacutil.exe'
+      with_command("\"#{exe_with_spaces}\"", filename: exe_with_spaces) do
+        is_expected.to eql([ exe_with_spaces, "\"#{exe_with_spaces}\"" ])
+      end
+      with_command("\"#{exe_with_spaces}\" arguments", filename: exe_with_spaces) do
+        is_expected.to eql([ exe_with_spaces, "\"#{exe_with_spaces}\" arguments" ])
+      end
+      long_options = "/i \"C:\Program Files (x86)\NUnit 2.6\bin\framework\nunit.framework.dll\""
+      with_command("\"#{exe_with_spaces}\" #{long_options}", filename: exe_with_spaces) do
+        is_expected.to eql([ exe_with_spaces, "\"#{exe_with_spaces}\" #{long_options}" ])
+      end
 
-          it "should use specified executable" do
-            is_expected.to eql([executable_path, cmd])
-          end
-
-          context "with arguments" do
-            let(:cmd) { "#{executable_path} arguments" }
-
-            it "should use specified executable" do
-              is_expected.to eql([executable_path, cmd])
-            end
-          end
-
-          context "with quoted arguments" do
-            let(:cmd) { "#{executable_path} /i \"C:\Program Files (x86)\NUnit 2.6\bin\framework\nunit.framework.dll\"" }
-
-            it "should use specified executable" do
-              is_expected.to eql([executable_path, cmd])
-            end
-          end
-        end
-
+      # shell built in
+      with_command("copy thing1.txt thing2.txt", search: true) do
+        is_expected.to eql([ comspec, 'cmd /c "copy thing1.txt thing2.txt"' ])
       end
     end
   end
