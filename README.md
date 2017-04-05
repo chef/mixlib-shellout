@@ -3,8 +3,6 @@
 
 Provides a simplified interface to shelling out while still collecting both standard out and standard error and providing full control over environment, working directory, uid, gid, etc.
 
-No means for passing input to the subprocess is provided.
-
 ## Example
 ### Simple Shellout
 Invoke find(1) to search for .rb files:
