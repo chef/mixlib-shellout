@@ -337,16 +337,20 @@ module Mixlib
 
       def kill_process(instance, logger)
         child_pid = instance.wmi_ole_object.processid
-        logger.debug([
-          "killing child process #{child_pid}::",
-          "#{instance.wmi_ole_object.Name} of parent #{pid}",
-        ].join) if logger
+        if logger
+          logger.debug([
+            "killing child process #{child_pid}::",
+            "#{instance.wmi_ole_object.Name} of parent #{pid}",
+          ].join)
+        end
         Process.kill(:KILL, instance.wmi_ole_object.processid)
       rescue Errno::EIO, SystemCallError
-        logger.debug([
-          "Failed to kill child process #{child_pid}::",
-          "#{instance.wmi_ole_object.Name} of parent #{pid}",
-        ].join) if logger
+        if logger
+          logger.debug([
+            "Failed to kill child process #{child_pid}::",
+            "#{instance.wmi_ole_object.Name} of parent #{pid}",
+          ].join)
+        end
       end
 
       def format_process(process, app_name, command_line, timeout)
