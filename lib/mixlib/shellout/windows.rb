@@ -54,7 +54,7 @@ module Mixlib
           #
           # Set cwd, environment, appname, etc.
           #
-          app_name, command_line = command_to_run(self.command)
+          app_name, command_line = command_to_run(command)
           create_process_args = {
             :app_name => app_name,
             :command_line => command_line,
@@ -180,7 +180,7 @@ module Mixlib
           end
         end
 
-        return true
+        true
       end
 
       def command_to_run(command)
@@ -278,7 +278,7 @@ module Mixlib
             env = false if c !~ /[A-Za-z1-9_]/
           end
         end
-        return false
+        false
       end
 
       # FIXME: reduce code duplication with chef/chef
@@ -337,16 +337,20 @@ module Mixlib
 
       def kill_process(instance, logger)
         child_pid = instance.wmi_ole_object.processid
-        logger.debug([
-          "killing child process #{child_pid}::",
-          "#{instance.wmi_ole_object.Name} of parent #{pid}",
-        ].join) if logger
+        if logger
+          logger.debug([
+            "killing child process #{child_pid}::",
+            "#{instance.wmi_ole_object.Name} of parent #{pid}",
+          ].join)
+        end
         Process.kill(:KILL, instance.wmi_ole_object.processid)
       rescue Errno::EIO, SystemCallError
-        logger.debug([
-          "Failed to kill child process #{child_pid}::",
-          "#{instance.wmi_ole_object.Name} of parent #{pid}",
-        ].join) if logger
+        if logger
+          logger.debug([
+            "Failed to kill child process #{child_pid}::",
+            "#{instance.wmi_ole_object.Name} of parent #{pid}",
+          ].join)
+        end
       end
 
       def format_process(process, app_name, command_line, timeout)

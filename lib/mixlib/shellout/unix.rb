@@ -32,7 +32,7 @@ module Mixlib
 
       # Whether we're simulating a login shell
       def using_login?
-        return login && user
+        login && user
       end
 
       # Helper method for sgids
@@ -43,7 +43,7 @@ module Mixlib
           ret << g
         end
         Etc.endgrent
-        return ret
+        ret
       end
 
       # The secondary groups that the subprocess will switch to.
@@ -68,7 +68,7 @@ module Mixlib
 
       # Merges the two environments for the process
       def process_environment
-        logon_environment.merge(self.environment)
+        logon_environment.merge(environment)
       end
 
       # Run the command, writing the command's standard out and standard error
@@ -351,16 +351,14 @@ module Mixlib
       # If it's there, un-marshal it and raise. If it's not there,
       # assume everything went well.
       def propagate_pre_exec_failure
-        begin
-          attempt_buffer_read until child_process_status.eof?
-          e = Marshal.load(@process_status)
-          raise(Exception === e ? e : "unknown failure: #{e.inspect}")
-        rescue ArgumentError # If we get an ArgumentError error, then the exec was successful
-          true
-        ensure
-          child_process_status.close
-          open_pipes.delete(child_process_status)
-        end
+        attempt_buffer_read until child_process_status.eof?
+        e = Marshal.load(@process_status)
+        raise(Exception === e ? e : "unknown failure: #{e.inspect}")
+      rescue ArgumentError # If we get an ArgumentError error, then the exec was successful
+        true
+      ensure
+        child_process_status.close
+        open_pipes.delete(child_process_status)
       end
 
       def reap_errant_child

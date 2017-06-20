@@ -212,7 +212,7 @@ module Mixlib
     def gid
       return group.kind_of?(Integer) ? group : Etc.getgrnam(group.to_s).gid if group
       return Etc.getpwuid(uid).gid if using_login?
-      return nil
+      nil
     end
 
     def timeout
