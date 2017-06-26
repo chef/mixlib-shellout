@@ -1526,4 +1526,18 @@ describe Mixlib::ShellOut do
       end
     end
   end
+
+  describe ".run_command" do
+    let(:command) { "yes | head -n1" }
+
+    it "returns a ShellOut instance" do
+      result = Mixlib::ShellOut.run_command(command)
+      expect(result).to be_a(Mixlib::ShellOut)
+    end
+
+    it "runs the requested command" do
+      result = Mixlib::ShellOut.run_command(command)
+      expect(result.stdout).to eq("y\n")
+    end
+  end
 end

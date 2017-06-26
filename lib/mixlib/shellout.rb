@@ -109,6 +109,10 @@ module Mixlib
 
     attr_reader :stdin_pipe, :stdout_pipe, :stderr_pipe, :process_status_pipe
 
+    def self.run_command(*args, &block)
+      new(*args, &block).tap(&:run_command)
+    end
+
     # === Arguments:
     # Takes a single command, or a list of command fragments. These are used
     # as arguments to Kernel.exec. See the Kernel.exec documentation for more
