@@ -1526,4 +1526,60 @@ describe Mixlib::ShellOut do
       end
     end
   end
+
+  describe ".run_command" do
+    let(:command) { "echo 'hello'" }
+
+    it "returns a ShellOut instance" do
+      result = Mixlib::ShellOut.run_command(command)
+      expect(result).to be_a(Mixlib::ShellOut)
+    end
+
+    it "runs the requested command" do
+      result = Mixlib::ShellOut.run_command(command)
+      expect(result.stdout).to eq("hello\n")
+    end
+  end
+
+  describe ".error!" do
+    it "raises an exception when the command fails" do
+      expect {
+        Mixlib::ShellOut.error!("ls not_a_directory")
+      }.to raise_error(Mixlib::ShellOut::ShellCommandFailed)
+    end
+
+    it "does not raise an error when the command succeeds" do
+      expect {
+        Mixlib::ShellOut.error!("echo 'hello'")
+      }.not_to raise_error
+    end
+  end
+
+  describe ".error?" do
+    it "returns true when the command fails" do
+      expect(Mixlib::ShellOut.error?("ls not_a_directory")).to eq(true)
+    end
+
+    it "returns false when the command succeeds" do
+      expect(Mixlib::ShellOut.error?("echo 'hello'")).to eq(false)
+    end
+  end
+
+  describe ".stdout" do
+    it "returns the process's stdout" do
+      expect(Mixlib::ShellOut.stdout("echo 'hello'")).to eq("hello\n")
+    end
+  end
+
+  describe ".stderr" do
+    it "returns the process's stderr" do
+      expect(Mixlib::ShellOut.stderr("echo 'hello' 1>&2")).to eq("hello\n")
+    end
+  end
+
+  describe ".exitstatus" do
+    it "returns the process's exitstatus" do
+      expect(Mixlib::ShellOut.exitstatus("echo 'hello'")).to eq(0)
+    end
+  end
 end
