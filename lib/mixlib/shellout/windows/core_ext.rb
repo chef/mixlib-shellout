@@ -24,6 +24,7 @@ module Process::Constants
   private
 
   LOGON32_LOGON_INTERACTIVE = 0x00000002
+  LOGON32_LOGON_BATCH = 0x00000004
   LOGON32_PROVIDER_DEFAULT  = 0x00000000
   UOI_NAME = 0x00000002
 
@@ -271,9 +272,8 @@ module Process
         # the logon (which happens with CreateProcessWithLogon) must have an
         # interactive windows station to attach to, which is created with the
         # LogonUser cann with the LOGON32_LOGON_INTERACTIVE flag.
+        token = FFI::MemoryPointer.new(:ulong)
         if winsta_name =~ /^Service-0x0-.*$/i
-          token = FFI::MemoryPointer.new(:ulong)
-
           bool = LogonUserW(
             logon,                      # User
             domain,                     # Domain
@@ -282,52 +282,43 @@ module Process
             LOGON32_PROVIDER_DEFAULT,   # Logon Provider
             token                       # User token handle
           )
-
-          unless bool
-            raise SystemCallError.new("LogonUserW", FFI.errno)
-          end
-
-          token = token.read_ulong
-
-          begin
-            bool = CreateProcessAsUserW(
-              token,                  # User token handle
-              app,                    # App name
-              cmd,                    # Command line
-              process_security,       # Process attributes
-              thread_security,        # Thread attributes
-              inherit,                # Inherit handles
-              hash["creation_flags"], # Creation Flags
-              env,                    # Environment
-              cwd,                    # Working directory
-              startinfo,              # Startup Info
-              procinfo                # Process Info
-            )
-          ensure
-            CloseHandle(token)
-          end
-
-          unless bool
-            raise SystemCallError.new("CreateProcessAsUserW (You must hold the 'Replace a process level token' permission)", FFI.errno)
-          end
         else
-          bool = CreateProcessWithLogonW(
-            logon,                  # User
-            domain,                 # Domain
-            passwd,                 # Password
-            LOGON_WITH_PROFILE,     # Logon flags
+          bool = LogonUserW(
+            logon,                      # User
+            domain,                     # Domain
+            passwd,                     # Password
+            LOGON32_LOGON_BATCH,        # Logon Type
+            LOGON32_PROVIDER_DEFAULT,   # Logon Provider
+            token                       # User token handle
+          )
+        end
+
+        unless bool
+          raise SystemCallError.new("LogonUserW", FFI.errno)
+        end
+
+        token = token.read_ulong
+
+        begin
+          bool = CreateProcessAsUserW(
+            token,                  # User token handle
             app,                    # App name
             cmd,                    # Command line
-            hash["creation_flags"], # Creation flags
+            process_security,       # Process attributes
+            thread_security,        # Thread attributes
+            inherit,                # Inherit handles
+            hash["creation_flags"], # Creation Flags
             env,                    # Environment
             cwd,                    # Working directory
             startinfo,              # Startup Info
             procinfo                # Process Info
           )
+        ensure
+          CloseHandle(token)
+        end
 
-          unless bool
-            raise SystemCallError.new("CreateProcessWithLogonW", FFI.errno)
-          end
+        unless bool
+          raise SystemCallError.new("CreateProcessAsUserW (You must hold the 'Replace a process level token' permission. Restart your machine after adding this right to make it effective.)", FFI.errno)
         end
       else
         bool = CreateProcessW(
