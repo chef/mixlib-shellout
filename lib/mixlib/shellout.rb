@@ -109,6 +109,9 @@ module Mixlib
 
     attr_reader :stdin_pipe, :stdout_pipe, :stderr_pipe, :process_status_pipe
 
+    # Runs windows process with elevated privileges. Required for Powershell commands which need elevated privileges
+    attr_accessor :elevated
+
     # === Arguments:
     # Takes a single command, or a list of command fragments. These are used
     # as arguments to Kernel.exec. See the Kernel.exec documentation for more
@@ -172,6 +175,7 @@ module Mixlib
       @valid_exit_codes = [0]
       @terminate_reason = nil
       @timeout = nil
+      @elevated = false
 
       if command_args.last.is_a?(Hash)
         parse_options(command_args.pop)
@@ -339,6 +343,8 @@ module Mixlib
           end
         when "login"
           self.login = setting
+        when "elevated"
+          self.elevated = setting
         else
           raise InvalidCommandOption, "option '#{option.inspect}' is not a valid option for #{self.class.name}"
         end

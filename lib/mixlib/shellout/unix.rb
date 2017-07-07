@@ -27,7 +27,9 @@ module Mixlib
 
       # Option validation that is unix specific
       def validate_options(opts)
-        # No options to validate, raise exceptions here if needed
+        if opts[:elevated]
+          raise InvalidCommandOption, "Option `elevated` is supported for Powershell commands only"
+        end
       end
 
       # Whether we're simulating a login shell
