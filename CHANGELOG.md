@@ -1,5 +1,9 @@
 # mixlib-shellout Changelog
 
+## Release 2.3.0
+
+* Add support for 'elevated' option on Windows, which logs on as batch server which is not affected by User Account Control (UAC)
+
 ## Release 2.2.6
 
 * Fix regression introduced in 2.2.2 by changing `CreateProcessAsUserW` to use a `:int` instead of `:bool` for the `inherit` flag to fix `shell_out` on windows from a service context
