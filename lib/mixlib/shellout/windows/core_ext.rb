@@ -24,7 +24,8 @@ module Process::Constants
   private
 
   LOGON32_LOGON_INTERACTIVE = 0x00000002
-  LOGON32_PROVIDER_DEFAULT  = 0x00000000
+  LOGON32_LOGON_BATCH = 0x00000004
+  LOGON32_PROVIDER_DEFAULT = 0x00000000
   UOI_NAME = 0x00000002
 
   WAIT_OBJECT_0    = 0
@@ -32,6 +33,9 @@ module Process::Constants
   WAIT_ABANDONED   = 128
   WAIT_ABANDONED_0 = WAIT_ABANDONED
   WAIT_FAILED      = 0xFFFFFFFF
+
+  ERROR_PRIVILEGE_NOT_HELD = 1314
+  ERROR_LOGON_TYPE_NOT_GRANTED = 0x569
 end
 
 # Define the functions needed to check with Service windows station
@@ -71,7 +75,7 @@ module Process
       valid_keys = %w{
         app_name command_line inherit creation_flags cwd environment
         startup_info thread_inherit process_inherit close_handles with_logon
-        domain password
+        domain password elevated
       }
 
       valid_si_keys = %w{
@@ -234,82 +238,32 @@ module Process
       inherit = hash["inherit"] ? 1 : 0
 
       if hash["with_logon"]
-        logon = hash["with_logon"].to_wide_string
-
-        if hash["password"]
-          passwd = hash["password"].to_wide_string
-        else
-          raise ArgumentError, "password must be specified if with_logon is used"
-        end
-
-        if hash["domain"]
-          domain = hash["domain"].to_wide_string
-        end
+        logon, passwd, domain = format_creds_from_hash(hash)
 
         hash["creation_flags"] |= CREATE_UNICODE_ENVIRONMENT
 
-        winsta_name = FFI::MemoryPointer.new(:char, 256)
-        return_size = FFI::MemoryPointer.new(:ulong)
-
-        bool = GetUserObjectInformationA(
-          GetProcessWindowStation(),  # Window station handle
-          UOI_NAME,                   # Information to get
-          winsta_name,                # Buffer to receive information
-          winsta_name.size,           # Size of buffer
-          return_size                 # Size filled into buffer
-        )
-
-        unless bool
-          raise SystemCallError.new("GetUserObjectInformationA", FFI.errno)
-        end
-
-        winsta_name = winsta_name.read_string(return_size.read_ulong)
+        winsta_name = get_windows_station_name
 
         # If running in the service windows station must do a log on to get
-        # to the interactive desktop.  Running process user account must have
+        # to the interactive desktop. The running process user account must have
         # the 'Replace a process level token' permission.  This is necessary as
         # the logon (which happens with CreateProcessWithLogon) must have an
         # interactive windows station to attach to, which is created with the
-        # LogonUser cann with the LOGON32_LOGON_INTERACTIVE flag.
-        if winsta_name =~ /^Service-0x0-.*$/i
-          token = FFI::MemoryPointer.new(:ulong)
+        # LogonUser call with the LOGON32_LOGON_INTERACTIVE flag.
+        #
+        # User Access Control (UAC) only applies to interactive logons, so we
+        # can simulate running a command 'elevated' by running it under a separate
+        # logon as a batch process.
+        if hash["elevated"] || winsta_name =~ /^Service-0x0-.*$/i
+          logon_type = if hash["elevated"]
+                         LOGON32_LOGON_BATCH
+                       else
+                         LOGON32_LOGON_INTERACTIVE
+                       end
 
-          bool = LogonUserW(
-            logon,                      # User
-            domain,                     # Domain
-            passwd,                     # Password
-            LOGON32_LOGON_INTERACTIVE,  # Logon Type
-            LOGON32_PROVIDER_DEFAULT,   # Logon Provider
-            token                       # User token handle
-          )
+          token = logon_user(logon, domain, passwd, logon_type)
 
-          unless bool
-            raise SystemCallError.new("LogonUserW", FFI.errno)
-          end
-
-          token = token.read_ulong
-
-          begin
-            bool = CreateProcessAsUserW(
-              token,                  # User token handle
-              app,                    # App name
-              cmd,                    # Command line
-              process_security,       # Process attributes
-              thread_security,        # Thread attributes
-              inherit,                # Inherit handles
-              hash["creation_flags"], # Creation Flags
-              env,                    # Environment
-              cwd,                    # Working directory
-              startinfo,              # Startup Info
-              procinfo                # Process Info
-            )
-          ensure
-            CloseHandle(token)
-          end
-
-          unless bool
-            raise SystemCallError.new("CreateProcessAsUserW (You must hold the 'Replace a process level token' permission)", FFI.errno)
-          end
+          create_process_as_user(token, app, cmd, process_security, thread_security, hash["creation_flags"], env, cwd, startinfo, procinfo)
         else
           bool = CreateProcessWithLogonW(
             logon,                  # User
@@ -366,6 +320,91 @@ module Process
         procinfo[:dwProcessId],
         procinfo[:dwThreadId]
       )
+    end
+
+    def logon_user(user, domain, passwd, type, provider = LOGON32_PROVIDER_DEFAULT)
+      token = FFI::MemoryPointer.new(:ulong)
+
+      bool = LogonUserW(
+        user,                       # User
+        domain,                     # Domain
+        passwd,                     # Password
+        type,                       # Logon Type
+        provider,                   # Logon Provider
+        token                       # User token handle
+      )
+
+      unless bool
+        if (FFI.errno == ERROR_LOGON_TYPE_NOT_GRANTED) && (type == LOGON32_LOGON_BATCH)
+          user_utf8 = user.encode( "UTF-8", invalid: :replace, undef: :replace, replace: "" ).delete("\0")
+          raise SystemCallError.new("LogonUserW (User '#{user_utf8}' must hold 'Log on as a batch job' permissions.)", FFI.errno)
+        else
+          raise SystemCallError.new("LogonUserW", FFI.errno)
+        end
+      end
+
+      token.read_ulong
+    end
+
+    def create_process_as_user(token, app, cmd, process_security, thread_security, inherit, creation_flags, env, cwd, startinfo, procinfo)
+      bool = CreateProcessAsUserW(
+        token,                  # User token handle
+        app,                    # App name
+        cmd,                    # Command line
+        process_security,       # Process attributes
+        thread_security,        # Thread attributes
+        inherit,                # Inherit handles
+        creation_flags,         # Creation Flags
+        env,                    # Environment
+        cwd,                    # Working directory
+        startinfo,              # Startup Info
+        procinfo                # Process Info
+      )
+
+      unless bool
+        if FFI.errno == ERROR_PRIVILEGE_NOT_HELD
+          raise SystemCallError.new("CreateProcessAsUserW (User '#{::ENV['USERNAME']}' must hold the 'Replace a process level token' and 'Adjust Memory Quotas for a process' permissions. Logoff the user after adding this right to make it effective.)", FFI.errno)
+        else
+          raise SystemCallError.new("CreateProcessAsUserW failed.", FFI.errno)
+        end
+      end
+    ensure
+      CloseHandle(token)
+    end
+
+    def get_windows_station_name
+      winsta_name = FFI::MemoryPointer.new(:char, 256)
+      return_size = FFI::MemoryPointer.new(:ulong)
+
+      bool = GetUserObjectInformationA(
+        GetProcessWindowStation(),  # Window station handle
+        UOI_NAME,                   # Information to get
+        winsta_name,                # Buffer to receive information
+        winsta_name.size,           # Size of buffer
+        return_size                 # Size filled into buffer
+      )
+
+      unless bool
+        raise SystemCallError.new("GetUserObjectInformationA", FFI.errno)
+      end
+
+      winsta_name.read_string(return_size.read_ulong)
+    end
+
+    def format_creds_from_hash(hash)
+      logon = hash["with_logon"].to_wide_string
+
+      if hash["password"]
+        passwd = hash["password"].to_wide_string
+      else
+        raise ArgumentError, "password must be specified if with_logon is used"
+      end
+
+      if hash["domain"]
+        domain = hash["domain"].to_wide_string
+      end
+
+      [ logon, passwd, domain ]
     end
   end
 end
