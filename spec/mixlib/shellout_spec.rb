@@ -660,7 +660,7 @@ describe Mixlib::ShellOut do
           let(:options) { { :user => user, :password => password, :elevated => true } }
 
           it "raises error" do
-            expect { running_user }.to raise_error("Logon failure: the user has not been granted the requested logon type at this computer. - LogonUserW (You must hold `Log on as a service` and `Log on as a batch job` permissions.)")
+            expect { running_user }.to raise_error(/the user has not been granted the requested logon type at this computer/)
           end
         end
       end
