@@ -33,6 +33,9 @@ module Process::Constants
   WAIT_ABANDONED   = 128
   WAIT_ABANDONED_0 = WAIT_ABANDONED
   WAIT_FAILED      = 0xFFFFFFFF
+
+  ERROR_PRIVILEGE_NOT_HELD = 1314
+  ERROR_LOGON_TYPE_NOT_GRANTED = 0X569
 end
 
 # Define the functions needed to check with Service windows station
@@ -285,7 +288,11 @@ module Process
           )
 
           unless bool
-            raise SystemCallError.new("LogonUserW", FFI.errno)
+            if FFI.errno == ERROR_LOGON_TYPE_NOT_GRANTED
+              raise SystemCallError.new("LogonUserW (You must hold `Log on as a service` and `Log on as a batch job` permissions.)", FFI.errno)
+            else
+              raise SystemCallError.new("LogonUserW", FFI.errno)
+            end
           end
 
           token = token.read_ulong
@@ -304,12 +311,16 @@ module Process
               startinfo,              # Startup Info
               procinfo                # Process Info
             )
+
+            unless bool
+              if FFI.errno == ERROR_PRIVILEGE_NOT_HELD
+                raise SystemCallError.new("CreateProcessAsUserW (You must hold the 'Replace a process level token' permission. Refresh the logon context after adding this right to make it effective.)", FFI.errno)
+              else
+                raise SystemCallError.new("CreateProcessAsUserW failed.", FFI.errno)
+              end
+            end
           ensure
             CloseHandle(token)
-          end
-
-          unless bool
-            raise SystemCallError.new("CreateProcessAsUserW (You must hold the 'Replace a process level token' permission. Restart your machine after adding this right to make it effective.)", FFI.errno)
           end
         else
           if hash["elevated"]
@@ -325,7 +336,11 @@ module Process
             )
 
             unless bool
-              raise SystemCallError.new("LogonUserW", FFI.errno)
+              if FFI.errno == ERROR_LOGON_TYPE_NOT_GRANTED
+                raise SystemCallError.new("LogonUserW (You must hold `Log on as a service` and `Log on as a batch job` permissions.)", FFI.errno)
+              else
+                raise SystemCallError.new("LogonUserW", FFI.errno)
+              end
             end
 
             token = token.read_ulong
@@ -344,12 +359,16 @@ module Process
                 startinfo,              # Startup Info
                 procinfo                # Process Info
               )
+
+              unless bool
+                if FFI.errno == ERROR_PRIVILEGE_NOT_HELD
+                  raise SystemCallError.new("CreateProcessAsUserW (You must hold the 'Replace a process level token' permission. Refresh the logon context after adding this right to make it effective.)", FFI.errno)
+                else
+                  raise SystemCallError.new("CreateProcessAsUserW failed.", FFI.errno)
+                end
+              end
             ensure
               CloseHandle(token)
-            end
-
-            unless bool
-              raise SystemCallError.new("CreateProcessAsUserW (You must hold the 'Replace a process level token' permission. Restart your machine after adding this right to make it effective.)", FFI.errno)
             end
           else
             bool = CreateProcessWithLogonW(
