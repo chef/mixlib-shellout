@@ -35,6 +35,10 @@ module Mixlib
         if opts[:user] && !opts[:password]
           raise InvalidCommandOption, "You must supply a password when supplying a user in windows"
         end
+
+        if opts[:elevated] && opts[:elevated] != true && opts[:elevated] != false
+          raise InvalidCommandOption, "Invalid value passed for `elevated`. Please provide true/false."
+        end
       end
 
       #--
@@ -71,6 +75,7 @@ module Mixlib
           create_process_args[:domain] = domain.nil? ? "." : domain
           create_process_args[:with_logon] = with_logon if with_logon
           create_process_args[:password] = password if password
+          create_process_args[:elevated] = elevated if elevated
 
           #
           # Start the process
