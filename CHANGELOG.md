@@ -1,5 +1,9 @@
 # mixlib-shellout Changelog
 
+## Release 2.3.1
+
+* Make Mixlib::ShellOut::EmptyWindowsCommand inherit from ShellCommandFailed
+
 ## Release 2.3.0
 
 * Add support for 'elevated' option on Windows, which logs on as batch server which is not affected by User Account Control (UAC)
