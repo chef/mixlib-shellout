@@ -1,5 +1,9 @@
 # mixlib-shellout Changelog
 
+## Release 2.3.2
+
+* Fix bad method call in Windows Process module
+
 ## Release 2.3.1
 
 * Make Mixlib::ShellOut::EmptyWindowsCommand inherit from ShellCommandFailed
