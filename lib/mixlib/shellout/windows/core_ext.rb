@@ -263,7 +263,7 @@ module Process
 
           token = logon_user(logon, domain, passwd, logon_type)
 
-          create_process_as_user(token, app, cmd, process_security, thread_security, hash["creation_flags"], env, cwd, startinfo, procinfo)
+          create_process_as_user(token, app, cmd, process_security, thread_security, inherit, hash["creation_flags"], env, cwd, startinfo, procinfo)
         else
           bool = CreateProcessWithLogonW(
             logon,                  # User
