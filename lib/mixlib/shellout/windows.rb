@@ -36,6 +36,14 @@ module Mixlib
           raise InvalidCommandOption, "You must supply a password when supplying a user in windows"
         end
 
+        if !opts[:user] && opts[:password]
+          raise InvalidCommandOption, "You must supply a user when supplying a password in windows"
+        end
+
+        if opts[:elevated] && !opts[:user] && !opts[:password]
+          raise InvalidCommandOption, "`elevated` option should be passed only with `username` and `password`."
+        end
+
         if opts[:elevated] && opts[:elevated] != true && opts[:elevated] != false
           raise InvalidCommandOption, "Invalid value passed for `elevated`. Please provide true/false."
         end
