@@ -61,6 +61,14 @@ Invoke "whoami.exe" to demonstrate running a command as another user:
   whoami.run_command
 ```
 
+Invoke "whoami.exe" with elevated privileges:
+
+```ruby
+  whoami = Mixlib::ShellOut.new("whoami.exe", :user => "username", :domain => "DOMAIN", :password => "password", :elevated => true)
+  whoami.run_command
+```
+**NOTE:** The user 'admin' must have the 'Log on as a batch job' permission and the user chef is running as must have the 'Replace a process level token' and 'Adjust Memory Quotas for a process' permissions.
+
 ## Platform Support
 Mixlib::ShellOut does a standard fork/exec on Unix, and uses the Win32 API on Windows. There is not currently support for JRuby.
 
