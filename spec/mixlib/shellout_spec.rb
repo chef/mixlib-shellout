@@ -657,10 +657,20 @@ describe Mixlib::ShellOut do
         end
 
         context "when :elevated => true" do
-          let(:options) { { :user => user, :password => password, :elevated => true } }
+          context "when user and password are passed" do
+            let(:options) { { :user => user, :password => password, :elevated => true } }
 
-          it "raises error" do
-            expect { running_user }.to raise_error(/the user has not been granted the requested logon type at this computer/)
+            it "raises permission related error" do
+              expect { running_user }.to raise_error(/the user has not been granted the requested logon type at this computer/)
+            end
+          end
+
+          context "when user and password are not passed" do
+            let(:options) { { :elevated => true } }
+
+            it "raises error" do
+              expect { running_user }.to raise_error("`elevated` option should be passed only with `username` and `password`.")
+            end
           end
         end
       end
