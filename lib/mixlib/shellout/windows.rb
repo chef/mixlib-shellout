@@ -229,12 +229,11 @@ module Mixlib
 
       # FIXME: this extracts ARGV[0] but is it correct?
       def candidate_executable_for_command(command)
-        if command =~ /^\s*"(.*?)"/
-          # If we have quotes, do an exact match
+        if command =~ /^\s*"(.*?)"/ || command =~ /^\s*([^\s]+)/
+          # If we have quotes, do an exact match, else pick the first word ignoring the leading spaces
           $1
         else
-          # Otherwise check everything up to the first space
-          command[0, command.index(/\s/) || command.length].strip
+          ""
         end
       end
 
