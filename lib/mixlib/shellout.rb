@@ -112,6 +112,8 @@ module Mixlib
     # Runs windows process with elevated privileges. Required for Powershell commands which need elevated privileges
     attr_accessor :elevated
 
+    attr_accessor :sensitive
+
     # === Arguments:
     # Takes a single command, or a list of command fragments. These are used
     # as arguments to Kernel.exec. See the Kernel.exec documentation for more
@@ -176,6 +178,7 @@ module Mixlib
       @terminate_reason = nil
       @timeout = nil
       @elevated = false
+      @sensitive = false
 
       if command_args.last.is_a?(Hash)
         parse_options(command_args.pop)
@@ -223,6 +226,10 @@ module Mixlib
       @timeout || DEFAULT_READ_TIMEOUT
     end
 
+    def sensitive
+      @sensitive
+    end
+
     # Creates a String showing the output of the command, including a banner
     # showing the exact command executed. Used by +invalid!+ to show command
     # results when the command exited with an unexpected status.
@@ -234,6 +241,7 @@ module Mixlib
       msg << "STDERR: #{stderr.strip}\n"
       msg << "---- End output of #{command} ----\n"
       msg << "Ran #{command} returned #{status.exitstatus}" if status
+      msg = "Command execution failed. STDOUT/STDERR suppressed for sensitive resource" if sensitive
       msg
     end
 
@@ -345,6 +353,8 @@ module Mixlib
           self.login = setting
         when "elevated"
           self.elevated = setting
+        when "sensitive"
+          self.sensitive = setting
         else
           raise InvalidCommandOption, "option '#{option.inspect}' is not a valid option for #{self.class.name}"
         end
