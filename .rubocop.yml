@@ -6,3 +6,13 @@ Lint/UnderscorePrefixedVariableName:
 Lint/UselessAccessModifier:
   Exclude:
     - 'lib/mixlib/shellout/windows/core_ext.rb'
+Security/Eval:
+  Enabled: false
+Layout/EndOfLine:
+  Enabled: false
+Lint/AssignmentInCondition:
+  Enabled: false
+Lint/ParenthesesAsGroupedExpression:
+  Enabled: false
+Lint/ShadowedException:
+  Enabled: false

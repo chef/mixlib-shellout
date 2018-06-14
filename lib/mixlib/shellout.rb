@@ -226,10 +226,6 @@ module Mixlib
       @timeout || DEFAULT_READ_TIMEOUT
     end
 
-    def sensitive
-      @sensitive
-    end
-
     # Creates a String showing the output of the command, including a banner
     # showing the exact command executed. Used by +invalid!+ to show command
     # results when the command exited with an unexpected status.
