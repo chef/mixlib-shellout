@@ -322,11 +322,11 @@ describe Mixlib::ShellOut do
 
     context "testing login", :unix_only do
       subject { shell_cmd }
-      let (:uid) { 1005 }
-      let (:gid) { 1002 }
-      let (:shell) { "/bin/money" }
-      let (:dir) { "/home/castle" }
-      let (:path) { "/sbin:/bin:/usr/sbin:/usr/bin" }
+      let(:uid) { 1005 }
+      let(:gid) { 1002 }
+      let(:shell) { "/bin/money" }
+      let(:dir) { "/home/castle" }
+      let(:path) { "/sbin:/bin:/usr/sbin:/usr/bin" }
       before :each do
         shell_cmd.login = true
         catbert_user = double("Etc::Passwd", :name => "catbert", :passwd => "x", :uid => 1005, :gid => 1002, :gecos => "Catbert,,,", :dir => "/home/castle", :shell => "/bin/money")
@@ -378,7 +378,7 @@ describe Mixlib::ShellOut do
         # Setting the user should set the env variables
         describe "#process_environment" do
           subject { super().process_environment }
-          it { is_expected.to eq ({ "HOME" => dir, "SHELL" => shell, "USER" => "catbert", "LOGNAME" => "catbert", "PATH" => path, "IFS" => "\t\n" }) }
+          it { is_expected.to eq({ "HOME" => dir, "SHELL" => shell, "USER" => "catbert", "LOGNAME" => "catbert", "PATH" => path, "IFS" => "\t\n" }) }
         end
         # Setting the user with overriding env variables should override
         context "when adding environment variables" do

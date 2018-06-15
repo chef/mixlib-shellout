@@ -1,4 +1,4 @@
-#--
+#
 # Author:: Daniel DeLeo (<dan@chef.io>)
 # Author:: John Keiser (<jkeiser@chef.io>)
 # Author:: Ho-Sheng Hsiao (<hosh@chef.io>)
@@ -122,7 +122,7 @@ module Mixlib
                     wmi = WmiLite::Wmi.new
                     kill_process_tree(process.process_id, wmi, logger)
                     Process.kill(:KILL, process.process_id)
-                  rescue Errno::EIO, SystemCallError
+                  rescue
                     logger.warn("Failed to kill timed out process #{process.process_id}") if logger
                   end
 
@@ -357,7 +357,7 @@ module Mixlib
           ].join)
         end
         Process.kill(:KILL, instance.wmi_ole_object.processid)
-      rescue Errno::EIO, SystemCallError
+      rescue
         if logger
           logger.debug([
             "Failed to kill child process #{child_pid}::",
