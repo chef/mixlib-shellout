@@ -1,4 +1,4 @@
-#--
+#
 # Author:: Daniel DeLeo (<dan@chef.io>)
 # Copyright:: Copyright (c) 2010-2016 Chef Software, Inc.
 # License:: Apache License, Version 2.0
@@ -284,7 +284,7 @@ module Mixlib
       end
 
       def read_stdout_to_buffer
-        while chunk = child_stdout.read_nonblock(READ_SIZE)
+        while ( chunk = child_stdout.read_nonblock(READ_SIZE) )
           @stdout << chunk
           @live_stdout << chunk if @live_stdout
         end
@@ -294,7 +294,7 @@ module Mixlib
       end
 
       def read_stderr_to_buffer
-        while chunk = child_stderr.read_nonblock(READ_SIZE)
+        while ( chunk = child_stderr.read_nonblock(READ_SIZE) )
           @stderr << chunk
           @live_stderr << chunk if @live_stderr
         end
@@ -304,7 +304,7 @@ module Mixlib
       end
 
       def read_process_status_to_buffer
-        while chunk = child_process_status.read_nonblock(READ_SIZE)
+        while ( chunk = child_process_status.read_nonblock(READ_SIZE) )
           @process_status << chunk
         end
       rescue Errno::EAGAIN
@@ -402,7 +402,8 @@ module Mixlib
 
       # Try to reap the child process but don't block if it isn't dead yet.
       def attempt_reap
-        if results = Process.waitpid2(@child_pid, Process::WNOHANG)
+        results = Process.waitpid2(@child_pid, Process::WNOHANG)
+        if results
           @reaped = true
           @status = results.last
         else
