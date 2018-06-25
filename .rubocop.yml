@@ -7,9 +7,5 @@ Lint/UselessAccessModifier:
   Exclude:
     - 'lib/mixlib/shellout/windows/core_ext.rb'
 
-# Set for mixlib-shell-out-windows.gemspec
-Security/Eval:
-  Enabled: false
-
 Style/HashSyntax:
   Enabled: true

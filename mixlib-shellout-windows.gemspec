@@ -1,4 +1,4 @@
-gemspec = eval(File.read(File.expand_path("../mixlib-shellout.gemspec", __FILE__)))
+gemspec = instance_eval(File.read(File.expand_path("../mixlib-shellout.gemspec", __FILE__)))
 
 gemspec.platform = Gem::Platform.new(%w{universal mingw32})
 

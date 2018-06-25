@@ -122,7 +122,7 @@ module Mixlib
                     wmi = WmiLite::Wmi.new
                     kill_process_tree(process.process_id, wmi, logger)
                     Process.kill(:KILL, process.process_id)
-                  rescue
+                  rescue SystemCallError
                     logger.warn("Failed to kill timed out process #{process.process_id}") if logger
                   end
 
@@ -357,7 +357,7 @@ module Mixlib
           ].join)
         end
         Process.kill(:KILL, instance.wmi_ole_object.processid)
-      rescue
+      rescue SystemCallError
         if logger
           logger.debug([
             "Failed to kill child process #{child_pid}::",
