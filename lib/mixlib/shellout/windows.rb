@@ -68,15 +68,15 @@ module Mixlib
           #
           app_name, command_line = command_to_run(command)
           create_process_args = {
-            :app_name => app_name,
-            :command_line => command_line,
-            :startup_info => {
-              :stdout => stdout_write,
-              :stderr => stderr_write,
-              :stdin => stdin_read,
+            app_name: app_name,
+            command_line: command_line,
+            startup_info: {
+              stdout: stdout_write,
+              stderr: stderr_write,
+              stdin: stdin_read,
             },
-            :environment => inherit_environment.map { |k, v| "#{k}=#{v}" },
-            :close_handles => false,
+            environment: inherit_environment.map { |k, v| "#{k}=#{v}" },
+            close_handles: false,
           }
           create_process_args[:cwd] = cwd if cwd
           # default to local account database if domain is not specified

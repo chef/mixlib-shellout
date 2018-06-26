@@ -10,3 +10,6 @@ Lint/UselessAccessModifier:
 # Set for mixlib-shell-out-windows.gemspec
 Security/Eval:
   Enabled: false
+
+Style/HashSyntax:
+  Enabled: true
