@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gemspec :name => "mixlib-shellout"
+gemspec name: "mixlib-shellout"
 
 group(:test) do
   gem "rspec_junit_formatter"
