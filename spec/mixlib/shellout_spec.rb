@@ -353,13 +353,13 @@ describe Mixlib::ShellOut do
       context "when setting user by id" do
         before(:each) { shell_cmd.user = uid }
         # Setting the user by uid should change the uid
-        #it 'should set the uid' do
+        # it 'should set the uid' do
 
         describe "#uid" do
           subject { super().uid }
           it { is_expected.to eq(uid) }
         end
-        #end
+        # end
         # Setting the user without a different gid should change the gid to 1002
 
         describe "#gid" do
@@ -1378,7 +1378,7 @@ describe Mixlib::ShellOut do
       end
 
       context "with subprocess writing lots of data to both stdout and stderr" do
-        let(:expected_output_with) { lambda { |chr| (chr * 20_000) + "#{LINE_ENDING}" + (chr * 20_000) + "#{LINE_ENDING}" } }
+        let(:expected_output_with) { lambda { |chr| (chr * 20_000) + (LINE_ENDING).to_s + (chr * 20_000) + (LINE_ENDING).to_s } }
 
         context "when writing to STDOUT first" do
           let(:ruby_code) { %q{puts "f" * 20_000; STDERR.puts "u" * 20_000; puts "f" * 20_000; STDERR.puts "u" * 20_000} }
@@ -1540,7 +1540,7 @@ describe Mixlib::ShellOut do
       let(:options) { { user: user } }
 
       it "should run as specified user" do
-        expect(running_user).to eql("#{user}")
+        expect(running_user).to eql((user).to_s)
       end
     end
   end
