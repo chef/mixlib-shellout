@@ -3,6 +3,7 @@ source "https://rubygems.org"
 gemspec name: "mixlib-shellout"
 
 group(:test) do
+  gem "chefstyle", git: "https://github.com/chef/chefstyle.git", branch: "master"
   gem "rspec_junit_formatter"
   gem "rake"
 end

@@ -9,11 +9,11 @@ def unix?
 end
 
 if windows?
-  LINE_ENDING = "\r\n"
-  ECHO_LC_ALL = "echo %LC_ALL%"
+  LINE_ENDING = "\r\n".freeze
+  ECHO_LC_ALL = "echo %LC_ALL%".freeze
 else
-  LINE_ENDING = "\n"
-  ECHO_LC_ALL = "echo $LC_ALL"
+  LINE_ENDING = "\n".freeze
+  ECHO_LC_ALL = "echo $LC_ALL".freeze
 end
 
 def root?
