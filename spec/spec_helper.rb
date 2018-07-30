@@ -11,6 +11,18 @@ require "timeout"
 Dir["spec/support/**/*.rb"].map { |f| f.gsub(%r{.rb$}, "") }.each { |f| require f }
 
 RSpec.configure do |config|
+  # Use documentation format
+  config.formatter = "doc"
+
+  # Use color in STDOUT
+  config.color = true
+
+  # Use color not only in STDOUT but also in pagers and files
+  config.tty = true
+
+  # run the examples in random order
+  config.order = :rand
+
   config.mock_with :rspec
   config.filter_run focus: true
   config.filter_run_excluding external: true
