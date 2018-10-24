@@ -18,6 +18,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "chefstyle"
 
   s.require_path = "lib"
-  s.files = %w{Gemfile Rakefile LICENSE README.md} + Dir.glob("*.gemspec") +
+  s.files = %w{LICENSE README.md} +
     Dir.glob("lib/**/*", File::FNM_DOTMATCH).reject { |f| File.directory?(f) }
 end
