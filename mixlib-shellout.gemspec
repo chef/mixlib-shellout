@@ -10,16 +10,14 @@ Gem::Specification.new do |s|
   s.description = s.summary
   s.author = "Chef Software Inc."
   s.email = "info@chef.io"
-  s.homepage = "https://www.chef.io/"
+  s.homepage = "https://github.com/chef/mixlib-shellout"
 
   s.required_ruby_version = ">= 2.2"
 
   s.add_development_dependency "rspec", "~> 3.0"
   s.add_development_dependency "chefstyle"
 
-  s.bindir       = "bin"
-  s.executables  = []
   s.require_path = "lib"
-  s.files = %w{Gemfile Rakefile LICENSE README.md} + Dir.glob("*.gemspec") +
+  s.files = %w{LICENSE README.md} +
     Dir.glob("lib/**/*", File::FNM_DOTMATCH).reject { |f| File.directory?(f) }
 end

@@ -18,7 +18,7 @@ describe "Mixlib::ShellOut::Windows", :windows_only do
       context "when unquoted" do
         with_command(%q{ruby -e 'prints "foobar"'}) { is_expected.not_to be_truthy }
 
-        # https://github.com/opscode/mixlib-shellout/pull/2#issuecomment-4825574
+        # https://github.com/chef/mixlib-shellout/pull/2#issuecomment-4825574
         with_command(%q{"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin\NETFX 4.0 Tools\gacutil.exe" /i "C:\Program Files (x86)\NUnit 2.6\bin\framework\nunit.framework.dll"}) { is_expected.not_to be_truthy }
 
         with_command(%q{ruby -e 'exit 1' | ruby -e 'exit 0'}) { is_expected.to be_truthy }
@@ -255,7 +255,7 @@ describe "Mixlib::ShellOut::Windows", :windows_only do
         is_expected.to eql([ 'C:\Windows\system32/ping.EXE', "ping" ])
       end
 
-      # https://github.com/opscode/mixlib-shellout/pull/2 with bat file
+      # https://github.com/chef/mixlib-shellout/pull/2 with bat file
       with_command('"C:\Program Files\Application\Start.bat"', filename: 'C:\Program Files\Application\Start.bat') do
         is_expected.to eql([ comspec, 'cmd /c ""C:\Program Files\Application\Start.bat""' ])
       end
@@ -266,7 +266,7 @@ describe "Mixlib::ShellOut::Windows", :windows_only do
         is_expected.to eql([ comspec, 'cmd /c ""C:\Program Files\Application\Start.bat" /i "C:\Program Files (x86)\NUnit 2.6\bin\framework\nunit.framework.dll""' ])
       end
 
-      # https://github.com/opscode/mixlib-shellout/pull/2 with cmd file
+      # https://github.com/chef/mixlib-shellout/pull/2 with cmd file
       with_command('"C:\Program Files\Application\Start.cmd"', filename: 'C:\Program Files\Application\Start.cmd') do
         is_expected.to eql([ comspec, 'cmd /c ""C:\Program Files\Application\Start.cmd""' ])
       end
@@ -277,7 +277,7 @@ describe "Mixlib::ShellOut::Windows", :windows_only do
         is_expected.to eql([ comspec, 'cmd /c ""C:\Program Files\Application\Start.cmd" /i "C:\Program Files (x86)\NUnit 2.6\bin\framework\nunit.framework.dll""' ])
       end
 
-      # https://github.com/opscode/mixlib-shellout/pull/2 with unquoted exe file
+      # https://github.com/chef/mixlib-shellout/pull/2 with unquoted exe file
       with_command('C:\RUBY192\bin\ruby.exe', filename: 'C:\RUBY192\bin\ruby.exe') do
         is_expected.to eql([ 'C:\RUBY192\bin\ruby.exe', 'C:\RUBY192\bin\ruby.exe' ])
       end
@@ -288,7 +288,7 @@ describe "Mixlib::ShellOut::Windows", :windows_only do
         is_expected.to eql([ 'C:\RUBY192\bin\ruby.exe', 'C:\RUBY192\bin\ruby.exe -e "print \'fee fie foe fum\'"' ])
       end
 
-      # https://github.com/opscode/mixlib-shellout/pull/2 with quoted exe file
+      # https://github.com/chef/mixlib-shellout/pull/2 with quoted exe file
       exe_with_spaces = 'C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin\NETFX 4.0 Tools\gacutil.exe'
       with_command("\"#{exe_with_spaces}\"", filename: exe_with_spaces) do
         is_expected.to eql([ exe_with_spaces, "\"#{exe_with_spaces}\"" ])
