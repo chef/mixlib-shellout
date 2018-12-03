@@ -1,9 +1,15 @@
 # mixlib-shellout Changelog
 
+<!-- latest_release -->
+<!-- latest_release -->
+<!-- release_rollup -->
+<!-- release_rollup -->
+<!-- latest_stable_release -->
 ## Release 2.4.0
 
 - Added username and password validation for elevated option on Windows
 - Added support for setting sensitive so that potentially sensitive output is suppressed
+<!-- latest_stable_release -->
 
 ## Release 2.3.2
 
