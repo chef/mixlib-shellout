@@ -18,6 +18,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "chefstyle"
 
   s.require_path = "lib"
-  s.files = %w{LICENSE README.md} +
+  s.files = %w{LICENSE} +
     Dir.glob("lib/**/*", File::FNM_DOTMATCH).reject { |f| File.directory?(f) }
 end
