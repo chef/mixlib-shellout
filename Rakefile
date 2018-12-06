@@ -3,14 +3,34 @@ require "rspec/core/rake_task"
 
 Bundler::GemHelper.install_tasks name: "mixlib-shellout"
 
-require "chefstyle"
-require "rubocop/rake_task"
-desc "Run Ruby style checks"
-RuboCop::RakeTask.new(:style)
+task default: [:style, :spec]
 
-desc "Run all specs in spec directory"
-RSpec::Core::RakeTask.new(:spec) do |t|
-  t.pattern = FileList["spec/**/*_spec.rb"]
+desc "Run specs"
+RSpec::Core::RakeTask.new(:spec) do |spec|
+  spec.pattern = "spec/**/*_spec.rb"
 end
 
-task default: [:spec, :style]
+begin
+  require "chefstyle"
+  require "rubocop/rake_task"
+  RuboCop::RakeTask.new(:style) do |task|
+    task.options += ["--display-cop-names", "--no-color"]
+  end
+rescue LoadError
+  puts "chefstyle/rubocop is not available. bundle install first to make sure all dependencies are installed."
+end
+
+begin
+  require "yard"
+  YARD::Rake::YardocTask.new(:docs)
+rescue LoadError
+  puts "yard is not available. bundle install first to make sure all dependencies are installed."
+end
+
+task :console do
+  require "irb"
+  require "irb/completion"
+  require "mixlib/shellout"
+  ARGV.clear
+  IRB.start
+end
