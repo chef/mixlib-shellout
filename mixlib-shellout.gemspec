@@ -14,10 +14,6 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = ">= 2.2"
 
-  s.add_development_dependency "rspec", "~> 3.0"
-  s.add_development_dependency "chefstyle"
-
   s.require_path = "lib"
-  s.files = %w{LICENSE} +
-    Dir.glob("lib/**/*", File::FNM_DOTMATCH).reject { |f| File.directory?(f) }
+  s.files = %w{LICENSE} + Dir.glob("lib/**/*", File::FNM_DOTMATCH).reject { |f| File.directory?(f) }
 end
