@@ -1,25 +1,22 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 2.4.4 -->
+<!-- latest_release -->
+<!-- latest_release -->
+<!-- release_rollup -->
+<!-- release_rollup -->
+<!-- latest_stable_release -->
 ## [v2.4.4](https://github.com/chef/mixlib-shellout/tree/v2.4.4) (2018-12-12)
 
 #### Merged Pull Requests
+- Have expeditor promote the windows gem as well [#172](https://github.com/chef/mixlib-shellout/pull/172) ([tas50](https://github.com/tas50))
 - Don&#39;t ship the readme in the gem artifact [#173](https://github.com/chef/mixlib-shellout/pull/173) ([tas50](https://github.com/tas50))
-<!-- latest_release -->
-<!-- release_rollup since=2.4.2 -->
-### Changes not yet released to rubygems.org
-
-#### Merged Pull Requests
-- Don&#39;t ship the readme in the gem artifact [#173](https://github.com/chef/mixlib-shellout/pull/173) ([tas50](https://github.com/tas50)) <!-- 2.4.4 -->
-- Have expeditor promote the windows gem as well [#172](https://github.com/chef/mixlib-shellout/pull/172) ([tas50](https://github.com/tas50)) <!-- 2.4.3 -->
-<!-- release_rollup -->
 <!-- latest_stable_release -->
+
 ## [v2.4.2](https://github.com/chef/mixlib-shellout/tree/v2.4.2) (2018-12-06)
 
 #### Merged Pull Requests
 - Test on ruby-head and Ruby 2.6 in Travis [#170](https://github.com/chef/mixlib-shellout/pull/170) ([tas50](https://github.com/tas50))
 - Remove dev deps from the gemspec [#171](https://github.com/chef/mixlib-shellout/pull/171) ([tas50](https://github.com/tas50))
-<!-- latest_stable_release -->
 
 ## Release 2.4.0
 
