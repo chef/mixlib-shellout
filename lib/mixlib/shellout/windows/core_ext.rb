@@ -36,10 +36,48 @@ module Process::Constants
 
   ERROR_PRIVILEGE_NOT_HELD = 1314
   ERROR_LOGON_TYPE_NOT_GRANTED = 0x569
+
+  # Only documented in Userenv.h ???
+  # - ZERO (type Local) is assumed, no docs found
+  WIN32_PROFILETYPE_LOCAL                  = 0x00
+  WIN32_PROFILETYPE_PT_TEMPORARY           = 0x01
+  WIN32_PROFILETYPE_PT_ROAMING             = 0x02
+  WIN32_PROFILETYPE_PT_MANDATORY           = 0x04
+  WIN32_PROFILETYPE_PT_ROAMING_PREEXISTING = 0x08
+
+end
+
+# Structs required for data handling
+module Process::Structs
+
+  class PROFILEINFO < FFI::Struct
+    layout(
+      :dwSize,        :dword,
+      :dwFlags,       :dword,
+      :lpUserName,    :pointer,
+      :lpProfilePath, :pointer,
+      :lpDefaultPath, :pointer,
+      :lpServerName,  :pointer,
+      :lpPolicyPath,  :pointer,
+      :hProfile,      :handle
+    )
+  end
+
 end
 
 # Define the functions needed to check with Service windows station
 module Process::Functions
+  ffi_lib :userenv
+
+  attach_pfunc :GetProfileType,
+    [:pointer], :bool
+
+  attach_pfunc :LoadUserProfileW,
+    [:handle, :pointer], :bool
+
+  attach_pfunc :UnloadUserProfile,
+    [:handle, :handle], :bool
+
   ffi_lib :advapi32
 
   attach_pfunc :LogonUserW,
@@ -64,10 +102,14 @@ end
 # as of 2015-10-15 from commit cc066e5df25048f9806a610f54bf5f7f253e86f7
 module Process
 
+  class UnsupportedFeature < StandardError; end
+
   # Explicitly reopen singleton class so that class/constant declarations from
   # extensions are visible in Modules.nesting.
   class << self
+
     def create(args)
+
       unless args.kind_of?(Hash)
         raise TypeError, "hash keyword arguments expected"
       end
@@ -238,6 +280,7 @@ module Process
       inherit = hash["inherit"] ? 1 : 0
 
       if hash["with_logon"]
+
         logon, passwd, domain = format_creds_from_hash(hash)
 
         hash["creation_flags"] |= CREATE_UNICODE_ENVIRONMENT
@@ -255,51 +298,42 @@ module Process
         # can simulate running a command 'elevated' by running it under a separate
         # logon as a batch process.
         if hash["elevated"] || winsta_name =~ /^Service-0x0-.*$/i
-          logon_type = if hash["elevated"]
-                         LOGON32_LOGON_BATCH
-                       else
-                         LOGON32_LOGON_INTERACTIVE
-                       end
 
-          token = logon_user(logon, domain, passwd, logon_type)
-
-          create_process_as_user(token, app, cmd, process_security, thread_security, inherit, hash["creation_flags"], env, cwd, startinfo, procinfo)
-        else
-          bool = CreateProcessWithLogonW(
-            logon,                  # User
-            domain,                 # Domain
-            passwd,                 # Password
-            LOGON_WITH_PROFILE,     # Logon flags
-            app,                    # App name
-            cmd,                    # Command line
-            hash["creation_flags"], # Creation flags
-            env,                    # Environment
-            cwd,                    # Working directory
-            startinfo,              # Startup Info
-            procinfo                # Process Info
-          )
-
-          unless bool
-            raise SystemCallError.new("CreateProcessWithLogonW", FFI.errno)
+          logon_type = hash["elevated"] ? LOGON32_LOGON_BATCH : LOGON32_LOGON_INTERACTIVE
+          token      = logon_user(logon, domain, passwd, logon_type)
+          logon_ptr  = FFI::MemoryPointer.from_string(logon)
+          profile    = PROFILEINFO.new.tap do |dat|
+            dat[:dwSize]     = dat.size
+            dat[:dwFlags]    = 1
+            dat[:lpUserName] = logon_ptr
           end
-        end
-      else
-        bool = CreateProcessW(
-          app,                    # App name
-          cmd,                    # Command line
-          process_security,       # Process attributes
-          thread_security,        # Thread attributes
-          inherit,                # Inherit handles?
-          hash["creation_flags"], # Creation flags
-          env,                    # Environment
-          cwd,                    # Working directory
-          startinfo,              # Startup Info
-          procinfo                # Process Info
-        )
 
-        unless bool
-          raise SystemCallError.new("CreateProcessW", FFI.errno)
+          if logon_has_roaming_profile?
+            msg = %W{
+              Mixlib does not currently support executing commands as users
+              configured with Roaming Profiles. [%s]
+            }.join(' ') % logon.encode('UTF-8').unpack("A*")
+            raise UnsupportedFeature.new(msg)
+          end
+
+          load_user_profile(token, profile.pointer)
+
+          create_process_as_user(token, app, cmd, process_security,
+            thread_security, inherit, hash["creation_flags"], env,
+            cwd, startinfo, procinfo)
+
+        else
+
+          create_process_with_logon(logon, domain, passwd, LOGON_WITH_PROFILE,
+            app,cmd, hash["creation_flags"], env, cwd, startinfo, procinfo)
+
         end
+
+      else
+
+        create_process(app, cmd, process_security, thread_security, inherit,
+          hash["creation_flags"], env, cwd, startinfo, procinfo)
+
       end
 
       # Automatically close the process and thread handles in the
@@ -314,12 +348,120 @@ module Process
         procinfo[:hThread] = 0
       end
 
-      ProcessInfo.new(
+      process = ProcessInfo.new(
         procinfo[:hProcess],
         procinfo[:hThread],
         procinfo[:dwProcessId],
         procinfo[:dwThreadId]
       )
+
+      [ process, profile, token ]
+    end
+
+    # See Process::Constants::WIN32_PROFILETYPE
+    def logon_has_roaming_profile?
+      get_profile_type >= 2
+    end
+
+    def get_profile_type
+      ptr = FFI::MemoryPointer.new(:uint)
+      unless GetProfileType(ptr)
+        raise SystemCallError.new("GetProfileType", FFI.errno)
+      end
+      ptr.read_uint
+    end
+
+    def load_user_profile(token, profile_ptr)
+      unless LoadUserProfileW(token, profile_ptr)
+        raise SystemCallError.new("LoadUserProfileW", FFI.errno)
+      end
+      true
+    end
+
+    def unload_user_profile(token, profile)
+      if profile[:hProfile].zero?
+        warn "\n\nWARNING: Profile not loaded\n"
+      else
+        unless UnloadUserProfile(token, profile[:hProfile])
+          raise SystemCallError.new("UnloadUserProfile", FFI.errno)
+        end
+      end
+      true
+    end
+
+    def create_process_as_user(token, app, cmd, process_security,
+      thread_security, inherit, creation_flags, env, cwd, startinfo, procinfo)
+
+      bool = CreateProcessAsUserW(
+        token,            # User token handle
+        app,              # App name
+        cmd,              # Command line
+        process_security, # Process attributes
+        thread_security,  # Thread attributes
+        inherit,          # Inherit handles
+        creation_flags,   # Creation Flags
+        env,              # Environment
+        cwd,              # Working directory
+        startinfo,        # Startup Info
+        procinfo          # Process Info
+      )
+
+      unless bool
+        msg = case FFI.errno
+        when ERROR_PRIVILEGE_NOT_HELD
+          %w{
+            CreateProcessAsUserW (User '%s' must hold the 'Replace a process
+            level token' and 'Adjust Memory Quotas for a process' permissions.
+            Logoff the user after adding this right to make it effective.)
+          }.join(' ') % ::ENV['USERNAME']
+        else
+          'CreateProcessAsUserW failed.'
+        end
+        raise SystemCallError.new(msg, FFI.errno)
+      end
+    end
+
+    def create_process_with_logon(logon, domain, passwd, logon_flags, app,cmd,
+      creation_flags, env, cwd, startinfo, procinfo)
+
+      bool = CreateProcessWithLogonW(
+        logon,           # User
+        domain,          # Domain
+        passwd,          # Password
+        logon_flags,     # Logon flags
+        app,             # App name
+        cmd,             # Command line
+        creation_flags,  # Creation flags
+        env,             # Environment
+        cwd,             # Working directory
+        startinfo,       # Startup Info
+        procinfo         # Process Info
+      )
+
+      unless bool
+        raise SystemCallError.new("CreateProcessWithLogonW", FFI.errno)
+      end
+    end
+
+    def create_process(app, cmd, process_security, thread_security, inherit,
+      creation_flags, env, cwd, startinfo, procinfo)
+
+      bool = CreateProcessW(
+        app,               # App name
+        cmd,               # Command line
+        process_security,  # Process attributes
+        thread_security,   # Thread attributes
+        inherit,           # Inherit handles?
+        creation_flags,    # Creation flags
+        env,               # Environment
+        cwd,               # Working directory
+        startinfo,         # Startup Info
+        procinfo           # Process Info
+      )
+
+      unless bool
+        raise SystemCallError.new("CreateProcessW", FFI.errno)
+      end
     end
 
     def logon_user(user, domain, passwd, type, provider = LOGON32_PROVIDER_DEFAULT)
@@ -344,32 +486,6 @@ module Process
       end
 
       token.read_ulong
-    end
-
-    def create_process_as_user(token, app, cmd, process_security, thread_security, inherit, creation_flags, env, cwd, startinfo, procinfo)
-      bool = CreateProcessAsUserW(
-        token,                  # User token handle
-        app,                    # App name
-        cmd,                    # Command line
-        process_security,       # Process attributes
-        thread_security,        # Thread attributes
-        inherit,                # Inherit handles
-        creation_flags,         # Creation Flags
-        env,                    # Environment
-        cwd,                    # Working directory
-        startinfo,              # Startup Info
-        procinfo                # Process Info
-      )
-
-      unless bool
-        if FFI.errno == ERROR_PRIVILEGE_NOT_HELD
-          raise SystemCallError.new("CreateProcessAsUserW (User '#{::ENV['USERNAME']}' must hold the 'Replace a process level token' and 'Adjust Memory Quotas for a process' permissions. Logoff the user after adding this right to make it effective.)", FFI.errno)
-        else
-          raise SystemCallError.new("CreateProcessAsUserW failed.", FFI.errno)
-        end
-      end
-    ensure
-      CloseHandle(token)
     end
 
     def get_windows_station_name
@@ -406,5 +522,6 @@ module Process
 
       [ logon, passwd, domain ]
     end
+
   end
 end

@@ -88,7 +88,7 @@ module Mixlib
           #
           # Start the process
           #
-          process = Process.create(create_process_args)
+          process, profile, token = Process.create(create_process_args)
           logger.debug(format_process(process, app_name, command_line, timeout)) if logger
           begin
             # Start pushing data into input
@@ -143,6 +143,8 @@ module Mixlib
           ensure
             CloseHandle(process.thread_handle) if process.thread_handle
             CloseHandle(process.process_handle) if process.process_handle
+            Process.unload_user_profile(token, profile) if profile
+            CloseHandle(token) if token
           end
 
         ensure
