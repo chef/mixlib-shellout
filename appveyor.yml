@@ -6,9 +6,11 @@ platform:
 
 environment:
   matrix:
-    - ruby_version: "22"
     - ruby_version: "23"
     - ruby_version: "23-x64"
+    - ruby_version: "24-x64"
+    - ruby_version: "25-x64"
+    - ruby_version: "26-x64"
 
 clone_folder: c:\projects\mixlib-shellout
 clone_depth: 1
@@ -31,9 +33,9 @@ install:
   - SET PATH=C:\Ruby%ruby_version%\bin;%PATH%
   - echo %PATH%
   - ruby --version
-  - gem --version
   - gem update --system
-  - gem install bundler --quiet --no-ri --no-rdoc
+  - gem --version
+  - gem install bundler --quiet --no-document
   - bundler --version
 
 build_script:
