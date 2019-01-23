@@ -1,8 +1,16 @@
 # mixlib-shellout Changelog
 
+<!-- latest_release unreleased -->
+## Unreleased
+
+#### Merged Pull Requests
+- update travis/appveyor, drop ruby 2.2 support, test on 2.6 [#176](https://github.com/chef/mixlib-shellout/pull/176) ([lamont-granquist](https://github.com/lamont-granquist))
 <!-- latest_release -->
-<!-- latest_release -->
-<!-- release_rollup -->
+<!-- release_rollup since=2.4.4 -->
+### Changes not yet released to rubygems.org
+
+#### Merged Pull Requests
+- update travis/appveyor, drop ruby 2.2 support, test on 2.6 [#176](https://github.com/chef/mixlib-shellout/pull/176) ([lamont-granquist](https://github.com/lamont-granquist)) <!-- 3.0.0 -->
 <!-- release_rollup -->
 <!-- latest_stable_release -->
 ## [v2.4.4](https://github.com/chef/mixlib-shellout/tree/v2.4.4) (2018-12-12)
