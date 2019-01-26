@@ -109,7 +109,6 @@ module Process
   class << self
 
     def create(args)
-
       unless args.kind_of?(Hash)
         raise TypeError, "hash keyword arguments expected"
       end
@@ -127,9 +126,9 @@ module Process
 
       # Set default values
       hash = {
-        "app_name"       => nil,
+        "app_name" => nil,
         "creation_flags" => 0,
-        "close_handles"  => true,
+        "close_handles" => true,
       }
 
       # Validate the keys, and convert symbols and case to lowercase strings.
@@ -309,10 +308,10 @@ module Process
           end
 
           if logon_has_roaming_profile?
-            msg = %W{
+            msg = %w{
               Mixlib does not currently support executing commands as users
               configured with Roaming Profiles. [%s]
-            }.join(' ') % logon.encode('UTF-8').unpack("A*")
+            }.join(" ") % logon.encode("UTF-8").unpack("A*")
             raise UnsupportedFeature.new(msg)
           end
 
@@ -325,7 +324,7 @@ module Process
         else
 
           create_process_with_logon(logon, domain, passwd, LOGON_WITH_PROFILE,
-            app,cmd, hash["creation_flags"], env, cwd, startinfo, procinfo)
+            app, cmd, hash["creation_flags"], env, cwd, startinfo, procinfo)
 
         end
 
@@ -379,7 +378,7 @@ module Process
     end
 
     def unload_user_profile(token, profile)
-      if profile[:hProfile].zero?
+      if profile[:hProfile] == 0
         warn "\n\nWARNING: Profile not loaded\n"
       else
         unless UnloadUserProfile(token, profile[:hProfile])
@@ -408,20 +407,20 @@ module Process
 
       unless bool
         msg = case FFI.errno
-        when ERROR_PRIVILEGE_NOT_HELD
-          %w{
-            CreateProcessAsUserW (User '%s' must hold the 'Replace a process
-            level token' and 'Adjust Memory Quotas for a process' permissions.
-            Logoff the user after adding this right to make it effective.)
-          }.join(' ') % ::ENV['USERNAME']
-        else
-          'CreateProcessAsUserW failed.'
-        end
+              when ERROR_PRIVILEGE_NOT_HELD
+                [
+                  %{CreateProcessAsUserW (User '%s' must hold the 'Replace a process},
+                  %{level token' and 'Adjust Memory Quotas for a process' permissions.},
+                  %{Logoff the user after adding this right to make it effective.)},
+                ].join(" ") % ::ENV["USERNAME"]
+              else
+                "CreateProcessAsUserW failed."
+              end
         raise SystemCallError.new(msg, FFI.errno)
       end
     end
 
-    def create_process_with_logon(logon, domain, passwd, logon_flags, app,cmd,
+    def create_process_with_logon(logon, domain, passwd, logon_flags, app, cmd,
       creation_flags, env, cwd, startinfo, procinfo)
 
       bool = CreateProcessWithLogonW(
