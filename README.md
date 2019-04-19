@@ -39,7 +39,7 @@ In addition to the command to run there are other options that can be set to cha
 Run a command as the `www` user with no extra ENV settings from `/tmp` with a 1s timeout
 
 ```ruby
-  cmd = Mixlib::ShellOut.new("apachectl", "start", :user => 'www', :env => nil, :cwd => '/tmp', :timeout => 1)
+  cmd = Mixlib::ShellOut.new("apachectl", "start", :user => 'www', :environment => nil, :cwd => '/tmp', :timeout => 1)
   cmd.run_command # etc.
 ```
 
