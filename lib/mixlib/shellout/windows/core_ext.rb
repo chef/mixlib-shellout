@@ -85,9 +85,9 @@ module Process
 
       # Set default values
       hash = {
-        "app_name"       => nil,
+        "app_name" => nil,
         "creation_flags" => 0,
-        "close_handles"  => true,
+        "close_handles" => true,
       }
 
       # Validate the keys, and convert symbols and case to lowercase strings.
