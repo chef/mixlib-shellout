@@ -66,7 +66,7 @@ module Mixlib
           #
           # Set cwd, environment, appname, etc.
           #
-          app_name, command_line = command_to_run(command)
+          app_name, command_line = command_to_run(combine_args(*command))
           create_process_args = {
             app_name: app_name,
             command_line: command_line,
@@ -194,6 +194,17 @@ module Mixlib
         end
 
         true
+      end
+
+      def combine_args(*args)
+        return args if args.length == 1
+        args.map do |arg|
+          if arg.match(/[ \t\n\v"]/)
+            "\"#{arg}\""
+          else
+            arg
+          end
+        end.join(" ")
       end
 
       def command_to_run(command)

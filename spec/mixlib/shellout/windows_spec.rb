@@ -15,6 +15,10 @@ describe "Mixlib::ShellOut::Windows", :windows_only do
         end
       end
 
+      context "with arrays" do
+        with_command(%w{echo %PATH%}) { is_expected.to be_truthy }
+      end
+
       context "when unquoted" do
         with_command(%q{ruby -e 'prints "foobar"'}) { is_expected.not_to be_truthy }
 
