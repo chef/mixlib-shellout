@@ -5,6 +5,8 @@ Provides a simplified interface to shelling out while still collecting both stan
 
 No means for passing input to the subprocess is provided.
 
+TEST!
+
 ## Example
 ### Simple Shellout
 Invoke find(1) to search for .rb files:
