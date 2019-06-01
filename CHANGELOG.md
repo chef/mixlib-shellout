@@ -1,15 +1,17 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release unreleased -->
-## Unreleased
+<!-- latest_release 3.0.2 -->
+## [v3.0.2](https://github.com/chef/mixlib-shellout/tree/v3.0.2) (2019-06-01)
 
 #### Merged Pull Requests
+- Add BuildKite pipeline [#184](https://github.com/chef/mixlib-shellout/pull/184) ([tas50](https://github.com/tas50))
 - Add new github templates and codeowners file [#179](https://github.com/chef/mixlib-shellout/pull/179) ([tas50](https://github.com/tas50))
 <!-- latest_release -->
 <!-- release_rollup since=2.4.4 -->
 ### Changes not yet released to rubygems.org
 
 #### Merged Pull Requests
+- Add BuildKite pipeline [#184](https://github.com/chef/mixlib-shellout/pull/184) ([tas50](https://github.com/tas50)) <!-- 3.0.2 -->
 - Add new github templates and codeowners file [#179](https://github.com/chef/mixlib-shellout/pull/179) ([tas50](https://github.com/tas50)) <!-- 3.0.1 -->
 - Misnamed parameter in README [#178](https://github.com/chef/mixlib-shellout/pull/178) ([martinisoft](https://github.com/martinisoft)) <!-- 3.0.1 -->
 - update travis/appveyor, drop ruby 2.2 support, test on 2.6 [#176](https://github.com/chef/mixlib-shellout/pull/176) ([lamont-granquist](https://github.com/lamont-granquist)) <!-- 3.0.0 -->
