@@ -2,8 +2,6 @@ def windows?
   !!(RUBY_PLATFORM =~ /mswin|mingw|windows/)
 end
 
-# def jruby?
-
 def unix?
   !windows?
 end
