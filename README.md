@@ -67,6 +67,7 @@ Invoke "whoami.exe" with elevated privileges:
   whoami = Mixlib::ShellOut.new("whoami.exe", :user => "username", :domain => "DOMAIN", :password => "password", :elevated => true)
   whoami.run_command
 ```
+
 **NOTE:** The user 'admin' must have the 'Log on as a batch job' permission and the user chef is running as must have the 'Replace a process level token' and 'Adjust Memory Quotas for a process' permissions.
 
 ## Platform Support
