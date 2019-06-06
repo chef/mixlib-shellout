@@ -1,16 +1,16 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.0.2 -->
-## [v3.0.2](https://github.com/chef/mixlib-shellout/tree/v3.0.2) (2019-06-01)
+<!-- latest_release 3.0.3 -->
+## [v3.0.3](https://github.com/chef/mixlib-shellout/tree/v3.0.3) (2019-06-06)
 
 #### Merged Pull Requests
-- Add BuildKite pipeline [#184](https://github.com/chef/mixlib-shellout/pull/184) ([tas50](https://github.com/tas50))
-- Add new github templates and codeowners file [#179](https://github.com/chef/mixlib-shellout/pull/179) ([tas50](https://github.com/tas50))
+- Support array args on windows WIP [#182](https://github.com/chef/mixlib-shellout/pull/182) ([lamont-granquist](https://github.com/lamont-granquist))
 <!-- latest_release -->
 <!-- release_rollup since=2.4.4 -->
 ### Changes not yet released to rubygems.org
 
 #### Merged Pull Requests
+- Support array args on windows WIP [#182](https://github.com/chef/mixlib-shellout/pull/182) ([lamont-granquist](https://github.com/lamont-granquist)) <!-- 3.0.3 -->
 - Add BuildKite pipeline [#184](https://github.com/chef/mixlib-shellout/pull/184) ([tas50](https://github.com/tas50)) <!-- 3.0.2 -->
 - Add new github templates and codeowners file [#179](https://github.com/chef/mixlib-shellout/pull/179) ([tas50](https://github.com/tas50)) <!-- 3.0.1 -->
 - Misnamed parameter in README [#178](https://github.com/chef/mixlib-shellout/pull/178) ([martinisoft](https://github.com/martinisoft)) <!-- 3.0.1 -->
