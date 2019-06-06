@@ -2,7 +2,7 @@
 # Author:: Daniel DeLeo (<dan@chef.io>)
 # Author:: John Keiser (<jkeiser@chef.io>)
 # Author:: Ho-Sheng Hsiao (<hosh@chef.io>)
-# Copyright:: Copyright (c) 2011-2016 Chef Software, Inc.
+# Copyright:: Copyright (c) 2011-2019, Chef Software Inc.
 # License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -66,7 +66,7 @@ module Mixlib
           #
           # Set cwd, environment, appname, etc.
           #
-          app_name, command_line = command_to_run(command)
+          app_name, command_line = command_to_run(combine_args(*command))
           create_process_args = {
             app_name: app_name,
             command_line: command_line,
@@ -194,6 +194,46 @@ module Mixlib
         end
 
         true
+      end
+
+      # Use to support array passing semantics on windows
+      #
+      # 1.  strings with whitespace or quotes in them need quotes around them.
+      # 2.  interior quotes need to get backslash escaped (parser needs to know when it really ends).
+      # 3.  random backlsashes in paths themselves remain untouched.
+      # 4.  if the argument must be quoted by #1 and terminates in a sequence of backslashes then all the backlashes must themselves
+      #     be backslash excaped (double the backslashes).
+      # 5.  if an interior quote that must be escaped by #2 has a sequence of backslashes before it then all the backslashes must
+      #     themselves be backslash excaped along with the backslash ecape of the interior quote (double plus one backslashes).
+      #
+      # And to restate.  We are constructing a string which will be parsed by the windows parser into arguments, and we want those
+      # arguments to match the *args array we are passed here.  So call the windows parser operation A then we need to apply A^-1 to
+      # our args to construct the string so that applying A gives windows back our *args.
+      #
+      # And when the windows parser sees a series of backslashes followed by a double quote, it has to determine if that double quote
+      # is terminating or not, and how many backslashes to insert in the args.  So what it does is divide it by two (rounding down) to
+      # get the number of backslashes to insert.  Then if it is even the double quotes terminate the argument.  If it is even the
+      # double quotes are interior double quotes (the extra backslash quotes the double quote).
+      #
+      # We construct the inverse operation so interior double quotes preceeded by N backslashes get 2N+1 backslashes in front of the quote,
+      # while trailing N backslashes get 2N backslashes in front of the quote that terminates the argument.
+      #
+      # see: https://blogs.msdn.microsoft.com/twistylittlepassagesallalike/2011/04/23/everyone-quotes-command-line-arguments-the-wrong-way/
+      #
+      # @api private
+      # @param args [Array<String>] array of command arguments
+      # @return String
+      def combine_args(*args)
+        return args[0] if args.length == 1
+        args.map do |arg|
+          if arg =~ /[ \t\n\v"]/
+            arg = arg.gsub(/(\\*)"/, '\1\1\"') # interior quotes with N preceeding backslashes need 2N+1 backslashes
+            arg = arg.sub(/(\\+)$/, '\1\1') # trailing N backslashes need to become 2N backslashes
+            "\"#{arg}\""
+          else
+            arg
+          end
+        end.join(" ")
       end
 
       def command_to_run(command)

@@ -307,4 +307,88 @@ describe "Mixlib::ShellOut::Windows", :windows_only do
       end
     end
   end
+
+  context "#combine_args" do
+    let(:shell_out) { Mixlib::ShellOut.new }
+    subject { shell_out.send(:combine_args, *largs) }
+
+    def self.with_args(*args, &example)
+      context "with command #{args}" do
+        let(:largs) { args }
+        it(&example)
+      end
+    end
+
+    with_args("echo", "%PATH%") do
+      is_expected.to eql(%q{echo %PATH%})
+    end
+
+    with_args("echo %PATH%") do
+      is_expected.to eql(%q{echo %PATH%})
+    end
+
+    # Note carefully for the following that single quotes in ruby support '\\' as an escape sequence for a single
+    # literal backslash.  It is not mandatory to always use this since '\d' does not escape the 'd' and is literally
+    # a backlash followed by an 'd'.  However, in the following all backslashes are escaped for consistency.  Otherwise
+    # it becomes prohibitively confusing to track when you need and do not need the escape the backslash (particularly
+    # when the literal string has a trailing backslash such that '\\' must be used instead of '\' which would escape
+    # the intended terminating single quote or %q{\} which escapes the terminating delimiter).
+
+    with_args("child.exe", "argument1", "argument 2", '\\some\\path with\\spaces') do
+      is_expected.to eql('child.exe argument1 "argument 2" "\\some\\path with\\spaces"')
+    end
+
+    with_args("child.exe", "argument1", 'she said, "you had me at hello"', '\\some\\path with\\spaces') do
+      is_expected.to eql('child.exe argument1 "she said, \\"you had me at hello\\"" "\\some\\path with\\spaces"')
+    end
+
+    with_args("child.exe", "argument1", 'argument\\\\"2\\\\"', "argument3", "argument4") do
+      is_expected.to eql('child.exe argument1 "argument\\\\\\\\\\"2\\\\\\\\\\"" argument3 argument4')
+    end
+
+    with_args("child.exe", '\\some\\directory with\\spaces\\', "argument2") do
+      is_expected.to eql('child.exe "\\some\\directory with\\spaces\\\\" argument2')
+    end
+
+    with_args("child.exe", '\\some\\directory with\\\\\\spaces\\\\\\', "argument2") do
+      is_expected.to eql('child.exe "\\some\\directory with\\\\\\spaces\\\\\\\\\\\\" argument2')
+    end
+  end
+
+  context "#run_command" do
+    let(:shell_out) { Mixlib::ShellOut.new(*largs) }
+    subject { shell_out.send(:run_command) }
+
+    def self.with_args(*args, &example)
+      context "with command #{args}" do
+        let(:largs) { args }
+        it(&example)
+      end
+    end
+
+    with_args("echo", "FOO") do
+      is_expected.not_to be_error
+    end
+
+    # Test box is going to have to have c:\program files on it, which is perhaps brittle in principle, but
+    # I don't know enough windows to come up with a less brittle test.  Fix it if you've got a better idea.
+    # The tests need to fail though if the argument is not quoted correctly so using `echo` would be poor
+    # because `echo FOO BAR` and `echo "FOO BAR"` aren't any different.
+
+    with_args('dir c:\\program files') do
+      is_expected.to be_error
+    end
+
+    with_args('dir "c:\\program files"') do
+      is_expected.not_to be_error
+    end
+
+    with_args("dir", 'c:\\program files') do
+      is_expected.not_to be_error
+    end
+
+    with_args("dir", 'c:\\program files\\') do
+      is_expected.not_to be_error
+    end
+  end
 end
