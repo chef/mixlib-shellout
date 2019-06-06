@@ -3,7 +3,7 @@ require "rspec/core/rake_task"
 
 Bundler::GemHelper.install_tasks name: "mixlib-shellout"
 
-task default: [:style, :spec]
+task default: [:spec, :style]
 
 desc "Run specs"
 RSpec::Core::RakeTask.new(:spec) do |spec|
