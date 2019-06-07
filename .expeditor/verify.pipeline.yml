@@ -2,30 +2,31 @@ steps:
 
 - label: run-lint-and-specs-ruby-2.4
   command:
-    - asdf local ruby 2.4.5
     - export USER="root"
     - bundle install --jobs=7 --retry=3 --without docs development
     - bundle exec rake
   expeditor:
     executor:
       docker:
+        image: ruby:2.4-stretch
 
 - label: run-lint-and-specs-ruby-2.5
   command:
-    - asdf local ruby 2.5.5
     - bundle install --jobs=7 --retry=3 --without docs development
     - export USER="root"
     - bundle exec rake
   expeditor:
     executor:
       docker:
+        image: ruby:2.5-stretch
 
 - label: run-lint-and-specs-ruby-2.6
   command:
-    - asdf local ruby 2.6.3
     - export USER="root"
     - bundle install --jobs=7 --retry=3 --without docs development
     - bundle exec rake
   expeditor:
     executor:
       docker:
+        image: ruby:2.6-stretch
+
