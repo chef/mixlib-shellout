@@ -1,29 +1,26 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.0.4 -->
-## [v3.0.4](https://github.com/chef/mixlib-shellout/tree/v3.0.4) (2019-06-06)
-
-#### Merged Pull Requests
-- Load and unload user profile as required [#177](https://github.com/chef/mixlib-shellout/pull/177) ([dayglojesus](https://github.com/dayglojesus))
 <!-- latest_release -->
-<!-- release_rollup since=2.4.4 -->
-### Changes not yet released to rubygems.org
-
-#### Merged Pull Requests
-- Load and unload user profile as required [#177](https://github.com/chef/mixlib-shellout/pull/177) ([dayglojesus](https://github.com/dayglojesus)) <!-- 3.0.4 -->
-- Support array args on windows WIP [#182](https://github.com/chef/mixlib-shellout/pull/182) ([lamont-granquist](https://github.com/lamont-granquist)) <!-- 3.0.3 -->
-- Add BuildKite pipeline [#184](https://github.com/chef/mixlib-shellout/pull/184) ([tas50](https://github.com/tas50)) <!-- 3.0.2 -->
-- Add new github templates and codeowners file [#179](https://github.com/chef/mixlib-shellout/pull/179) ([tas50](https://github.com/tas50)) <!-- 3.0.1 -->
-- Misnamed parameter in README [#178](https://github.com/chef/mixlib-shellout/pull/178) ([martinisoft](https://github.com/martinisoft)) <!-- 3.0.1 -->
-- update travis/appveyor, drop ruby 2.2 support, test on 2.6 [#176](https://github.com/chef/mixlib-shellout/pull/176) ([lamont-granquist](https://github.com/lamont-granquist)) <!-- 3.0.0 -->
+<!-- latest_release -->
+<!-- release_rollup -->
 <!-- release_rollup -->
 <!-- latest_stable_release -->
+## [v3.0.4](https://github.com/chef/mixlib-shellout/tree/v3.0.4) (2019-06-07)
+
+#### Merged Pull Requests
+- update travis/appveyor, drop ruby 2.2 support, test on 2.6 [#176](https://github.com/chef/mixlib-shellout/pull/176) ([lamont-granquist](https://github.com/lamont-granquist))
+- Misnamed parameter in README [#178](https://github.com/chef/mixlib-shellout/pull/178) ([martinisoft](https://github.com/martinisoft))
+- Add new github templates and codeowners file [#179](https://github.com/chef/mixlib-shellout/pull/179) ([tas50](https://github.com/tas50))
+- Add BuildKite pipeline [#184](https://github.com/chef/mixlib-shellout/pull/184) ([tas50](https://github.com/tas50))
+- Support array args on windows WIP [#182](https://github.com/chef/mixlib-shellout/pull/182) ([lamont-granquist](https://github.com/lamont-granquist))
+- Load and unload user profile as required [#177](https://github.com/chef/mixlib-shellout/pull/177) ([dayglojesus](https://github.com/dayglojesus))
+<!-- latest_stable_release -->
+
 ## [v2.4.4](https://github.com/chef/mixlib-shellout/tree/v2.4.4) (2018-12-12)
 
 #### Merged Pull Requests
 - Have expeditor promote the windows gem as well [#172](https://github.com/chef/mixlib-shellout/pull/172) ([tas50](https://github.com/tas50))
 - Don&#39;t ship the readme in the gem artifact [#173](https://github.com/chef/mixlib-shellout/pull/173) ([tas50](https://github.com/tas50))
-<!-- latest_stable_release -->
 
 ## [v2.4.2](https://github.com/chef/mixlib-shellout/tree/v2.4.2) (2018-12-06)
 
