@@ -1,23 +1,28 @@
 require "bundler"
-require "rspec/core/rake_task"
 
 Bundler::GemHelper.install_tasks name: "mixlib-shellout"
 
-task default: [:spec, :style]
-
-desc "Run specs"
-RSpec::Core::RakeTask.new(:spec) do |spec|
-  spec.pattern = "spec/**/*_spec.rb"
+begin
+  require "rspec/core/rake_task"
+  RSpec::Core::RakeTask.new do |t|
+    t.pattern = "spec/**/*_spec.rb"
+  end
+rescue LoadError
+  desc "rspec is not installed, this task is disabled"
+  task :spec do
+    abort "rspec is not installed. bundle install first to make sure all dependencies are installed."
+  end
 end
 
 begin
   require "chefstyle"
   require "rubocop/rake_task"
+  desc "Run Chefstyle tests"
   RuboCop::RakeTask.new(:style) do |task|
     task.options += ["--display-cop-names", "--no-color"]
   end
 rescue LoadError
-  puts "chefstyle/rubocop is not available. bundle install first to make sure all dependencies are installed."
+  puts "chefstyle gem is not installed. bundle install first to make sure all dependencies are installed."
 end
 
 begin
@@ -34,3 +39,5 @@ task :console do
   ARGV.clear
   IRB.start
 end
+
+task default: [:spec, :style]
