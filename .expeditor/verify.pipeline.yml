@@ -1,5 +1,25 @@
 steps:
 
+- label: run-lint-and-specs-ruby-2.2
+  command:
+    - export USER="root"
+    - bundle install --jobs=7 --retry=3 --without docs development style
+    - bundle exec rake spec
+  expeditor:
+    executor:
+      docker:
+        image: ruby:2.2-jessie
+
+- label: run-lint-and-specs-ruby-2.3
+  command:
+    - export USER="root"
+    - bundle install --jobs=7 --retry=3 --without docs development
+    - bundle exec rake
+  expeditor:
+    executor:
+      docker:
+        image: ruby:2.3-stretch
+
 - label: run-lint-and-specs-ruby-2.4
   command:
     - export USER="root"
@@ -29,4 +49,3 @@ steps:
     executor:
       docker:
         image: ruby:2.6-stretch
-
