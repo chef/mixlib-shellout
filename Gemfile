@@ -9,8 +9,7 @@ group :docs do
 end
 
 group :test do
-  gem "chefstyle", git: "https://github.com/chef/chefstyle.git", branch: "master"
-  gem "rspec_junit_formatter"
+  gem "chefstyle"
   gem "rspec", "~> 3.0"
   gem "rake"
 end

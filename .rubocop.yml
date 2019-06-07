@@ -6,6 +6,3 @@ Lint/UnderscorePrefixedVariableName:
 Lint/UselessAccessModifier:
   Exclude:
     - 'lib/mixlib/shellout/windows/core_ext.rb'
-
-Style/HashSyntax:
-  Enabled: true
