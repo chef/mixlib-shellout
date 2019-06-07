@@ -9,7 +9,6 @@ group :docs do
 end
 
 group :test do
-  gem "rspec_junit_formatter"
   gem "chefstyle"
   gem "rspec", "~> 3.0"
   gem "rake"

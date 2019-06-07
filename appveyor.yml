@@ -39,7 +39,7 @@ install:
   - bundler --version
 
 build_script:
-  - bundle install
+  - bundle install --jobs=7 --retry=3 --without docs development
 
 test_script:
   - bundle exec rspec
