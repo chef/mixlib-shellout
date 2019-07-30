@@ -73,19 +73,19 @@ module Process::Functions
     [:pointer], :bool
 
   attach_pfunc :LoadUserProfileW,
-    [:handle, :pointer], :bool
+    %i{handle pointer}, :bool
 
   attach_pfunc :UnloadUserProfile,
-    [:handle, :handle], :bool
+    %i{handle handle}, :bool
 
   ffi_lib :advapi32
 
   attach_pfunc :LogonUserW,
-    [:buffer_in, :buffer_in, :buffer_in, :ulong, :ulong, :pointer], :bool
+    %i{buffer_in buffer_in buffer_in ulong ulong pointer}, :bool
 
   attach_pfunc :CreateProcessAsUserW,
-    [:ulong, :buffer_in, :buffer_inout, :pointer, :pointer, :int,
-      :ulong, :buffer_in, :buffer_in, :pointer, :pointer], :bool
+    %i{ulong buffer_in buffer_inout pointer pointer int
+      ulong buffer_in buffer_in pointer pointer}, :bool
 
   ffi_lib :user32
 
@@ -93,7 +93,7 @@ module Process::Functions
     [], :ulong
 
   attach_pfunc :GetUserObjectInformationA,
-    [:ulong, :uint, :buffer_out, :ulong, :pointer], :bool
+    %i{ulong uint buffer_out ulong pointer}, :bool
 end
 
 # Override Process.create to check for running in the Service window station and doing
@@ -109,7 +109,7 @@ module Process
   class << self
 
     def create(args)
-      unless args.kind_of?(Hash)
+      unless args.is_a?(Hash)
         raise TypeError, "hash keyword arguments expected"
       end
 
@@ -137,6 +137,7 @@ module Process
         unless valid_keys.include?(key)
           raise ArgumentError, "invalid key '#{key}'"
         end
+
         hash[key] = val
       end
 
@@ -149,6 +150,7 @@ module Process
           unless valid_si_keys.include?(key)
             raise ArgumentError, "invalid startup_info key '#{key}'"
           end
+
           si_hash[key] = val
         end
       end
@@ -367,6 +369,7 @@ module Process
       unless GetProfileType(ptr)
         raise SystemCallError.new("GetProfileType", FFI.errno)
       end
+
       ptr.read_uint
     end
 
@@ -374,6 +377,7 @@ module Process
       unless LoadUserProfileW(token, profile_ptr)
         raise SystemCallError.new("LoadUserProfileW", FFI.errno)
       end
+
       true
     end
 

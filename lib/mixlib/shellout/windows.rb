@@ -110,6 +110,7 @@ module Mixlib
                 unless GetExitCodeProcess(process.process_handle, exit_code)
                   raise get_last_error
                 end
+
                 @status = ThingThatLooksSortOfLikeAProcessStatus.new
                 @status.exitstatus = exit_code.unpack("l").first
 
@@ -170,8 +171,9 @@ module Mixlib
 
       def consume_output(open_streams, stdout_read, stderr_read)
         return false if open_streams.length == 0
+
         ready = IO.select(open_streams, nil, nil, READ_WAIT_TIME)
-        return true if ! ready
+        return true unless ready
 
         if ready.first.include?(stdout_read)
           begin
@@ -227,6 +229,7 @@ module Mixlib
       # @return String
       def combine_args(*args)
         return args[0] if args.length == 1
+
         args.map do |arg|
           if arg =~ /[ \t\n\v"]/
             arg = arg.gsub(/(\\*)"/, '\1\1\"') # interior quotes with N preceeding backslashes need 2N+1 backslashes
@@ -321,10 +324,12 @@ module Mixlib
             return true unless quote
           when "%"
             return true if env
+
             env = env_first_char = true
             next
           else
             next unless env
+
             if env_first_char
               env_first_char = false
               (env = false) && next if c !~ /[A-Za-z_]/
@@ -370,6 +375,7 @@ module Mixlib
 
       def unsafe_process?(name, logger)
         return false unless system_required_processes.include? name
+
         logger.debug(
           "A request to kill a critical system process - #{name} - was received and skipped."
         )
@@ -383,6 +389,7 @@ module Mixlib
       def kill_process_tree(pid, wmi, logger)
         wmi.query("select * from Win32_Process where ParentProcessID=#{pid}").each do |instance|
           next if unsafe_process?(instance.wmi_ole_object.name, logger)
+
           child_pid = instance.wmi_ole_object.processid
           kill_process_tree(child_pid, wmi, logger)
           kill_process(instance, logger)

@@ -53,14 +53,16 @@ module Mixlib
       # to the user's secondary groups
       def sgids
         return nil unless using_login?
+
         user_name = Etc.getpwuid(uid).name
-        all_seconderies.select { |g| g.mem.include?(user_name) }.map { |g| g.gid }
+        all_seconderies.select { |g| g.mem.include?(user_name) }.map(&:gid)
       end
 
       # The environment variables that are deduced from simulating logon
       # Only valid if login is used
       def logon_environment
         return {} unless using_login?
+
         entry = Etc.getpwuid(uid)
         # According to `man su`, the set fields are:
         #  $HOME, $SHELL, $USER, $LOGNAME, $PATH, and $IFS
@@ -269,6 +271,7 @@ module Mixlib
       # Keep this unbuffered for now
       def write_to_child_stdin
         return unless input
+
         child_stdin << input
         child_stdin.close # Kick things off
       end
@@ -337,7 +340,7 @@ module Mixlib
           set_cwd
 
           begin
-            command.kind_of?(Array) ? exec(*command, close_others: true) : exec(command, close_others: true)
+            command.is_a?(Array) ? exec(*command, close_others: true) : exec(command, close_others: true)
 
             raise "forty-two" # Should never get here
           rescue Exception => e
@@ -365,6 +368,7 @@ module Mixlib
 
       def reap_errant_child
         return if attempt_reap
+
         @terminate_reason = "Command exceeded allowed execution time, process terminated"
         logger.error("Command exceeded allowed execution time, sending TERM") if logger
         Process.kill(:TERM, child_pgid)
