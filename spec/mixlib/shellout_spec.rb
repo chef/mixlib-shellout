@@ -410,7 +410,8 @@ describe Mixlib::ShellOut do
       let(:options) do
         { cwd: cwd, user: user, login: true, domain: domain, password: password, group: group,
           umask: umask, timeout: timeout, environment: environment, returns: valid_exit_codes,
-          live_stream: stream, input: input } end
+          live_stream: stream, input: input }
+      end
 
       let(:cwd) { "/tmp" }
       let(:user) { "toor" }
@@ -635,7 +636,7 @@ describe Mixlib::ShellOut do
         # to match how whoami returns the information
 
         it "should run as current user" do
-          expect(running_user).to eql("#{ENV['USERDOMAIN'].downcase}\\#{ENV['USERNAME'].downcase}")
+          expect(running_user).to eql("#{ENV["USERDOMAIN"].downcase}\\#{ENV["USERNAME"].downcase}")
         end
       end
 
@@ -653,7 +654,7 @@ describe Mixlib::ShellOut do
         let(:options) { { user: user, password: password } }
 
         it "should run as specified user" do
-          expect(running_user).to eql("#{ENV['COMPUTERNAME'].downcase}\\#{user}")
+          expect(running_user).to eql("#{ENV["COMPUTERNAME"].downcase}\\#{user}")
         end
 
         context "when :elevated => true" do
@@ -1514,7 +1515,8 @@ describe Mixlib::ShellOut do
         %q{STDERR: msg_in_stderr},
         "---- End output of #{cmd} ----",
         "Ran #{cmd} returned 0",
-      ] end
+      ]
+      end
 
       it "should format exception messages" do
         exception_output.each_with_index do |output_line, i|

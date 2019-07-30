@@ -16,5 +16,6 @@ end
 
 def root?
   return false if windows?
+
   Process.euid == 0
 end

@@ -210,15 +210,17 @@ module Mixlib
     # TODO migrate to shellout/unix.rb
     def uid
       return nil unless user
-      user.kind_of?(Integer) ? user : Etc.getpwnam(user.to_s).uid
+
+      user.is_a?(Integer) ? user : Etc.getpwnam(user.to_s).uid
     end
 
     # The gid that the subprocess will switch to. If the group attribute is
     # given as a group name, it is converted to a gid by Etc.getgrnam
     # TODO migrate to shellout/unix.rb
     def gid
-      return group.kind_of?(Integer) ? group : Etc.getgrnam(group.to_s).gid if group
+      return group.is_a?(Integer) ? group : Etc.getgrnam(group.to_s).gid if group
       return Etc.getpwuid(uid).gid if using_login?
+
       nil
     end
 
@@ -231,6 +233,7 @@ module Mixlib
     # results when the command exited with an unexpected status.
     def format_for_exception
       return "Command execution failed. STDOUT/STDERR suppressed for sensitive resource" if sensitive
+
       msg = ""
       msg << "#{@terminate_reason}\n" if @terminate_reason
       msg << "---- Begin output of #{command} ----\n"
@@ -363,6 +366,7 @@ module Mixlib
       if login && !user
         raise InvalidCommandOption, "cannot set login without specifying a user"
       end
+
       super
     end
   end
