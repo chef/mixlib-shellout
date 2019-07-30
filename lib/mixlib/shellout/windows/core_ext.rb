@@ -109,6 +109,10 @@ module Process
   class << self
 
     def create(args)
+      create3(args).first
+    end
+
+    def create3(args)
       unless args.is_a?(Hash)
         raise TypeError, "hash keyword arguments expected"
       end
