@@ -1,15 +1,16 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.0.5 -->
-## [3.0.5](https://github.com/chef/mixlib-shellout/tree/3.0.5) (2019-06-07)
+<!-- latest_release 3.0.6 -->
+## [3.0.6](https://github.com/chef/mixlib-shellout/tree/3.0.6) (2019-07-30)
 
 #### Merged Pull Requests
-- Add the actual BK pipeline config [#185](https://github.com/chef/mixlib-shellout/pull/185) ([tas50](https://github.com/tas50))
+- Blinding applying chefstyle -a. [#191](https://github.com/chef/mixlib-shellout/pull/191) ([zenspider](https://github.com/zenspider))
 <!-- latest_release -->
 <!-- release_rollup since=3.0.4 -->
 ### Changes not yet released to rubygems.org
 
 #### Merged Pull Requests
+- Blinding applying chefstyle -a. [#191](https://github.com/chef/mixlib-shellout/pull/191) ([zenspider](https://github.com/zenspider)) <!-- 3.0.6 -->
 - Add the actual BK pipeline config [#185](https://github.com/chef/mixlib-shellout/pull/185) ([tas50](https://github.com/tas50)) <!-- 3.0.5 -->
 <!-- release_rollup -->
 <!-- latest_stable_release -->
