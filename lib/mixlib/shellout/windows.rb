@@ -88,7 +88,7 @@ module Mixlib
           #
           # Start the process
           #
-          process, profile, token = Process.create(create_process_args)
+          process, profile, token = Process.create3(create_process_args)
           logger.debug(format_process(process, app_name, command_line, timeout)) if logger
           begin
             # Start pushing data into input
