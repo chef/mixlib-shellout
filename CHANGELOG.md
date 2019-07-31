@@ -1,20 +1,18 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.0.7 -->
-## [3.0.7](https://github.com/chef/mixlib-shellout/tree/3.0.7) (2019-07-30)
-
-#### Merged Pull Requests
-- Fix return type of Process.create to be a ProcessInfo instance again. [#190](https://github.com/chef/mixlib-shellout/pull/190) ([zenspider](https://github.com/zenspider))
 <!-- latest_release -->
-<!-- release_rollup since=3.0.4 -->
-### Changes not yet released to rubygems.org
-
-#### Merged Pull Requests
-- Fix return type of Process.create to be a ProcessInfo instance again. [#190](https://github.com/chef/mixlib-shellout/pull/190) ([zenspider](https://github.com/zenspider)) <!-- 3.0.7 -->
-- Blinding applying chefstyle -a. [#191](https://github.com/chef/mixlib-shellout/pull/191) ([zenspider](https://github.com/zenspider)) <!-- 3.0.6 -->
-- Add the actual BK pipeline config [#185](https://github.com/chef/mixlib-shellout/pull/185) ([tas50](https://github.com/tas50)) <!-- 3.0.5 -->
+<!-- latest_release -->
+<!-- release_rollup -->
 <!-- release_rollup -->
 <!-- latest_stable_release -->
+## [3.0.7](https://github.com/chef/mixlib-shellout/tree/3.0.7) (2019-07-31)
+
+#### Merged Pull Requests
+- Add the actual BK pipeline config [#185](https://github.com/chef/mixlib-shellout/pull/185) ([tas50](https://github.com/tas50))
+- Blinding applying chefstyle -a. [#191](https://github.com/chef/mixlib-shellout/pull/191) ([zenspider](https://github.com/zenspider))
+- Fix return type of Process.create to be a ProcessInfo instance again. [#190](https://github.com/chef/mixlib-shellout/pull/190) ([zenspider](https://github.com/zenspider))
+<!-- latest_stable_release -->
+
 ## [v3.0.4](https://github.com/chef/mixlib-shellout/tree/v3.0.4) (2019-06-07)
 
 #### Merged Pull Requests
@@ -24,7 +22,6 @@
 - Add BuildKite pipeline [#184](https://github.com/chef/mixlib-shellout/pull/184) ([tas50](https://github.com/tas50))
 - Support array args on windows WIP [#182](https://github.com/chef/mixlib-shellout/pull/182) ([lamont-granquist](https://github.com/lamont-granquist))
 - Load and unload user profile as required [#177](https://github.com/chef/mixlib-shellout/pull/177) ([dayglojesus](https://github.com/dayglojesus))
-<!-- latest_stable_release -->
 
 ## [v2.4.4](https://github.com/chef/mixlib-shellout/tree/v2.4.4) (2018-12-12)
 
