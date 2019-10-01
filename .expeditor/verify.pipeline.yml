@@ -49,3 +49,12 @@ steps:
     executor:
       docker:
         image: ruby:2.6-stretch
+
+- label: run-specs-windows
+  command:
+    - /workdir/.expeditor/buildkite/verify.ps1
+  expeditor:
+    executor:
+      docker:
+        host_os: windows
+        shell: ["powershell", "-Command"]
