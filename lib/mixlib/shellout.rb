@@ -26,7 +26,7 @@ module Mixlib
   class ShellOut
     READ_WAIT_TIME = 0.01
     READ_SIZE = 4096
-    DEFAULT_READ_TIMEOUT = 600
+    DEFAULT_READ_TIMEOUT = 1000
 
     if RUBY_PLATFORM =~ /mswin|mingw32|windows/
       require "mixlib/shellout/windows"
