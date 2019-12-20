@@ -8,12 +8,8 @@ group :docs do
   gem "github-markup"
 end
 
-# added to its own group so we can exclude for Ruby 2.2
-group :style do
-  gem "chefstyle"
-end
-
 group :test do
+  gem "chefstyle", "~> 0.12.0" # still supports Ruby 2.2 TargetRubyVersion
   gem "rspec", "~> 3.0"
   gem "rake"
 end

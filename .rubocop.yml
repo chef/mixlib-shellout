@@ -1,3 +1,6 @@
+AllCops:
+  TargetRubyVersion: 2.2
+
 Lint/UnderscorePrefixedVariableName:
   Exclude:
     - 'spec/mixlib/shellout/windows_spec.rb'
