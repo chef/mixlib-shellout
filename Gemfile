@@ -16,7 +16,7 @@ end
 
 group :debug do
   gem "pry"
-  gem "pry-byebug"
+  gem "pry-byebug", "~> 3.6.0" # Pinned for ruby 2.2
   gem "pry-stack_explorer"
   gem "rb-readline"
 end
