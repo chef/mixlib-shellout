@@ -9,7 +9,7 @@ group :docs do
 end
 
 group :test do
-  gem "chefstyle", "~> 0.12.0" # still supports Ruby 2.2 TargetRubyVersion
+  gem "chefstyle", "~> 0.11.0" # still supports Ruby 2.2 TargetRubyVersion
   gem "rspec", "~> 3.0"
   gem "rake"
 end
