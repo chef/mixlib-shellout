@@ -19,7 +19,7 @@
 #
 
 require "win32/process"
-require "mixlib/shellout/windows/core_ext"
+require_relative "windows/core_ext"
 
 module Mixlib
   class ShellOut
