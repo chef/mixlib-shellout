@@ -1,26 +1,23 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.0.9 -->
+<!-- latest_release -->
+<!-- latest_release -->
+<!-- release_rollup -->
+<!-- release_rollup -->
+<!-- latest_stable_release -->
 ## [v3.0.9](https://github.com/chef/mixlib-shellout/tree/v3.0.9) (2019-12-30)
 
 #### Merged Pull Requests
+- Add Ruby 2.6/2.7 and Windows testing [#198](https://github.com/chef/mixlib-shellout/pull/198) ([tas50](https://github.com/tas50))
 - Substitute require for require_relative [#199](https://github.com/chef/mixlib-shellout/pull/199) ([tas50](https://github.com/tas50))
-<!-- latest_release -->
-<!-- release_rollup since=3.0.7 -->
-### Changes not yet released to rubygems.org
-
-#### Merged Pull Requests
-- Substitute require for require_relative [#199](https://github.com/chef/mixlib-shellout/pull/199) ([tas50](https://github.com/tas50)) <!-- 3.0.9 -->
-- Add Ruby 2.6/2.7 and Windows testing [#198](https://github.com/chef/mixlib-shellout/pull/198) ([tas50](https://github.com/tas50)) <!-- 3.0.8 -->
-<!-- release_rollup -->
 <!-- latest_stable_release -->
+
 ## [3.0.7](https://github.com/chef/mixlib-shellout/tree/3.0.7) (2019-07-31)
 
 #### Merged Pull Requests
 - Add the actual BK pipeline config [#185](https://github.com/chef/mixlib-shellout/pull/185) ([tas50](https://github.com/tas50))
 - Blinding applying chefstyle -a. [#191](https://github.com/chef/mixlib-shellout/pull/191) ([zenspider](https://github.com/zenspider))
 - Fix return type of Process.create to be a ProcessInfo instance again. [#190](https://github.com/chef/mixlib-shellout/pull/190) ([zenspider](https://github.com/zenspider))
-<!-- latest_stable_release -->
 
 ## [v3.0.4](https://github.com/chef/mixlib-shellout/tree/v3.0.4) (2019-06-07)
 
