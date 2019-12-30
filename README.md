@@ -1,5 +1,5 @@
 # Mixlib::ShellOut
-[![Build Status Master](https://ci.appveyor.com/api/projects/status/github/chef/mixlib-shellout?branch=master&svg=true&passingText=master%20-%20Ok&pendingText=master%20-%20Pending&failingText=master%20-%20Failing)](https://ci.appveyor.com/project/Chef/mixlib-shellout/branch/master) [![Build Status](https://badge.buildkite.com/7051b7b35cc19076c35a6e6a9e996807b0c14475ca3f3acd86.svg)](https://buildkite.com/chef-oss/chef-mixlib-shellout-master-verify) [![Gem Version](https://badge.fury.io/rb/mixlib-shellout.svg)](https://badge.fury.io/rb/mixlib-shellout)
+[![Build Status](https://badge.buildkite.com/7051b7b35cc19076c35a6e6a9e996807b0c14475ca3f3acd86.svg)](https://buildkite.com/chef-oss/chef-mixlib-shellout-master-verify) [![Gem Version](https://badge.fury.io/rb/mixlib-shellout.svg)](https://badge.fury.io/rb/mixlib-shellout)
 
 **Umbrella Project**: [Chef Foundation](https://github.com/chef/chef-oss-practices/blob/master/projects/chef-foundation.md)
 
