@@ -1,8 +1,16 @@
 # mixlib-shellout Changelog
 
+<!-- latest_release 3.0.8 -->
+## [v3.0.8](https://github.com/chef/mixlib-shellout/tree/v3.0.8) (2019-12-30)
+
+#### Merged Pull Requests
+- Add Ruby 2.6/2.7 and Windows testing [#198](https://github.com/chef/mixlib-shellout/pull/198) ([tas50](https://github.com/tas50))
 <!-- latest_release -->
-<!-- latest_release -->
-<!-- release_rollup -->
+<!-- release_rollup since=3.0.7 -->
+### Changes not yet released to rubygems.org
+
+#### Merged Pull Requests
+- Add Ruby 2.6/2.7 and Windows testing [#198](https://github.com/chef/mixlib-shellout/pull/198) ([tas50](https://github.com/tas50)) <!-- 3.0.8 -->
 <!-- release_rollup -->
 <!-- latest_stable_release -->
 ## [3.0.7](https://github.com/chef/mixlib-shellout/tree/3.0.7) (2019-07-31)
