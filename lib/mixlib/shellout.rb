@@ -19,7 +19,7 @@
 require "etc"
 require "tmpdir"
 require "fcntl"
-require "mixlib/shellout/exceptions"
+require_relative "shellout/exceptions"
 
 module Mixlib
 
@@ -29,10 +29,10 @@ module Mixlib
     DEFAULT_READ_TIMEOUT = 600
 
     if RUBY_PLATFORM =~ /mswin|mingw32|windows/
-      require "mixlib/shellout/windows"
+      require_relative "shellout/windows"
       include ShellOut::Windows
     else
-      require "mixlib/shellout/unix"
+      require_relative "shellout/unix"
       include ShellOut::Unix
     end
 
