@@ -66,7 +66,6 @@ module Mixlib
           #
           # Set cwd, environment, appname, etc.
           #
-          environment = inherit_environment.map { |k, v| "#{k}=#{v}" } unless with_logon
           app_name, command_line = command_to_run(combine_args(*command))
           create_process_args = {
             app_name: app_name,
@@ -76,7 +75,7 @@ module Mixlib
               stderr: stderr_write,
               stdin: stdin_read,
             },
-            environment: environment,
+            environment: inherit_environment.map { |k, v| "#{k}=#{v}" },
             close_handles: false,
           }
           create_process_args[:cwd] = cwd if cwd

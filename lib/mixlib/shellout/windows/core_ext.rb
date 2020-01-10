@@ -45,6 +45,8 @@ module Process::Constants
   WIN32_PROFILETYPE_PT_MANDATORY           = 0x04
   WIN32_PROFILETYPE_PT_ROAMING_PREEXISTING = 0x08
 
+  # The environment block list ends with two nulls (\0\0).
+  ENVIROMENT_BLOCK_ENDS = "\0\0".freeze
 end
 
 # Structs required for data handling
@@ -77,6 +79,12 @@ module Process::Functions
 
   attach_pfunc :UnloadUserProfile,
     %i{handle handle}, :bool
+
+  attach_pfunc :CreateEnvironmentBlock,
+    %i{pointer ulong bool}, :bool
+
+  attach_pfunc :DestroyEnvironmentBlock,
+    %i{pointer}, :bool
 
   ffi_lib :advapi32
 
@@ -171,10 +179,19 @@ module Process
       end
 
       env = nil
+      env_list = []
+
+      # Retrieve the environment variables for the specified user.
+      if hash["with_logon"]
+        logon, passwd, domain = format_creds_from_hash(hash)
+        logon_type = hash["elevated"] ? LOGON32_LOGON_BATCH : LOGON32_LOGON_INTERACTIVE
+        token = logon_user(logon, domain, passwd, logon_type)
+        env_list = retrieve_environment_variables(token, env_list)
+      end
 
       # The env string should be passed as a string of ';' separated paths.
       if hash["environment"]
-        env = hash["environment"]
+        env = env_list.any? ? merge_env_variables(env_list, hash["environment"]) : hash["environment"]
 
         unless env.respond_to?(:join)
           env = hash["environment"].split(File::PATH_SEPARATOR)
@@ -396,6 +413,26 @@ module Process
       true
     end
 
+    # Retrieves the environment variables for the specified user.
+    #
+    def create_environment_block(env_pointer, token, inherit)
+      unless CreateEnvironmentBlock(env_pointer, token, inherit)
+        raise SystemCallError.new("CreateEnvironmentBlock", FFI.errno)
+      end
+
+      true
+    end
+
+    # Frees environment variables created by the CreateEnvironmentBlock function.
+    #
+    def destroy_environment_block(env_pointer)
+      unless DestroyEnvironmentBlock(env_pointer)
+        raise SystemCallError.new("DestroyEnvironmentBlock", FFI.errno)
+      end
+
+      true
+    end
+
     def create_process_as_user(token, app, cmd, process_security,
       thread_security, inherit, creation_flags, env, cwd, startinfo, procinfo)
 
@@ -530,5 +567,39 @@ module Process
       [ logon, passwd, domain ]
     end
 
+    # Retrieves the environment variables for the specified user.
+    #
+    def retrieve_environment_variables(token, env_list)
+      env_pointer = FFI::MemoryPointer.new(:pointer)
+      create_environment_block(env_pointer, token, false)
+      str_ptr = env_pointer.read_pointer
+      offset = 0
+      loop do
+        new_str_pointer = str_ptr.+(offset)
+        break if new_str_pointer.read_string(2) == ENVIROMENT_BLOCK_ENDS
+
+        environment = new_str_pointer.read_wstring
+        env_list << environment
+        offset = offset + environment.length * 2 + 2
+      end
+      # To free the buffer when we have finished with the environment block
+      destroy_environment_block(str_ptr)
+      env_list
+    end
+
+    # Merge environment variables of specified user and current environment variables.
+    #
+    def merge_env_variables(fetched_env, current_env)
+      env_hash_1 = to_hash(fetched_env)
+      env_hash_2 = to_hash(current_env)
+      merged_env = env_hash_2.merge(env_hash_1)
+      merged_env.map { |k, v| "#{k}=#{v}" }
+    end
+
+    # Convert an array to a hash.
+    #
+    def to_hash(str)
+      Hash[ str.map { |pair| pair.split("=", 2) } ]
+    end
   end
 end
