@@ -52,7 +52,7 @@ steps:
 
 - label: run-specs-windows
   command:
-    - /workdir/.expeditor/buildkite/verify.ps1
+    - /workdir/.expeditor/buildkite/privilege.ps1; /workdir/.expeditor/buildkite/verify.ps1
   expeditor:
     executor:
       docker:
