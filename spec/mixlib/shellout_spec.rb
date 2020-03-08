@@ -1,4 +1,5 @@
 require "spec_helper"
+require "etc"
 require "logger"
 require "timeout"
 
@@ -1532,7 +1533,7 @@ describe Mixlib::ShellOut do
 
     context "when no user is set" do
       it "should run as current user" do
-        expect(running_user).to eql(ENV["USER"])
+        expect(running_user).to eql(Etc.getpwuid.name)
       end
     end
 
