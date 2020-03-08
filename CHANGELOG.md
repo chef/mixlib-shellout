@@ -1,8 +1,16 @@
 # mixlib-shellout Changelog
 
+<!-- latest_release 3.0.10 -->
+## [v3.0.10](https://github.com/chef/mixlib-shellout/tree/v3.0.10) (2020-03-08)
+
+#### Merged Pull Requests
+- shellout_spec: make &quot;current user&quot; independent of the environment [#203](https://github.com/chef/mixlib-shellout/pull/203) ([terceiro](https://github.com/terceiro))
 <!-- latest_release -->
-<!-- latest_release -->
-<!-- release_rollup -->
+<!-- release_rollup since=3.0.9 -->
+### Changes not yet released to rubygems.org
+
+#### Merged Pull Requests
+- shellout_spec: make &quot;current user&quot; independent of the environment [#203](https://github.com/chef/mixlib-shellout/pull/203) ([terceiro](https://github.com/terceiro)) <!-- 3.0.10 -->
 <!-- release_rollup -->
 <!-- latest_stable_release -->
 ## [v3.0.9](https://github.com/chef/mixlib-shellout/tree/v3.0.9) (2019-12-30)
