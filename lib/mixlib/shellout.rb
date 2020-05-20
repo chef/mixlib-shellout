@@ -65,7 +65,7 @@ module Mixlib
     # as the subprocess is running.
     attr_accessor :live_stderr
 
-    # ShellOut will push data from :input down the stdin of the subprocss.
+    # ShellOut will push data from :input down the stdin of the subprocess.
     # Normally set via options passed to new.
     # Default: nil
     attr_accessor :input
