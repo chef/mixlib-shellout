@@ -36,7 +36,7 @@ if [ -n "${RESET_BUNDLE_CACHE:-}" ]; then
 fi
 
 bundle config --local path vendor/bundle
-bundle install --jobs=7 --retry=3
+bundle install --jobs=7 --retry=3 --without docs debug
 
 echo "--- bundle cache"
 if test -f bundle.sha256 && shasum --check bundle.sha256 --status; then
