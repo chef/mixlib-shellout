@@ -16,6 +16,7 @@
 # limitations under the License.
 
 require_relative "../shellout"
+require "chef-utils"
 require "chef-utils/dsl/path_sanity"
 require "chef-utils/internal"
 
@@ -153,7 +154,7 @@ module Mixlib
       end
 
       def __shell_out_command(*args, **options)
-        if __config.target_mode?
+        if __transport_connection
           FakeShellOut.new(args, options, __transport_connection.run_command(args.join(" "))) # FIXME: train should accept run_command(*args)
         else
           cmd = if options.empty?
