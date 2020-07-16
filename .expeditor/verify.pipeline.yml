@@ -6,24 +6,6 @@ expeditor:
 
 steps:
 
-- label: run-lint-and-specs-ruby-2.2
-  command:
-    - export USER="root"
-    - .expeditor/run_linux_tests.sh rake
-  expeditor:
-    executor:
-      docker:
-        image: ruby:2.2-jessie
-
-- label: run-lint-and-specs-ruby-2.3
-  command:
-    - export USER="root"
-    - .expeditor/run_linux_tests.sh rake
-  expeditor:
-    executor:
-      docker:
-        image: ruby:2.3-stretch
-
 - label: run-lint-and-specs-ruby-2.4
   command:
     - export USER="root"
