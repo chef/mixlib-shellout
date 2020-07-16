@@ -1,15 +1,16 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.0.13 -->
-## [v3.0.13](https://github.com/chef/mixlib-shellout/tree/v3.0.13) (2020-07-16)
+<!-- latest_release 3.0.14 -->
+## [v3.0.14](https://github.com/chef/mixlib-shellout/tree/v3.0.14) (2020-07-16)
 
 #### Merged Pull Requests
-- Bumping minor version [#207](https://github.com/chef/mixlib-shellout/pull/207) ([lamont-granquist](https://github.com/lamont-granquist))
+- Test on Ruby 2.7 final, update chefstyle, and other CI fixes [#208](https://github.com/chef/mixlib-shellout/pull/208) ([tas50](https://github.com/tas50))
 <!-- latest_release -->
 <!-- release_rollup since=3.0.9 -->
 ### Changes not yet released to rubygems.org
 
 #### Merged Pull Requests
+- Test on Ruby 2.7 final, update chefstyle, and other CI fixes [#208](https://github.com/chef/mixlib-shellout/pull/208) ([tas50](https://github.com/tas50)) <!-- 3.0.14 -->
 - Bumping minor version [#207](https://github.com/chef/mixlib-shellout/pull/207) ([lamont-granquist](https://github.com/lamont-granquist)) <!-- 3.0.13 -->
 - extracting shell_out helper to mixlib-shellout [#206](https://github.com/chef/mixlib-shellout/pull/206) ([lamont-granquist](https://github.com/lamont-granquist)) <!-- 3.0.12 -->
 - Minor doc fixes [#205](https://github.com/chef/mixlib-shellout/pull/205) ([phiggins](https://github.com/phiggins)) <!-- 3.0.11 -->
