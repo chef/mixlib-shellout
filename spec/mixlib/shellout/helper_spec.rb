@@ -2,7 +2,7 @@ require "spec_helper"
 require "mixlib/shellout/helper"
 require "logger"
 
-describe Mixlib::ShellOut::Helper do
+describe Mixlib::ShellOut::Helper,  ruby: ">= 2.3" do
   class TestClass
     include Mixlib::ShellOut::Helper
 
