@@ -387,7 +387,7 @@ describe Mixlib::ShellOut do
           it "should preserve custom variables" do
             expect(shell_cmd.process_environment["PATH"]).to eq("/lord:/of/the/dance")
           end
-                # Setting the user with additional env variables should have both
+          # Setting the user with additional env variables should have both
           it "should allow new variables" do
             expect(shell_cmd.process_environment["CUSTOM"]).to eq("costume")
           end
