@@ -9,14 +9,14 @@ group :docs do
 end
 
 group :test do
-  gem "chefstyle", "~> 0.11.0" # still supports Ruby 2.2 TargetRubyVersion
+  gem "chefstyle", "1.2.0"
   gem "rspec", "~> 3.0"
   gem "rake"
 end
 
 group :debug do
   gem "pry"
-  gem "pry-byebug", "~> 3.6.0" # Pinned for ruby 2.2
-  gem "pry-stack_explorer"
+  gem "pry-byebug"
+  gem "pry-stack_explorer", "~> 0.4.0" # pin until we drop ruby < 2.6
   gem "rb-readline"
 end
