@@ -50,5 +50,7 @@ steps:
     - bundle exec rake
   expeditor:
     executor:
-      docker:
-        host_os: windows
+      windows:
+        privileged: true
+        single-use: true
+        shell: ["powershell", "-Command"]
