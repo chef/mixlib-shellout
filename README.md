@@ -77,7 +77,7 @@ Invoke "whoami.exe" with elevated privileges:
 **NOTE:** The user 'admin' must have the 'Log on as a batch job' permission and the user chef is running as must have the 'Replace a process level token' and 'Adjust Memory Quotas for a process' permissions.
 
 ## Platform Support
-Mixlib::ShellOut does a standard fork/exec on Unix, and uses the Win32 API on Windows. There is not currently support for JRuby.
+Mixlib::ShellOut does a standard fork/exec on Unix, and uses the Win32 API on Windows.  There is not currently support for JRuby.
 
 ## See Also
 - `Process.spawn` in Ruby 1.9+
