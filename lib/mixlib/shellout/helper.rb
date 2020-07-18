@@ -26,23 +26,13 @@ module Mixlib
       include ChefUtils::Internal
       include ChefUtils::DSL::PathSanity
 
-      # PREFERRED APIS:
       #
-      # all consumers should now call shell_out!/shell_out.
+      # These APIs are considered public for use in ohai and chef (by cookbooks and plugins, etc)
+      # but are considered private/experimental for now for the direct users of mixlib-shellout.
       #
-      # the shell_out_compacted/shell_out_compacted! APIs are private but are intended for use
-      # in rspec tests, and should ideally always be used to make code refactoring that do not
-      # change behavior easier:
-      #
-      # allow(provider).to receive(:shell_out_compacted!).with("foo", "bar", "baz")
-      # provider.shell_out!("foo", [ "bar", nil, "baz"])
-      # provider.shell_out!(["foo", nil, "bar" ], ["baz"])
-      #
-      # note that shell_out_compacted also includes adding the magical timeout option to force
-      # people to setup expectations on that value explicitly.  it does not include the default_env
-      # mangling in order to avoid users having to setup an expectation on anything other than
-      # setting `default_env: false` and allow us to make tweak to the default_env without breaking
-      # a thousand unit tests.
+      # You can see an example of how to handle the "dependenecy injection" in the rspec unit test.
+      # That backend API is left deliberately undocumented for now and may not follow SemVer and may
+      # break at any time (at least for the rest of 2020).
       #
 
       def shell_out(*args, **options)
@@ -104,9 +94,22 @@ module Mixlib
         options
       end
 
-      # this SHOULD be used for setting up expectations in rspec, see banner comment at top.
+      # The shell_out_compacted/shell_out_compacted! APIs are private but are intended for use
+      # in rspec tests.  They should always be used in rspec tests instead of shell_out to allow
+      # for less brittle rspec tests.
       #
-      # the private constraint is meant to avoid code calling this directly, rspec expectations are fine.
+      # This expectation:
+      #
+      # allow(provider).to receive(:shell_out_compacted!).with("foo", "bar", "baz")
+      #
+      # Is met by many different possible calling conventions that mean the same thing:
+      #
+      # provider.shell_out!("foo", [ "bar", nil, "baz"])
+      # provider.shell_out!(["foo", nil, "bar" ], ["baz"])
+      #
+      # Note that when setting `default_env: false` that you should just setup an expectation on
+      # :shell_out_compacted for `default_env: false`, rather than the expanded env settings so
+      # that the default_env implementation can change without breaking unit tests.
       #
       def shell_out_compacted(*args, **options)
         options = __apply_default_env(options)
@@ -117,10 +120,6 @@ module Mixlib
         end
       end
 
-      # this SHOULD be used for setting up expectations in rspec, see banner comment at top.
-      #
-      # the private constraint is meant to avoid code calling this directly, rspec expectations are fine.
-      #
       def shell_out_compacted!(*args, **options)
         options = __apply_default_env(options)
         cmd = if options.empty?
@@ -132,23 +131,12 @@ module Mixlib
         cmd
       end
 
-      # Helper for subclasses to reject nil out of an array.  It allows
-      # using the array form of shell_out (which avoids the need to surround arguments with
-      # quote marks to deal with shells).
-      #
-      # Usage:
-      #   shell_out!(*clean_array("useradd", universal_options, useradd_options, new_resource.username))
-      #
-      # universal_options and useradd_options can be nil, empty array, empty string, strings or arrays
-      # and the result makes sense.
-      #
-      # keeping this separate from shell_out!() makes it a bit easier to write expectations against the
-      # shell_out args and be able to omit nils and such in the tests (and to test that the nils are
-      # being rejected correctly).
+      # Helper for subclasses to reject nil out of an array.  It allows using the array form of
+      # shell_out (which avoids the need to surround arguments with quote marks to deal with shells).
       #
       # @param args [String] variable number of string arguments
       # @return [Array] array of strings with nil and null string rejection
-
+      #
       def __clean_array(*args)
         args.flatten.compact.map(&:to_s)
       end
