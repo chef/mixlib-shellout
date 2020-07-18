@@ -2,9 +2,13 @@
 
 <!-- latest_release -->
 <!-- latest_release -->
-<!-- release_rollup -->
+<!-- release_rollup since=3.1.1 -->
+### Changes not yet released to rubygems.org
 <!-- release_rollup -->
 <!-- latest_stable_release -->
+## [v3.1.1](https://github.com/chef/mixlib-shellout/tree/v3.1.1) (2020-07-18)
+<!-- latest_stable_release -->
+
 ## [v3.1.0](https://github.com/chef/mixlib-shellout/tree/v3.1.0) (2020-07-17)
 
 #### Merged Pull Requests
@@ -15,7 +19,6 @@
 - Test on Ruby 2.7 final, update chefstyle, and other CI fixes [#208](https://github.com/chef/mixlib-shellout/pull/208) ([tas50](https://github.com/tas50))
 - Bump minor for release [#210](https://github.com/chef/mixlib-shellout/pull/210) ([lamont-granquist](https://github.com/lamont-granquist))
 - Bumping minor for release again, again. [#211](https://github.com/chef/mixlib-shellout/pull/211) ([lamont-granquist](https://github.com/lamont-granquist))
-<!-- latest_stable_release -->
 
 ## [v3.0.9](https://github.com/chef/mixlib-shellout/tree/v3.0.9) (2019-12-30)
 
