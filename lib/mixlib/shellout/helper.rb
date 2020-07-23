@@ -17,14 +17,14 @@
 
 require_relative "../shellout"
 require "chef-utils"
-require "chef-utils/dsl/path_sanity"
+require "chef-utils/dsl/default_paths"
 require "chef-utils/internal"
 
 module Mixlib
   class ShellOut
     module Helper
       include ChefUtils::Internal
-      include ChefUtils::DSL::PathSanity
+      include ChefUtils::DSL::DefaultPaths
 
       #
       # These APIs are considered public for use in ohai and chef (by cookbooks and plugins, etc)
@@ -88,7 +88,7 @@ module Mixlib
             "LC_ALL" => __config[:internal_locale],
             "LANGUAGE" => __config[:internal_locale],
             "LANG" => __config[:internal_locale],
-            __env_path_name => sanitized_path,
+            __env_path_name => default_paths,
           }.update(options[env_key] || {})
         end
         options
