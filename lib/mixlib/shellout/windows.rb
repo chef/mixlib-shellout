@@ -208,7 +208,7 @@ module Mixlib
       # 4.  if the argument must be quoted by #1 and terminates in a sequence of backslashes then all the backlashes must themselves
       #     be backslash excaped (double the backslashes).
       # 5.  if an interior quote that must be escaped by #2 has a sequence of backslashes before it then all the backslashes must
-      #     themselves be backslash excaped along with the backslash ecape of the interior quote (double plus one backslashes).
+      #     themselves be backslash excaped along with the backslash escape of the interior quote (double plus one backslashes).
       #
       # And to restate.  We are constructing a string which will be parsed by the windows parser into arguments, and we want those
       # arguments to match the *args array we are passed here.  So call the windows parser operation A then we need to apply A^-1 to
