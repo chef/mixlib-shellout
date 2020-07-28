@@ -1,8 +1,16 @@
 # mixlib-shellout Changelog
 
+<!-- latest_release 3.1.3 -->
+## [v3.1.3](https://github.com/chef/mixlib-shellout/tree/v3.1.3) (2020-07-28)
+
+#### Merged Pull Requests
+- Fix a few typos [#217](https://github.com/chef/mixlib-shellout/pull/217) ([tas50](https://github.com/tas50))
 <!-- latest_release -->
-<!-- latest_release -->
-<!-- release_rollup -->
+<!-- release_rollup since=3.1.2 -->
+### Changes not yet released to rubygems.org
+
+#### Merged Pull Requests
+- Fix a few typos [#217](https://github.com/chef/mixlib-shellout/pull/217) ([tas50](https://github.com/tas50)) <!-- 3.1.3 -->
 <!-- release_rollup -->
 <!-- latest_stable_release -->
 ## [v3.1.2](https://github.com/chef/mixlib-shellout/tree/v3.1.2) (2020-07-24)
