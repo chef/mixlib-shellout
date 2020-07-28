@@ -190,7 +190,7 @@ describe "Mixlib::ShellOut::Windows", :windows_only do
         end
       end
 
-      # quoted and unqouted commands that have correct bat and cmd extensions
+      # quoted and unquoted commands that have correct bat and cmd extensions
       with_command("autoexec.bat", filename: "autoexec.bat") do
         is_expected.to eql([ comspec, 'cmd /c "autoexec.bat"'])
       end

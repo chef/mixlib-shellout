@@ -30,7 +30,7 @@ module Mixlib
       # These APIs are considered public for use in ohai and chef (by cookbooks and plugins, etc)
       # but are considered private/experimental for now for the direct users of mixlib-shellout.
       #
-      # You can see an example of how to handle the "dependenecy injection" in the rspec unit test.
+      # You can see an example of how to handle the "dependency injection" in the rspec unit test.
       # That backend API is left deliberately undocumented for now and may not follow SemVer and may
       # break at any time (at least for the rest of 2020).
       #

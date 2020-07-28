@@ -122,7 +122,7 @@ module Mixlib
     # === Options:
     # If the last argument is a Hash, it is removed from the list of args passed
     # to exec and used as an options hash. The following options are available:
-    # * +user+: the user the commmand should run as. if an integer is given, it is
+    # * +user+: the user the command should run as. if an integer is given, it is
     #   used as a uid. A string is treated as a username and resolved to a uid
     #   with Etc.getpwnam
     # * +group+: the group the command should run as. works similarly to +user+

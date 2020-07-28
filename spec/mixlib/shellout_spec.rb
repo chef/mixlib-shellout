@@ -460,7 +460,7 @@ describe Mixlib::ShellOut do
         expect(shell_cmd.umask).to eql(002222)
       end
 
-      it "should set the timout" do
+      it "should set the timeout" do
         expect(shell_cmd.timeout).to eql(timeout)
       end
 
@@ -472,7 +472,7 @@ describe Mixlib::ShellOut do
         context "when setting the :env option" do
           let(:options) { { env: environment } }
 
-          it "should also set the enviroment" do
+          it "should also set the environment" do
             expect(shell_cmd.environment).to eql({ "RUBY_OPTS" => "-w" })
           end
         end
