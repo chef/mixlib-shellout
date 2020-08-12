@@ -16,7 +16,7 @@
 # limitations under the License.
 
 require_relative "../shellout"
-require "chef-utils"
+require "chef-utils" unless defined?(ChefUtils)
 require "chef-utils/dsl/default_paths"
 require "chef-utils/internal"
 
