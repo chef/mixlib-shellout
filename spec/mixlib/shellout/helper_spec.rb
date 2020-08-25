@@ -8,8 +8,9 @@ require "logger"
 #  3. override the __io_for_live_stream method
 #
 class Logger
-  module Severity; TRACE=-1;end
-  def trace(progname = nil, &block);add(TRACE, nil, progname, &block);end
+  module Severity; TRACE = -1; end
+  def trace(progname = nil, &block); add(TRACE, nil, progname, &block); end
+
   def trace?; @level <= TRACE; end
 end
 
