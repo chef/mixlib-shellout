@@ -157,7 +157,7 @@ module Mixlib
       end
 
       def __io_for_live_stream
-        if STDOUT.tty? && !__config[:daemon] && __log.trace?
+        if !STDOUT.closed? && __log.trace?
           STDOUT
         else
           nil
