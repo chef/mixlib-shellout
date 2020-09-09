@@ -577,7 +577,7 @@ module Process
       offset = 0
       loop do
         new_str_pointer = str_ptr.+(offset)
-        break if new_str_pointer.read_string(2) == ENVIROMENT_BLOCK_ENDS
+        break if new_str_pointer.read_string(2) == ENVIRONMENT_BLOCK_ENDS
 
         environment = new_str_pointer.read_wstring
         env_list << environment
