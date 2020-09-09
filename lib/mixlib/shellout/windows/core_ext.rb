@@ -47,7 +47,7 @@ module Process::Constants
   WIN32_PROFILETYPE_PT_ROAMING_PREEXISTING = 0x08
 
   # The environment block list ends with two nulls (\0\0).
-  ENVIROMENT_BLOCK_ENDS = "\0\0".freeze
+  ENVIRONMENT_BLOCK_ENDS = "\0\0".freeze
 end
 
 # Structs required for data handling
