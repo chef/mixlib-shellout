@@ -1,5 +1,5 @@
-$:.unshift File.expand_path("../../lib", __FILE__)
-$:.unshift File.expand_path("../..", __FILE__)
+$:.unshift File.expand_path("../lib", __dir__)
+$:.unshift File.expand_path("..", __dir__)
 require "mixlib/shellout"
 
 require "tmpdir"
