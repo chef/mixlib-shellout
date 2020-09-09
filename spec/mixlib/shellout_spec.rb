@@ -658,6 +658,21 @@ describe Mixlib::ShellOut do
           expect(running_user).to eql("#{ENV["COMPUTERNAME"].downcase}\\#{user}")
         end
 
+        context "when an alternate user is passed" do
+          let(:env_list) { ["ALLUSERSPROFILE=C:\\ProgramData", "TEMP=C:\\Windows\\TEMP", "TMP=C:\\Windows\\TEMP", "USERDOMAIN=WIN-G06ENRTTKF9", "USERNAME=testuser", "USERPROFILE=C:\\Users\\Default", "windir=C:\\Windows"] }
+          let(:current_env) { ["ALLUSERSPROFILE=C:\\ProgramData", "TEMP=C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\2", "TMP=C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\2", "USER=Administrator", "USERDOMAIN=WIN-G06ENRTTKF9", "USERDOMAIN_ROAMINGPROFILE=WIN-G06ENRTTKF9", "USERNAME=Administrator", "USERPROFILE=C:\\Users\\Administrator", "windir=C:\\Windows"] }
+          let(:merged_env) { ["ALLUSERSPROFILE=C:\\ProgramData", "TEMP=C:\\Windows\\TEMP", "TMP=C:\\Windows\\TEMP", "USER=Administrator", "USERDOMAIN=WIN-G06ENRTTKF9", "USERDOMAIN_ROAMINGPROFILE=WIN-G06ENRTTKF9", "USERNAME=testuser", "USERPROFILE=C:\\Users\\Default", "windir=C:\\Windows"] }
+          let(:converted) { { "ALLUSERSPROFILE" => "C:\\ProgramData", "TEMP" => "C:\\Windows\\TEMP", "TMP" => "C:\\Windows\\TEMP", "USERDOMAIN" => "WIN-G06ENRTTKF9", "USERNAME" => "testuser", "USERPROFILE" => "C:\\Users\\Default", "windir" => "C:\\Windows" } }
+
+          it "merge environment variables" do
+            expect(Process.merge_env_variables(env_list, current_env)).to eql(merged_env)
+          end
+
+          it "Convert an array to a hash" do
+            expect(Process.to_hash(env_list)).to eql(converted)
+          end
+        end
+
         context "when :elevated => true" do
           context "when user and password are passed" do
             let(:options) { { user: user, password: password, elevated: true } }

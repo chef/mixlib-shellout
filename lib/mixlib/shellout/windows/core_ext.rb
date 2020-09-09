@@ -18,6 +18,7 @@
 #
 
 require "win32/process"
+require "ffi/win32/extensions"
 
 # Add new constants for Logon
 module Process::Constants
