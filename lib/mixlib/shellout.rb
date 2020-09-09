@@ -248,7 +248,7 @@ module Mixlib
     # running or died without setting an exit status (e.g., terminated by
     # `kill -9`).
     def exitstatus
-      @status && @status.exitstatus
+      @status&.exitstatus
     end
 
     # Run the command, writing the command's standard out and standard error
