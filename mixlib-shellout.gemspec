@@ -1,4 +1,4 @@
-$:.unshift(File.dirname(__FILE__) + "/lib")
+$:.unshift(__dir__ + "/lib")
 require "mixlib/shellout/version"
 
 Gem::Specification.new do |s|
