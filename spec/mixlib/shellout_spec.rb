@@ -1095,7 +1095,7 @@ describe Mixlib::ShellOut do
         end
 
         after do
-          @test_file.close if @test_file
+          @test_file&.close
         end
 
         let(:ruby_code) { "fd = File.for_fd(#{@test_file.to_i}) rescue nil; if fd; fd.seek(0); puts fd.read(5); end" }
@@ -1380,7 +1380,7 @@ describe Mixlib::ShellOut do
       end
 
       context "with subprocess writing lots of data to both stdout and stderr" do
-        let(:expected_output_with) { lambda { |chr| (chr * 20_000) + (LINE_ENDING).to_s + (chr * 20_000) + (LINE_ENDING).to_s } }
+        let(:expected_output_with) { lambda { |chr| (chr * 20_000) + LINE_ENDING.to_s + (chr * 20_000) + LINE_ENDING.to_s } }
 
         context "when writing to STDOUT first" do
           let(:ruby_code) { %q{puts "f" * 20_000; STDERR.puts "u" * 20_000; puts "f" * 20_000; STDERR.puts "u" * 20_000} }
@@ -1543,7 +1543,7 @@ describe Mixlib::ShellOut do
       let(:options) { { user: user } }
 
       it "should run as specified user" do
-        expect(running_user).to eql((user).to_s)
+        expect(running_user).to eql(user.to_s)
       end
     end
   end

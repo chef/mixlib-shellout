@@ -89,7 +89,7 @@ module Mixlib
           # Start the process
           #
           process, profile, token = Process.create3(create_process_args)
-          logger.debug(format_process(process, app_name, command_line, timeout)) if logger
+          logger&.debug(format_process(process, app_name, command_line, timeout))
           begin
             # Start pushing data into input
             stdin_write << input if input
@@ -124,7 +124,7 @@ module Mixlib
                     kill_process_tree(process.process_id, wmi, logger)
                     Process.kill(:KILL, process.process_id)
                   rescue SystemCallError
-                    logger.warn("Failed to kill timed out process #{process.process_id}") if logger
+                    logger&.warn("Failed to kill timed out process #{process.process_id}")
                   end
 
                   raise Mixlib::ShellOut::CommandTimeout, [
@@ -398,20 +398,16 @@ module Mixlib
 
       def kill_process(instance, logger)
         child_pid = instance.wmi_ole_object.processid
-        if logger
-          logger.debug([
+        logger&.debug([
             "killing child process #{child_pid}::",
             "#{instance.wmi_ole_object.Name} of parent #{pid}",
           ].join)
-        end
         Process.kill(:KILL, instance.wmi_ole_object.processid)
       rescue SystemCallError
-        if logger
-          logger.debug([
+        logger&.debug([
             "Failed to kill child process #{child_pid}::",
             "#{instance.wmi_ole_object.Name} of parent #{pid}",
           ].join)
-        end
       end
 
       def format_process(process, app_name, command_line, timeout)

@@ -21,7 +21,6 @@ require "win32/process"
 
 # Add new constants for Logon
 module Process::Constants
-  private
 
   LOGON32_LOGON_INTERACTIVE = 0x00000002
   LOGON32_LOGON_BATCH = 0x00000004
@@ -148,15 +147,13 @@ module Process
       si_hash = {}
 
       # If the startup_info key is present, validate its subkeys
-      if hash["startup_info"]
-        hash["startup_info"].each do |key, val|
-          key = key.to_s.downcase
-          unless valid_si_keys.include?(key)
-            raise ArgumentError, "invalid startup_info key '#{key}'"
-          end
-
-          si_hash[key] = val
+      hash["startup_info"]&.each do |key, val|
+        key = key.to_s.downcase
+        unless valid_si_keys.include?(key)
+          raise ArgumentError, "invalid startup_info key '#{key}'"
         end
+
+        si_hash[key] = val
       end
 
       # The +command_line+ key is mandatory unless the +app_name+ key
