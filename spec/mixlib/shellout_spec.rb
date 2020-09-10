@@ -669,7 +669,7 @@ describe Mixlib::ShellOut do
           end
 
           it "Convert an array to a hash" do
-            expect(Process.to_hash(env_list)).to eql(converted)
+            expect(Process.environment_list_to_hash(env_list)).to eql(converted)
           end
         end
 

@@ -180,19 +180,18 @@ module Process
       end
 
       env = nil
-      env_list = []
 
       # Retrieve the environment variables for the specified user.
       if hash["with_logon"]
         logon, passwd, domain = format_creds_from_hash(hash)
         logon_type = hash["elevated"] ? LOGON32_LOGON_BATCH : LOGON32_LOGON_INTERACTIVE
         token = logon_user(logon, domain, passwd, logon_type)
-        env_list = retrieve_environment_variables(token, env_list)
+        env_list = retrieve_environment_variables(token)
       end
 
       # The env string should be passed as a string of ';' separated paths.
       if hash["environment"]
-        env = env_list.any? ? merge_env_variables(env_list, hash["environment"]) : hash["environment"]
+        env = env_list.nil? ? hash["environment"] : merge_env_variables(env_list, hash["environment"])
 
         unless env.respond_to?(:join)
           env = hash["environment"].split(File::PATH_SEPARATOR)
@@ -416,8 +415,12 @@ module Process
 
     # Retrieves the environment variables for the specified user.
     #
-    def create_environment_block(env_pointer, token, inherit)
-      unless CreateEnvironmentBlock(env_pointer, token, inherit)
+    # @param env_pointer [Pointer] The environment block is an array of null-terminated Unicode strings.
+    # @param token [Integer] User token handle.
+    # @return [Boolean] true if successfully retrieves the environment variables for the specified user.
+    #
+    def create_environment_block(env_pointer, token)
+      unless CreateEnvironmentBlock(env_pointer, token, false)
         raise SystemCallError.new("CreateEnvironmentBlock", FFI.errno)
       end
 
@@ -425,6 +428,9 @@ module Process
     end
 
     # Frees environment variables created by the CreateEnvironmentBlock function.
+    #
+    # @param env_pointer [Pointer] The environment block is an array of null-terminated Unicode strings.
+    # @return [Boolean] true if successfully frees environment variables created by the CreateEnvironmentBlock function.
     #
     def destroy_environment_block(env_pointer)
       unless DestroyEnvironmentBlock(env_pointer)
@@ -570,19 +576,24 @@ module Process
 
     # Retrieves the environment variables for the specified user.
     #
-    def retrieve_environment_variables(token, env_list)
+    # @param token [Integer] User token handle.
+    # @return env_list [Array<String>] Environment variables of specified user.
+    #
+    def retrieve_environment_variables(token)
+      env_list = []
       env_pointer = FFI::MemoryPointer.new(:pointer)
-      create_environment_block(env_pointer, token, false)
+      create_environment_block(env_pointer, token)
       str_ptr = env_pointer.read_pointer
       offset = 0
       loop do
-        new_str_pointer = str_ptr.+(offset)
+        new_str_pointer = str_ptr + offset
         break if new_str_pointer.read_string(2) == ENVIRONMENT_BLOCK_ENDS
 
         environment = new_str_pointer.read_wstring
         env_list << environment
         offset = offset + environment.length * 2 + 2
       end
+
       # To free the buffer when we have finished with the environment block
       destroy_environment_block(str_ptr)
       env_list
@@ -590,17 +601,24 @@ module Process
 
     # Merge environment variables of specified user and current environment variables.
     #
+    # @param fetched_env [Array<String>] environment variables of specified user.
+    # @param current_env [Array<String>] current environment variables.
+    # @return [Array<String>] Merged environment variables.
+    #
     def merge_env_variables(fetched_env, current_env)
-      env_hash_1 = to_hash(fetched_env)
-      env_hash_2 = to_hash(current_env)
+      env_hash_1 = environment_list_to_hash(fetched_env)
+      env_hash_2 = environment_list_to_hash(current_env)
       merged_env = env_hash_2.merge(env_hash_1)
       merged_env.map { |k, v| "#{k}=#{v}" }
     end
 
     # Convert an array to a hash.
     #
-    def to_hash(str)
-      Hash[ str.map { |pair| pair.split("=", 2) } ]
+    # @param env_var [Array<String>] Environment variables.
+    # @return [Hash] Converted an array to hash.
+    #
+    def environment_list_to_hash(env_var)
+      Hash[ env_var.map { |pair| pair.split("=", 2) } ]
     end
   end
 end
