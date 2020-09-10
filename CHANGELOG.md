@@ -1,25 +1,22 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.1.6 -->
+<!-- latest_release -->
+<!-- latest_release -->
+<!-- release_rollup -->
+<!-- release_rollup -->
+<!-- latest_stable_release -->
 ## [v3.1.6](https://github.com/chef/mixlib-shellout/tree/v3.1.6) (2020-09-10)
 
 #### Merged Pull Requests
+- Use __dir__ instead of __FILE__ [#220](https://github.com/chef/mixlib-shellout/pull/220) ([tas50](https://github.com/tas50))
 - Simplify things a bit with &amp;. [#221](https://github.com/chef/mixlib-shellout/pull/221) ([tas50](https://github.com/tas50))
-<!-- latest_release -->
-<!-- release_rollup since=3.1.4 -->
-### Changes not yet released to rubygems.org
-
-#### Merged Pull Requests
-- Simplify things a bit with &amp;. [#221](https://github.com/chef/mixlib-shellout/pull/221) ([tas50](https://github.com/tas50)) <!-- 3.1.6 -->
-- Use __dir__ instead of __FILE__ [#220](https://github.com/chef/mixlib-shellout/pull/220) ([tas50](https://github.com/tas50)) <!-- 3.1.5 -->
-<!-- release_rollup -->
 <!-- latest_stable_release -->
+
 ## [v3.1.4](https://github.com/chef/mixlib-shellout/tree/v3.1.4) (2020-08-13)
 
 #### Merged Pull Requests
 - Fix a few typos [#217](https://github.com/chef/mixlib-shellout/pull/217) ([tas50](https://github.com/tas50))
 - Optimize requires for non-omnibus installs [#218](https://github.com/chef/mixlib-shellout/pull/218) ([tas50](https://github.com/tas50))
-<!-- latest_stable_release -->
 
 ## [v3.1.2](https://github.com/chef/mixlib-shellout/tree/v3.1.2) (2020-07-24)
 
