@@ -1,24 +1,21 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.1.7 -->
+<!-- latest_release -->
+<!-- latest_release -->
+<!-- release_rollup -->
+<!-- release_rollup -->
+<!-- latest_stable_release -->
 ## [v3.1.7](https://github.com/chef/mixlib-shellout/tree/v3.1.7) (2020-10-29)
 
 #### Merged Pull Requests
 - Loosen win32-process dep to resolve Ruby 3 deprecation warnings [#223](https://github.com/chef/mixlib-shellout/pull/223) ([tas50](https://github.com/tas50))
-<!-- latest_release -->
-<!-- release_rollup since=3.1.6 -->
-### Changes not yet released to rubygems.org
-
-#### Merged Pull Requests
-- Loosen win32-process dep to resolve Ruby 3 deprecation warnings [#223](https://github.com/chef/mixlib-shellout/pull/223) ([tas50](https://github.com/tas50)) <!-- 3.1.7 -->
-<!-- release_rollup -->
 <!-- latest_stable_release -->
+
 ## [v3.1.6](https://github.com/chef/mixlib-shellout/tree/v3.1.6) (2020-09-10)
 
 #### Merged Pull Requests
 - Use __dir__ instead of __FILE__ [#220](https://github.com/chef/mixlib-shellout/pull/220) ([tas50](https://github.com/tas50))
 - Simplify things a bit with &amp;. [#221](https://github.com/chef/mixlib-shellout/pull/221) ([tas50](https://github.com/tas50))
-<!-- latest_stable_release -->
 
 ## [v3.1.4](https://github.com/chef/mixlib-shellout/tree/v3.1.4) (2020-08-13)
 
