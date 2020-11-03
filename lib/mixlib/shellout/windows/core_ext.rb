@@ -186,6 +186,14 @@ module Process
         logon, passwd, domain = format_creds_from_hash(hash)
         logon_type = hash["elevated"] ? LOGON32_LOGON_BATCH : LOGON32_LOGON_INTERACTIVE
         token = logon_user(logon, domain, passwd, logon_type)
+        logon_ptr = FFI::MemoryPointer.from_string(logon)
+        profile = PROFILEINFO.new.tap do |dat|
+          dat[:dwSize]     = dat.size
+          dat[:dwFlags]    = 1
+          dat[:lpUserName] = logon_ptr
+        end
+
+        load_user_profile(token, profile.pointer)
         env_list = retrieve_environment_variables(token)
       end
 
