@@ -1,23 +1,20 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.2.0 -->
+<!-- latest_release -->
+<!-- latest_release -->
+<!-- release_rollup -->
+<!-- release_rollup -->
+<!-- latest_stable_release -->
 ## [v3.2.0](https://github.com/chef/mixlib-shellout/tree/v3.2.0) (2020-11-12)
 
 #### Merged Pull Requests
 - Windows: fetch env variables for specified users [#224](https://github.com/chef/mixlib-shellout/pull/224) ([kapilchouhan99](https://github.com/kapilchouhan99))
-<!-- latest_release -->
-<!-- release_rollup since=3.1.7 -->
-### Changes not yet released to rubygems.org
-
-#### Merged Pull Requests
-- Windows: fetch env variables for specified users [#224](https://github.com/chef/mixlib-shellout/pull/224) ([kapilchouhan99](https://github.com/kapilchouhan99)) <!-- 3.2.0 -->
-<!-- release_rollup -->
 <!-- latest_stable_release -->
+
 ## [v3.1.7](https://github.com/chef/mixlib-shellout/tree/v3.1.7) (2020-10-29)
 
 #### Merged Pull Requests
 - Loosen win32-process dep to resolve Ruby 3 deprecation warnings [#223](https://github.com/chef/mixlib-shellout/pull/223) ([tas50](https://github.com/tas50))
-<!-- latest_stable_release -->
 
 ## [v3.1.6](https://github.com/chef/mixlib-shellout/tree/v3.1.6) (2020-09-10)
 
