@@ -2,6 +2,8 @@ source "https://rubygems.org"
 
 gemspec name: "mixlib-shellout"
 
+gem "parallel", "< 1.20" # pin until we drop ruby < 2.4
+
 group :docs do
   gem "yard"
   gem "redcarpet"
