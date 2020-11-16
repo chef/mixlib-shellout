@@ -1,15 +1,16 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.2.1 -->
-## [v3.2.1](https://github.com/chef/mixlib-shellout/tree/v3.2.1) (2020-11-12)
+<!-- latest_release 3.2.2 -->
+## [v3.2.2](https://github.com/chef/mixlib-shellout/tree/v3.2.2) (2020-11-16)
 
 #### Merged Pull Requests
-- Remove copyright dates [#225](https://github.com/chef/mixlib-shellout/pull/225) ([tas50](https://github.com/tas50))
+- Cleanup deps and fix the failing spec helper loading of support files [#226](https://github.com/chef/mixlib-shellout/pull/226) ([tas50](https://github.com/tas50))
 <!-- latest_release -->
 <!-- release_rollup since=3.2.0 -->
 ### Changes not yet released to rubygems.org
 
 #### Merged Pull Requests
+- Cleanup deps and fix the failing spec helper loading of support files [#226](https://github.com/chef/mixlib-shellout/pull/226) ([tas50](https://github.com/tas50)) <!-- 3.2.2 -->
 - Remove copyright dates [#225](https://github.com/chef/mixlib-shellout/pull/225) ([tas50](https://github.com/tas50)) <!-- 3.2.1 -->
 <!-- release_rollup -->
 <!-- latest_stable_release -->
