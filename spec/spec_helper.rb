@@ -5,8 +5,7 @@ require "tempfile"
 require "timeout"
 
 # Load everything from spec/support
-# Do not change the gsub.
-Dir["spec/support/**/*.rb"].map { |f| f.gsub(/.rb$/, "") }.each { |f| require f }
+Dir["spec/support/**/*.rb"].each { |f| require File.expand_path(f) }
 
 RSpec.configure do |config|
   config.mock_with :rspec
