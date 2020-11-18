@@ -637,7 +637,12 @@ describe Mixlib::ShellOut do
         # to match how whoami returns the information
 
         it "should run as current user" do
-          expect(running_user).to eql("#{ENV["USERDOMAIN"].downcase}\\#{ENV["USERNAME"].downcase}")
+          if ENV["USERNAME"] == "#{ENV["COMPUTERNAME"]}$"
+            expected_user = "nt authority\\system"
+          else
+            expected_user = "#{ENV["USERDOMAIN"].downcase}\\#{ENV["USERNAME"].downcase}"
+          end
+          expect(running_user).to eql(expected_user)
         end
       end
 
@@ -787,15 +792,11 @@ describe Mixlib::ShellOut do
             end
 
             context "when not using a batch file" do
-              let(:cmd) { "#{executable_file_name} #{script_name}" }
-
-              let(:executable_file_name) { "\"#{dir}/Ruby Parser.exe\"".tap(&make_executable!) }
-              let(:make_executable!) { lambda { |filename| Mixlib::ShellOut.new("copy \"#{full_path_to_ruby}\" #{filename}").run_command } }
-              let(:script_content) { "print \"#{expected_output}\"" }
+              let(:cmd) { "#{executable_file_name} -command #{script_content}" }
+              let(:executable_file_name) { "\"#{dir}/Powershell Parser.exe\"".tap(&make_executable!) }
+              let(:make_executable!) { lambda { |filename| Mixlib::ShellOut.new("copy \"c:\\windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe\" #{filename}").run_command } }
+              let(:script_content) { "Write-Host \"#{expected_output}\"" }
               let(:expected_output) { "Random #{rand(10000)}" }
-
-              let(:full_path_to_ruby) { ENV["PATH"].split(";").map(&try_ruby).reject(&:nil?).first }
-              let(:try_ruby) { lambda { |path| "#{path}\\ruby.exe" if File.executable? "#{path}\\ruby.exe" } }
 
               it "should execute" do
                 is_expected.to eql(expected_output)
