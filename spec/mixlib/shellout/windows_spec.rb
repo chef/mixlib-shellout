@@ -305,6 +305,11 @@ describe "Mixlib::ShellOut::Windows", :windows_only do
       with_command("copy thing1.txt thing2.txt", search: true) do
         is_expected.to eql([ comspec, 'cmd /c "copy thing1.txt thing2.txt"' ])
       end
+
+      # FIXME: seems this is wrong?  https://github.com/chef/mixlib-shellout/issues/131
+      with_command("echo %^COMPUTERNAME%", search: true) do
+        is_expected.to eql([ comspec, 'cmd /c "echo %^COMPUTERNAME%"' ])
+      end
     end
   end
 
