@@ -10,6 +10,7 @@ Gem::Specification.new do |s|
   s.author = "Chef Software Inc."
   s.email = "info@chef.io"
   s.homepage = "https://github.com/chef/mixlib-shellout"
+  s.license = "Apache-2.0"
 
   s.required_ruby_version = ">= 2.4"
 
