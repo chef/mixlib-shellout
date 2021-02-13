@@ -1,15 +1,16 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.2.4 -->
-## [v3.2.4](https://github.com/chef/mixlib-shellout/tree/v3.2.4) (2021-02-12)
+<!-- latest_release 3.2.5 -->
+## [v3.2.5](https://github.com/chef/mixlib-shellout/tree/v3.2.5) (2021-02-13)
 
 #### Merged Pull Requests
-- Add Ruby 3 testing + cleanup deps [#228](https://github.com/chef/mixlib-shellout/pull/228) ([tas50](https://github.com/tas50))
+- gemspec: add license metadata [#229](https://github.com/chef/mixlib-shellout/pull/229) ([priv-kweihmann](https://github.com/priv-kweihmann))
 <!-- latest_release -->
 <!-- release_rollup since=3.2.2 -->
 ### Changes not yet released to rubygems.org
 
 #### Merged Pull Requests
+- gemspec: add license metadata [#229](https://github.com/chef/mixlib-shellout/pull/229) ([priv-kweihmann](https://github.com/priv-kweihmann)) <!-- 3.2.5 -->
 - Add Ruby 3 testing + cleanup deps [#228](https://github.com/chef/mixlib-shellout/pull/228) ([tas50](https://github.com/tas50)) <!-- 3.2.4 -->
 - fix broken windows tests [#227](https://github.com/chef/mixlib-shellout/pull/227) ([mwrock](https://github.com/mwrock)) <!-- 3.2.3 -->
 <!-- release_rollup -->
