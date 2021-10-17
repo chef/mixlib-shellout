@@ -204,11 +204,11 @@ module Mixlib
       #
       # 1.  strings with whitespace or quotes in them need quotes around them.
       # 2.  interior quotes need to get backslash escaped (parser needs to know when it really ends).
-      # 3.  random backlsashes in paths themselves remain untouched.
+      # 3.  random backslashes in paths themselves remain untouched.
       # 4.  if the argument must be quoted by #1 and terminates in a sequence of backslashes then all the backlashes must themselves
-      #     be backslash excaped (double the backslashes).
+      #     be backslash escaped (double the backslashes).
       # 5.  if an interior quote that must be escaped by #2 has a sequence of backslashes before it then all the backslashes must
-      #     themselves be backslash excaped along with the backslash escape of the interior quote (double plus one backslashes).
+      #     themselves be backslash escaped along with the backslash escape of the interior quote (double plus one backslashes).
       #
       # And to restate.  We are constructing a string which will be parsed by the windows parser into arguments, and we want those
       # arguments to match the *args array we are passed here.  So call the windows parser operation A then we need to apply A^-1 to
@@ -219,7 +219,7 @@ module Mixlib
       # get the number of backslashes to insert.  Then if it is even the double quotes terminate the argument.  If it is even the
       # double quotes are interior double quotes (the extra backslash quotes the double quote).
       #
-      # We construct the inverse operation so interior double quotes preceeded by N backslashes get 2N+1 backslashes in front of the quote,
+      # We construct the inverse operation so interior double quotes preceded by N backslashes get 2N+1 backslashes in front of the quote,
       # while trailing N backslashes get 2N backslashes in front of the quote that terminates the argument.
       #
       # see: https://blogs.msdn.microsoft.com/twistylittlepassagesallalike/2011/04/23/everyone-quotes-command-line-arguments-the-wrong-way/
@@ -232,7 +232,7 @@ module Mixlib
 
         args.map do |arg|
           if arg =~ /[ \t\n\v"]/
-            arg = arg.gsub(/(\\*)"/, '\1\1\"') # interior quotes with N preceeding backslashes need 2N+1 backslashes
+            arg = arg.gsub(/(\\*)"/, '\1\1\"') # interior quotes with N preceding backslashes need 2N+1 backslashes
             arg = arg.sub(/(\\+)$/, '\1\1') # trailing N backslashes need to become 2N backslashes
             "\"#{arg}\""
           else

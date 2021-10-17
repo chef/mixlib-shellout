@@ -480,7 +480,7 @@ describe Mixlib::ShellOut do
         context "when setting environments with symbols" do
           let(:options) { { environment: { SYMBOL: "cymbal" } } }
 
-          it "should also set the enviroment" do
+          it "should also set the environment" do
             expect(shell_cmd.environment).to eql({ "SYMBOL" => "cymbal" })
           end
         end

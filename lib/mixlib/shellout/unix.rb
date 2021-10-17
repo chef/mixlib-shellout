@@ -120,7 +120,7 @@ module Mixlib
           unless ready_buffers
             @execution_time += READ_WAIT_TIME
             if @execution_time >= timeout && !@result
-              # kill the bad proccess
+              # kill the bad process
               reap_errant_child
               # read anything it wrote when we killed it
               attempt_buffer_read
