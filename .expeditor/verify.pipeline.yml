@@ -51,7 +51,7 @@ steps:
       docker:
         image: ruby:3.1
 
-- label: run-specs-windows
+- label: run-specs-ruby-3.1-windows
   command:
     - bundle config --local path vendor/bundle
     - bundle install --jobs=7 --retry=3
@@ -60,4 +60,5 @@ steps:
     executor:
       docker:
         host_os: windows
-        user: 'NT AUTHORITY\SYSTEM'
+        shell: ["powershell", "-Command"]
+        image: rubydistros/windows-2019:3.1
