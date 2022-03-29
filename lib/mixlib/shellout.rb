@@ -28,7 +28,7 @@ module Mixlib
     READ_SIZE = 4096
     DEFAULT_READ_TIMEOUT = 600
 
-    if RUBY_PLATFORM =~ /mswin|mingw32|windows/
+    if RUBY_PLATFORM =~ /mswin|mingw|windows/
       require_relative "shellout/windows"
       include ShellOut::Windows
     else
