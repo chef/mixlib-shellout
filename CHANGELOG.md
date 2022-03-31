@@ -1,25 +1,22 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.2.6 -->
-## [v3.2.6](https://github.com/chef/mixlib-shellout/tree/v3.2.6) (2022-03-29)
+<!-- latest_release -->
+<!-- latest_release -->
+<!-- release_rollup -->
+<!-- release_rollup -->
+<!-- latest_stable_release -->
+## [v3.2.6](https://github.com/chef/mixlib-shellout/tree/v3.2.6) (2022-03-31)
 
 #### Merged Pull Requests
 - Loosen platform regex to allow 64 or 32 bit mingw [#234](https://github.com/chef/mixlib-shellout/pull/234) ([clintoncwolfe](https://github.com/clintoncwolfe))
-<!-- latest_release -->
-<!-- release_rollup since=3.2.5 -->
-### Changes not yet released to rubygems.org
-
-#### Merged Pull Requests
-- Loosen platform regex to allow 64 or 32 bit mingw [#234](https://github.com/chef/mixlib-shellout/pull/234) ([clintoncwolfe](https://github.com/clintoncwolfe)) <!-- 3.2.6 -->
-<!-- release_rollup -->
 <!-- latest_stable_release -->
+
 ## [v3.2.5](https://github.com/chef/mixlib-shellout/tree/v3.2.5) (2021-02-13)
 
 #### Merged Pull Requests
 - fix broken windows tests [#227](https://github.com/chef/mixlib-shellout/pull/227) ([mwrock](https://github.com/mwrock))
 - Add Ruby 3 testing + cleanup deps [#228](https://github.com/chef/mixlib-shellout/pull/228) ([tas50](https://github.com/tas50))
 - gemspec: add license metadata [#229](https://github.com/chef/mixlib-shellout/pull/229) ([priv-kweihmann](https://github.com/priv-kweihmann))
-<!-- latest_stable_release -->
 
 ## [v3.2.2](https://github.com/chef/mixlib-shellout/tree/v3.2.2) (2020-11-16)
 
