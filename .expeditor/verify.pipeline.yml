@@ -53,7 +53,7 @@ steps:
 
 - label: run-specs-ruby-3.1-windows
   command:
-    .expeditor/run_windows_tests.ps1
+    - .expeditor/run_windows_tests.ps1
   expeditor:
     executor:
       docker:

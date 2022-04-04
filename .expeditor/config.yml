@@ -9,6 +9,7 @@ slack:
 rubygems:
   - mixlib-shellout
   - mixlib-shellout-universal-mingw32
+  - mixlib-shellout-universal-mingw-ucrt
 
 github:
   # This deletes the GitHub PR branch after successfully merged into the release branch
