@@ -2,15 +2,18 @@
 
 <!-- latest_release -->
 <!-- latest_release -->
-<!-- release_rollup -->
+<!-- release_rollup since=3.2.7 -->
+### Changes not yet released to rubygems.org
 <!-- release_rollup -->
 <!-- latest_stable_release -->
+## [v3.2.7](https://github.com/chef/mixlib-shellout/tree/v3.2.7) (2022-04-04)
+<!-- latest_stable_release -->
+
 ## [v3.2.7](https://github.com/chef/mixlib-shellout/tree/v3.2.7) (2022-04-04)
 
 #### Merged Pull Requests
 - Loosen platform regex to allow 64 or 32 bit mingw [#234](https://github.com/chef/mixlib-shellout/pull/234) ([clintoncwolfe](https://github.com/clintoncwolfe))
 - Hard Coding the gems in the gemfile to overcome a Ruby 3.1 bug [#235](https://github.com/chef/mixlib-shellout/pull/235) ([johnmccrae](https://github.com/johnmccrae))
-<!-- latest_stable_release -->
 
 ## [v3.2.6](https://github.com/chef/mixlib-shellout/tree/v3.2.6) (2022-03-31)
 
