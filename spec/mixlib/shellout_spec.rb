@@ -1167,7 +1167,7 @@ describe Mixlib::ShellOut do
           context "and child processes should be killed" do
             it "kills the child processes" do
               expect(shell_cmd).to receive(:kill_process) do |instance|
-                expect(instance.wmi_ole_object.Name).to match(/powershell/)
+                expect(instance.wmi_ole_object.Name).to match(/powershell.exe/)
                 Process.kill(:KILL, instance.wmi_ole_object.processid)
               end
               expect { executed_cmd }.to raise_error(Mixlib::ShellOut::CommandTimeout)

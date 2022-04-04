@@ -1,8 +1,6 @@
 # mixlib-shellout Changelog
 
 <!-- latest_release -->
-<!-- latest_release -->
-<!-- release_rollup -->
 <!-- release_rollup -->
 <!-- latest_stable_release -->
 ## [v3.2.6](https://github.com/chef/mixlib-shellout/tree/v3.2.6) (2022-03-31)

@@ -11,21 +11,13 @@ expeditor:
 
 steps:
 
-- label: run-lint-and-specs-ruby-2.4
-  command:
-    - .expeditor/run_linux_tests.sh rake
-  expeditor:
-    executor:
-      docker:
-        image: ruby:2.4-buster
-
 - label: run-lint-and-specs-ruby-2.5
   command:
     - .expeditor/run_linux_tests.sh rake
   expeditor:
     executor:
       docker:
-        image: ruby:2.5-buster
+        image: ruby:2.5
 
 - label: run-lint-and-specs-ruby-2.6
   command:
@@ -33,7 +25,7 @@ steps:
   expeditor:
     executor:
       docker:
-        image: ruby:2.6-buster
+        image: ruby:2.6
 
 - label: run-lint-and-specs-ruby-2.7
   command:
@@ -41,7 +33,7 @@ steps:
   expeditor:
     executor:
       docker:
-        image: ruby:2.7-buster
+        image: ruby:2.7
 
 - label: run-lint-and-specs-ruby-3.0
   command:
@@ -49,15 +41,24 @@ steps:
   expeditor:
     executor:
       docker:
-        image: ruby:3.0-buster
+        image: ruby:3.0
 
-- label: run-specs-windows
+- label: run-lint-and-specs-ruby-3.1
   command:
-    - bundle config --local path vendor/bundle
-    - bundle install --jobs=7 --retry=3
-    - bundle exec rake
+    - .expeditor/run_linux_tests.sh rake
+  expeditor:
+    executor:
+      docker:
+        image: ruby:3.1
+
+
+- label: run-specs-ruby-3.1-windows
+  command:
+    - .expeditor/run_windows_tests.ps1
   expeditor:
     executor:
       docker:
         host_os: windows
-        user: 'NT AUTHORITY\SYSTEM'
+        shell: ["powershell", "-Command"]
+        image: rubydistros/windows-2019:3.1
+        user: "NT AUTHORITY\\SYSTEM"
