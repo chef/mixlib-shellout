@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = ">= 2.5"
 
   s.add_dependency "chef-utils"
+  s.add_runtime_dependency "win32-process"
   s.require_path = "lib"
   s.files = %w{LICENSE} + Dir.glob("lib/**/*", File::FNM_DOTMATCH).reject { |f| File.directory?(f) }
 end
