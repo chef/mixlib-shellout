@@ -60,4 +60,4 @@ steps:
         host_os: windows
         shell: ["powershell", "-Command"]
         image: rubydistros/windows-2019:3.1
-        user: 'NT AUTHORITY\SYSTEM'
+        # user: 'NT AUTHORITY\SYSTEM'
