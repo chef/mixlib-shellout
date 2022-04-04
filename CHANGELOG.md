@@ -10,6 +10,12 @@
 ### Changes not yet released to rubygems.org
 
 #### Merged Pull Requests
+- Loosen platform regex to allow 64 or 32 bit mingw [#234](https://github.com/chef/mixlib-shellout/pull/234) ([clintoncwolfe](https://github.com/clintoncwolfe)) <!-- 3.2.6 -->
+<!-- release_rollup -->
+<!-- latest_stable_release -->
+## [v3.2.6](https://github.com/chef/mixlib-shellout/tree/v3.2.6) (2022-03-31)
+
+#### Merged Pull Requests
 - Loosen platform regex to allow 64 or 32 bit mingw [#234](https://github.com/chef/mixlib-shellout/pull/234) ([clintoncwolfe](https://github.com/clintoncwolfe))
 <!-- latest_stable_release -->
 
