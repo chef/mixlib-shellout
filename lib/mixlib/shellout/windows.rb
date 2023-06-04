@@ -129,7 +129,7 @@ module Mixlib
                   rescue SystemCallError
                     logger&.warn("Failed to kill timed out process #{process.process_id}")
                   end
-                  
+
                   # Save the execution time
                   @execution_time = Time.now - start_wait
 
