@@ -60,6 +60,7 @@ module Mixlib
         stderr_read, stderr_write = IO.pipe
         stdin_read, stdin_write = IO.pipe
         open_streams = [ stdout_read, stderr_read ]
+        @execution_time = 0
 
         begin
 
@@ -105,6 +106,8 @@ module Mixlib
               wait_status = WaitForSingleObject(process.process_handle, 0)
               case wait_status
               when WAIT_OBJECT_0
+                # Save the execution time
+                @execution_time = Time.now - start_wait
                 # Get process exit code
                 exit_code = [0].pack("l")
                 unless GetExitCodeProcess(process.process_handle, exit_code)
@@ -126,6 +129,9 @@ module Mixlib
                   rescue SystemCallError
                     logger&.warn("Failed to kill timed out process #{process.process_id}")
                   end
+
+                  # Save the execution time
+                  @execution_time = Time.now - start_wait
 
                   raise Mixlib::ShellOut::CommandTimeout, [
                     "command timed out:",
