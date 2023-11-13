@@ -1449,7 +1449,9 @@ describe Mixlib::ShellOut do
         context "with input data" do
           let(:ruby_code) { "bad_ruby { [ } ]" }
           let(:options) { { input: input } }
-          let(:input) { [ "f" * 20_000, "u" * 20_000, "f" * 20_000, "u" * 20_000 ].join(LINE_ENDING) }
+          # https://github.com/chef/mixlib-shellout/issues/204
+          let(:repeats) { 20_000 * (Etc.sysconf(Etc::SC_PAGESIZE) / 4096) }
+          let(:input) { [ "f" * repeats, "u" * repeats, "f" * repeats, "u" * repeats ].join(LINE_ENDING) }
 
           # Should the exception be handled?
           it "should raise error" do
