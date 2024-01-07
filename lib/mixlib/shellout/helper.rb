@@ -141,9 +141,30 @@ module Mixlib
         args.flatten.compact.map(&:to_s)
       end
 
+      # Join arguments into a string.
+      #
+      # If the argument ends with a whitespace, use it as-is. Otherwise, add
+      # a space at the end
+      #
+      # @param args [String] variable number of string arguments
+      # @return [String] merged string
+      #
+      def __join_whitespace(*args)
+        args.reduce { |output, e| output + (e.rstrip == e ? '' : ' ') + e }.first
+      end
+
       def __shell_out_command(*args, **options)
         if __transport_connection
-          FakeShellOut.new(args, options, __transport_connection.run_command(args.join(" "))) # FIXME: train should accept run_command(*args)
+          # POSIX compatible (2.7.4)
+          # FIXME: Should be in Train for parity, but would need to be in
+          #        base_connection, which is a bit tough.
+          # if options[:input] && !ChefUtils.windows?
+          #   args = Array(args)
+          #   args.concat ["<<<'COMMANDINPUT'\n", options[:input] + "\n", "COMMANDINPUT\n"]
+          #   logger.debug __join_whitespace(args)
+          # end
+
+          FakeShellOut.new(args, options, __transport_connection.run_command(__join_whitespace(args), options)) # FIXME: train should accept run_command(*args)
         else
           cmd = if options.empty?
                   Mixlib::ShellOut.new(*args)
@@ -181,11 +202,12 @@ module Mixlib
           @stdout = result.stdout
           @stderr = result.stderr
           @exitstatus = result.exit_status
-          @status = OpenStruct.new(success?: ( exitstatus == 0 ))
+          @valid_exit_codes = options[:returns] || [0]
+          @status = OpenStruct.new(success?: (@valid_exit_codes.include? exitstatus))
         end
 
         def error?
-          exitstatus != 0
+          @valid_exit_codes.none?(exitstatus)
         end
 
         def error!
