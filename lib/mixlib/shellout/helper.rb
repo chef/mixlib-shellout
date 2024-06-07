@@ -155,14 +155,6 @@ module Mixlib
 
       def __shell_out_command(*args, **options)
         if __transport_connection
-          # POSIX compatible (2.7.4)
-          # FIXME: Should be in Train for parity, but would need to be in
-          #        base_connection, which is a bit tough.
-          # if options[:input]
-          #   args = Array(args)
-          #   args.concat ["<<<'COMMANDINPUT'\n", options[:input] + "\n", "COMMANDINPUT\n"]
-          #   logger.debug __join_whitespace(args)
-          # end
           command = __join_whitespace(args)
           if !ChefUtils.windows?
             if options[:cwd]
@@ -175,6 +167,8 @@ module Mixlib
               logger.debug __join_whitespace(args)
             end
           end
+
+          # FIXME: train should accept run_command(*args)
           FakeShellOut.new(args, options, __transport_connection.run_command(command, options))
         else
           cmd = if options.empty?
