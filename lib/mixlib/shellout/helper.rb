@@ -150,13 +150,13 @@ module Mixlib
       # @return [String] merged string
       #
       def __join_whitespace(*args)
-        args.flatten.map { |e| e + (e.rstrip == e ? " " : "")}.join
+        args.flatten.map { |e| e + (e.rstrip == e ? " " : "") }.join
       end
 
       def __shell_out_command(*args, **options)
         if __transport_connection
           command = __join_whitespace(args)
-          if !ChefUtils.windows?
+          unless ChefUtils.windows?
             if options[:cwd]
               command.prepend sprintf("cd %s;", options[:cwd])
             end
