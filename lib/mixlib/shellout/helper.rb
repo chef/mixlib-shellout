@@ -150,7 +150,7 @@ module Mixlib
       # @return [String] merged string
       #
       def __join_whitespace(*args)
-        args.flatten.map { |e| e + (e.rstrip == e ? ' ' : '')}.join
+        args.flatten.map { |e| e + (e.rstrip == e ? " " : "")}.join
       end
 
       def __shell_out_command(*args, **options)
