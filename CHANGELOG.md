@@ -1,9 +1,16 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release -->
+<!-- latest_release 3.2.8 -->
+## [v3.2.8](https://github.com/chef/mixlib-shellout/tree/v3.2.8) (2024-06-08)
+
+#### Merged Pull Requests
+- Keep ffi version below 1.17 [#244](https://github.com/chef/mixlib-shellout/pull/244) ([tpowell-progress](https://github.com/tpowell-progress))
 <!-- latest_release -->
 <!-- release_rollup since=3.2.7 -->
 ### Changes not yet released to rubygems.org
+
+#### Merged Pull Requests
+- Keep ffi version below 1.17 [#244](https://github.com/chef/mixlib-shellout/pull/244) ([tpowell-progress](https://github.com/tpowell-progress)) <!-- 3.2.8 -->
 <!-- release_rollup -->
 <!-- latest_stable_release -->
 ## [v3.2.7](https://github.com/chef/mixlib-shellout/tree/v3.2.7) (2022-04-04)
