@@ -1,15 +1,16 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.2.10 -->
-## [v3.2.10](https://github.com/chef/mixlib-shellout/tree/v3.2.10) (2024-06-18)
+<!-- latest_release 3.2.11 -->
+## [v3.2.11](https://github.com/chef/mixlib-shellout/tree/v3.2.11) (2024-06-18)
 
 #### Merged Pull Requests
-- [#239] Add execution time to Windows shellout object [#247](https://github.com/chef/mixlib-shellout/pull/247) ([dafyddcrosby](https://github.com/dafyddcrosby))
+- Increase EPIPE test input size based on platform page size [#241](https://github.com/chef/mixlib-shellout/pull/241) ([matoro](https://github.com/matoro))
 <!-- latest_release -->
 <!-- release_rollup since=3.2.8 -->
 ### Changes not yet released to rubygems.org
 
 #### Merged Pull Requests
+- Increase EPIPE test input size based on platform page size [#241](https://github.com/chef/mixlib-shellout/pull/241) ([matoro](https://github.com/matoro)) <!-- 3.2.11 -->
 - [#239] Add execution time to Windows shellout object [#247](https://github.com/chef/mixlib-shellout/pull/247) ([dafyddcrosby](https://github.com/dafyddcrosby)) <!-- 3.2.10 -->
 - [Unix#run_command] Remove Ruby 1.8.7 check [#242](https://github.com/chef/mixlib-shellout/pull/242) ([dafyddcrosby](https://github.com/dafyddcrosby)) <!-- 3.2.9 -->
 <!-- release_rollup -->
