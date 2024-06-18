@@ -1,8 +1,16 @@
 # mixlib-shellout Changelog
 
+<!-- latest_release 3.2.9 -->
+## [v3.2.9](https://github.com/chef/mixlib-shellout/tree/v3.2.9) (2024-06-18)
+
+#### Merged Pull Requests
+- [Unix#run_command] Remove Ruby 1.8.7 check [#242](https://github.com/chef/mixlib-shellout/pull/242) ([dafyddcrosby](https://github.com/dafyddcrosby))
 <!-- latest_release -->
-<!-- latest_release -->
-<!-- release_rollup -->
+<!-- release_rollup since=3.2.8 -->
+### Changes not yet released to rubygems.org
+
+#### Merged Pull Requests
+- [Unix#run_command] Remove Ruby 1.8.7 check [#242](https://github.com/chef/mixlib-shellout/pull/242) ([dafyddcrosby](https://github.com/dafyddcrosby)) <!-- 3.2.9 -->
 <!-- release_rollup -->
 <!-- latest_stable_release -->
 ## [v3.2.8](https://github.com/chef/mixlib-shellout/tree/v3.2.8) (2024-06-11)
