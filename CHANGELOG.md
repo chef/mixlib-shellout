@@ -1,15 +1,16 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.2.9 -->
-## [v3.2.9](https://github.com/chef/mixlib-shellout/tree/v3.2.9) (2024-06-18)
+<!-- latest_release 3.2.10 -->
+## [v3.2.10](https://github.com/chef/mixlib-shellout/tree/v3.2.10) (2024-06-18)
 
 #### Merged Pull Requests
-- [Unix#run_command] Remove Ruby 1.8.7 check [#242](https://github.com/chef/mixlib-shellout/pull/242) ([dafyddcrosby](https://github.com/dafyddcrosby))
+- [#239] Add execution time to Windows shellout object [#247](https://github.com/chef/mixlib-shellout/pull/247) ([dafyddcrosby](https://github.com/dafyddcrosby))
 <!-- latest_release -->
 <!-- release_rollup since=3.2.8 -->
 ### Changes not yet released to rubygems.org
 
 #### Merged Pull Requests
+- [#239] Add execution time to Windows shellout object [#247](https://github.com/chef/mixlib-shellout/pull/247) ([dafyddcrosby](https://github.com/dafyddcrosby)) <!-- 3.2.10 -->
 - [Unix#run_command] Remove Ruby 1.8.7 check [#242](https://github.com/chef/mixlib-shellout/pull/242) ([dafyddcrosby](https://github.com/dafyddcrosby)) <!-- 3.2.9 -->
 <!-- release_rollup -->
 <!-- latest_stable_release -->
