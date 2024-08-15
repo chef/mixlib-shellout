@@ -162,9 +162,9 @@ module Mixlib
             end
 
             if options[:input]
-              args = Array(args)
-              args.concat ["<<<'COMMANDINPUT'\n", options[:input] + "\n", "COMMANDINPUT\n"]
-              logger.debug __join_whitespace(args)
+              command.concat "<<'COMMANDINPUT'\n"
+              command.concat __join_whitespace(options[:input])
+              command.concat "COMMANDINPUT\n"
             end
           end
 
@@ -216,7 +216,7 @@ module Mixlib
         end
 
         def error!
-          raise Mixlib::ShellOut::ShellCommandFailed, "Unexpected exit status of #{exitstatus} running #{@args}" if error?
+          raise Mixlib::ShellOut::ShellCommandFailed, "Unexpected exit status of #{exitstatus} running #{@args}: #{stderr}" if error?
         end
       end
     end
