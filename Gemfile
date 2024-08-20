@@ -8,7 +8,7 @@ gem "ffi", "< 1.17.0"
 gem "wmi-lite", "~> 1.0.7"
 
 group :test do
-  gem "chefstyle", "1.6.2"
+  gem "cookstyle", ">=7.32.8"
   gem "rake"
   gem "rspec", "~> 3.0"
 end
