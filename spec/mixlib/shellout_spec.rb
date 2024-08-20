@@ -951,11 +951,11 @@ describe Mixlib::ShellOut do
         end
 
         it "includes output with exceptions from #error!" do
-          begin
-            executed_cmd.error!
-          rescue Mixlib::ShellOut::ShellCommandFailed => e
-            expect(e.message).to match(exception_message_format)
-          end
+
+          executed_cmd.error!
+        rescue Mixlib::ShellOut::ShellCommandFailed => e
+          expect(e.message).to match(exception_message_format)
+
         end
 
         it "should set the exit status of the command" do
@@ -1087,11 +1087,11 @@ describe Mixlib::ShellOut do
           # probably won't be consistent on different environments.
           created_procs = 0
           100.times do
-            begin
-              shell_out_cmd.run_command
-            rescue Errno::ENOENT
-              created_procs += 1
-            end
+
+            shell_out_cmd.run_command
+          rescue Errno::ENOENT
+            created_procs += 1
+
           end
           expect(created_procs).to eq(100)
           reaped_procs = 0
