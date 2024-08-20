@@ -1,15 +1,16 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.3.0 -->
-## [v3.3.0](https://github.com/chef/mixlib-shellout/tree/v3.3.0) (2024-06-25)
+<!-- latest_release 3.3.1 -->
+## [v3.3.1](https://github.com/chef/mixlib-shellout/tree/v3.3.1) (2024-08-20)
 
 #### Merged Pull Requests
-- Adjustments for Chef Target Mode [#243](https://github.com/chef/mixlib-shellout/pull/243) ([thheinen](https://github.com/thheinen))
+- Migrate from Chefstyle to Cookstyle [#249](https://github.com/chef/mixlib-shellout/pull/249) ([dafyddcrosby](https://github.com/dafyddcrosby))
 <!-- latest_release -->
 <!-- release_rollup since=3.2.8 -->
 ### Changes not yet released to rubygems.org
 
 #### Merged Pull Requests
+- Migrate from Chefstyle to Cookstyle [#249](https://github.com/chef/mixlib-shellout/pull/249) ([dafyddcrosby](https://github.com/dafyddcrosby)) <!-- 3.3.1 -->
 - Adjustments for Chef Target Mode [#243](https://github.com/chef/mixlib-shellout/pull/243) ([thheinen](https://github.com/thheinen)) <!-- 3.3.0 -->
 - Increase EPIPE test input size based on platform page size [#241](https://github.com/chef/mixlib-shellout/pull/241) ([matoro](https://github.com/matoro)) <!-- 3.2.11 -->
 - [#239] Add execution time to Windows shellout object [#247](https://github.com/chef/mixlib-shellout/pull/247) ([dafyddcrosby](https://github.com/dafyddcrosby)) <!-- 3.2.10 -->
