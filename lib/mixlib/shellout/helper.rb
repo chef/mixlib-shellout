@@ -158,7 +158,8 @@ module Mixlib
           command = __join_whitespace(args)
           unless ChefUtils.windows?
             if options[:cwd]
-              command.prepend sprintf("cd %s;", options[:cwd])
+              # as `timeout` is used, commands need to be executed in a subshell
+              command = "sh -c 'cd #{options[:cwd]}; #{command}'"
             end
 
             if options[:input]
