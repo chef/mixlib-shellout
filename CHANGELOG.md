@@ -1,15 +1,16 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.3.1 -->
-## [v3.3.1](https://github.com/chef/mixlib-shellout/tree/v3.3.1) (2024-08-20)
+<!-- latest_release 3.3.2 -->
+## [v3.3.2](https://github.com/chef/mixlib-shellout/tree/v3.3.2) (2024-10-08)
 
 #### Merged Pull Requests
-- Migrate from Chefstyle to Cookstyle [#249](https://github.com/chef/mixlib-shellout/pull/249) ([dafyddcrosby](https://github.com/dafyddcrosby))
+- Fix execution in target mode with cwd parameter given [#250](https://github.com/chef/mixlib-shellout/pull/250) ([thheinen](https://github.com/thheinen))
 <!-- latest_release -->
 <!-- release_rollup since=3.2.8 -->
 ### Changes not yet released to rubygems.org
 
 #### Merged Pull Requests
+- Fix execution in target mode with cwd parameter given [#250](https://github.com/chef/mixlib-shellout/pull/250) ([thheinen](https://github.com/thheinen)) <!-- 3.3.2 -->
 - Migrate from Chefstyle to Cookstyle [#249](https://github.com/chef/mixlib-shellout/pull/249) ([dafyddcrosby](https://github.com/dafyddcrosby)) <!-- 3.3.1 -->
 - Adjustments for Chef Target Mode [#243](https://github.com/chef/mixlib-shellout/pull/243) ([thheinen](https://github.com/thheinen)) <!-- 3.3.0 -->
 - Increase EPIPE test input size based on platform page size [#241](https://github.com/chef/mixlib-shellout/pull/241) ([matoro](https://github.com/matoro)) <!-- 3.2.11 -->
