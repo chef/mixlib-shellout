@@ -1,29 +1,26 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.3.3 -->
+<!-- latest_release -->
+<!-- latest_release -->
+<!-- release_rollup -->
+<!-- release_rollup -->
+<!-- latest_stable_release -->
 ## [v3.3.3](https://github.com/chef/mixlib-shellout/tree/v3.3.3) (2024-10-14)
 
 #### Merged Pull Requests
+- [Unix#run_command] Remove Ruby 1.8.7 check [#242](https://github.com/chef/mixlib-shellout/pull/242) ([dafyddcrosby](https://github.com/dafyddcrosby))
+- [#239] Add execution time to Windows shellout object [#247](https://github.com/chef/mixlib-shellout/pull/247) ([dafyddcrosby](https://github.com/dafyddcrosby))
+- Increase EPIPE test input size based on platform page size [#241](https://github.com/chef/mixlib-shellout/pull/241) ([matoro](https://github.com/matoro))
+- Adjustments for Chef Target Mode [#243](https://github.com/chef/mixlib-shellout/pull/243) ([thheinen](https://github.com/thheinen))
+- Migrate from Chefstyle to Cookstyle [#249](https://github.com/chef/mixlib-shellout/pull/249) ([dafyddcrosby](https://github.com/dafyddcrosby))
+- Fix execution in target mode with cwd parameter given [#250](https://github.com/chef/mixlib-shellout/pull/250) ([thheinen](https://github.com/thheinen))
 - Fix execution of multiline inputs to target mode; Improve error output [#248](https://github.com/chef/mixlib-shellout/pull/248) ([thheinen](https://github.com/thheinen))
-<!-- latest_release -->
-<!-- release_rollup since=3.2.8 -->
-### Changes not yet released to rubygems.org
-
-#### Merged Pull Requests
-- Fix execution of multiline inputs to target mode; Improve error output [#248](https://github.com/chef/mixlib-shellout/pull/248) ([thheinen](https://github.com/thheinen)) <!-- 3.3.3 -->
-- Fix execution in target mode with cwd parameter given [#250](https://github.com/chef/mixlib-shellout/pull/250) ([thheinen](https://github.com/thheinen)) <!-- 3.3.2 -->
-- Migrate from Chefstyle to Cookstyle [#249](https://github.com/chef/mixlib-shellout/pull/249) ([dafyddcrosby](https://github.com/dafyddcrosby)) <!-- 3.3.1 -->
-- Adjustments for Chef Target Mode [#243](https://github.com/chef/mixlib-shellout/pull/243) ([thheinen](https://github.com/thheinen)) <!-- 3.3.0 -->
-- Increase EPIPE test input size based on platform page size [#241](https://github.com/chef/mixlib-shellout/pull/241) ([matoro](https://github.com/matoro)) <!-- 3.2.11 -->
-- [#239] Add execution time to Windows shellout object [#247](https://github.com/chef/mixlib-shellout/pull/247) ([dafyddcrosby](https://github.com/dafyddcrosby)) <!-- 3.2.10 -->
-- [Unix#run_command] Remove Ruby 1.8.7 check [#242](https://github.com/chef/mixlib-shellout/pull/242) ([dafyddcrosby](https://github.com/dafyddcrosby)) <!-- 3.2.9 -->
-<!-- release_rollup -->
 <!-- latest_stable_release -->
+
 ## [v3.2.8](https://github.com/chef/mixlib-shellout/tree/v3.2.8) (2024-06-11)
 
 #### Merged Pull Requests
 - Keep ffi version below 1.17 [#244](https://github.com/chef/mixlib-shellout/pull/244) ([tpowell-progress](https://github.com/tpowell-progress))
-<!-- latest_stable_release -->
 
 ## [v3.2.7](https://github.com/chef/mixlib-shellout/tree/v3.2.7) (2022-04-04)
 
