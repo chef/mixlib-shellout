@@ -2,9 +2,13 @@
 
 <!-- latest_release -->
 <!-- latest_release -->
-<!-- release_rollup -->
+<!-- release_rollup since=3.3.3 -->
+### Changes not yet released to rubygems.org
 <!-- release_rollup -->
 <!-- latest_stable_release -->
+## [v3.3.3](https://github.com/chef/mixlib-shellout/tree/v3.3.3) (2024-10-14)
+<!-- latest_stable_release -->
+
 ## [v3.3.3](https://github.com/chef/mixlib-shellout/tree/v3.3.3) (2024-10-14)
 
 #### Merged Pull Requests
@@ -15,7 +19,6 @@
 - Migrate from Chefstyle to Cookstyle [#249](https://github.com/chef/mixlib-shellout/pull/249) ([dafyddcrosby](https://github.com/dafyddcrosby))
 - Fix execution in target mode with cwd parameter given [#250](https://github.com/chef/mixlib-shellout/pull/250) ([thheinen](https://github.com/thheinen))
 - Fix execution of multiline inputs to target mode; Improve error output [#248](https://github.com/chef/mixlib-shellout/pull/248) ([thheinen](https://github.com/thheinen))
-<!-- latest_stable_release -->
 
 ## [v3.2.8](https://github.com/chef/mixlib-shellout/tree/v3.2.8) (2024-06-11)
 
