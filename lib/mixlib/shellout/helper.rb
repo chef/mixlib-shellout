@@ -143,14 +143,17 @@ module Mixlib
 
       # Join arguments into a string.
       #
-      # If the argument ends with a whitespace, use it as-is. Otherwise, add
-      # a space at the end
+      # Strips leading/trailing spaces from each argument. If an argument contains
+      # a space, it is quoted. Join into a single string with spaces between each argument.
       #
       # @param args [String] variable number of string arguments
       # @return [String] merged string
       #
       def __join_whitespace(*args)
-        args.flatten.map { |e| e + (e.rstrip == e ? " " : "") }.join
+        args.flatten.map do |arg|
+          arg.strip!
+          arg.include?(" ") ? sprintf('"%s"', arg) : arg
+        end.join(" ")
       end
 
       def __shell_out_command(*args, **options)
