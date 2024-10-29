@@ -1,9 +1,16 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release -->
+<!-- latest_release 3.3.4 -->
+## [v3.3.4](https://github.com/chef/mixlib-shellout/tree/v3.3.4) (2024-10-29)
+
+#### Merged Pull Requests
+- Fix quoting of command arguments in Target Mode [#251](https://github.com/chef/mixlib-shellout/pull/251) ([thheinen](https://github.com/thheinen))
 <!-- latest_release -->
 <!-- release_rollup since=3.3.3 -->
 ### Changes not yet released to rubygems.org
+
+#### Merged Pull Requests
+- Fix quoting of command arguments in Target Mode [#251](https://github.com/chef/mixlib-shellout/pull/251) ([thheinen](https://github.com/thheinen)) <!-- 3.3.4 -->
 <!-- release_rollup -->
 <!-- latest_stable_release -->
 ## [v3.3.3](https://github.com/chef/mixlib-shellout/tree/v3.3.3) (2024-10-14)
