@@ -104,10 +104,15 @@ module Mixlib
 
         write_to_child_stdin
 
+        select_timeout = 0.001 # 1 millisecond
+
         until @status
-          ready_buffers = attempt_buffer_read
+          ready_buffers = attempt_buffer_read(select_timeout)
           unless ready_buffers
-            @execution_time += READ_WAIT_TIME
+            @execution_time += select_timeout
+
+            # 1.3 multiplier is so we get ~10 selects before we hit the 0.01 threshold
+            select_timeout *= 1.3 unless select_timeout > READ_WAIT_TIME
             if @execution_time >= timeout && !@result
               # kill the bad proccess
               reap_errant_child
@@ -265,8 +270,8 @@ module Mixlib
         child_stdin.close # Kick things off
       end
 
-      def attempt_buffer_read
-        ready = IO.select(open_pipes, nil, nil, READ_WAIT_TIME)
+      def attempt_buffer_read(select_timeout = READ_WAIT_TIME)
+        ready = IO.select(open_pipes, nil, nil, select_timeout)
         if ready
           read_stdout_to_buffer if ready.first.include?(child_stdout)
           read_stderr_to_buffer if ready.first.include?(child_stderr)
