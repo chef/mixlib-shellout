@@ -18,7 +18,7 @@ describe Mixlib::ShellOut do
   let(:ruby_code) { raise "define let(:ruby_code)" }
   let(:options) { nil }
 
-  let(:ruby_eval) { lambda { |code| "ruby -e '#{code}'" } }
+  let(:ruby_eval) { lambda { |code| "#{Gem.ruby} -e '#{code}'" } }
 
   context "when instantiating" do
     subject { shell_cmd }
@@ -1177,7 +1177,7 @@ describe Mixlib::ShellOut do
 
         context "on unix", :unix_only do
           def ruby_wo_shell(code)
-            parts = %w{ruby}
+            parts = [ Gem.ruby ]
             parts << "-e"
             parts << code
           end
