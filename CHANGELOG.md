@@ -1,8 +1,16 @@
 # mixlib-shellout Changelog
 
+<!-- latest_release 3.3.5 -->
+## [v3.3.5](https://github.com/chef/mixlib-shellout/tree/v3.3.5) (2024-12-10)
+
+#### Merged Pull Requests
+- [CI] Drop EOL Rubies [#253](https://github.com/chef/mixlib-shellout/pull/253) ([dafyddcrosby](https://github.com/dafyddcrosby))
 <!-- latest_release -->
-<!-- latest_release -->
-<!-- release_rollup -->
+<!-- release_rollup since=3.3.4 -->
+### Changes not yet released to rubygems.org
+
+#### Merged Pull Requests
+- [CI] Drop EOL Rubies [#253](https://github.com/chef/mixlib-shellout/pull/253) ([dafyddcrosby](https://github.com/dafyddcrosby)) <!-- 3.3.5 -->
 <!-- release_rollup -->
 <!-- latest_stable_release -->
 ## [v3.3.4](https://github.com/chef/mixlib-shellout/tree/v3.3.4) (2024-11-05)
