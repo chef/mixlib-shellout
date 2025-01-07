@@ -149,10 +149,14 @@ module Mixlib
       # @param args [String] variable number of string arguments
       # @return [String] merged string
       #
-      def __join_whitespace(*args)
-        args.flatten.map do |arg|
-          arg.strip!
-          arg.include?(" ") ? sprintf('"%s"', arg) : arg
+      def __join_whitespace(*args, quote: false)
+        args.map do |arg|
+          if arg.is_a?(Array)
+            __join_whitespace(*arg, quote: arg.count > 1)
+          else
+            arg = arg.include?(" ") ? sprintf('"%s"', arg) : arg if quote
+            arg.strip
+          end
         end.join(" ")
       end
 
