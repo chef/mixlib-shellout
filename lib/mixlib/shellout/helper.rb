@@ -172,7 +172,7 @@ module Mixlib
             if options[:input]
               command.concat "<<'COMMANDINPUT'\n"
               command.concat __join_whitespace(options[:input])
-              command.concat "COMMANDINPUT\n"
+              command.concat "\nCOMMANDINPUT\n"
             end
           end
 
