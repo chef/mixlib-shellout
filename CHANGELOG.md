@@ -1,24 +1,21 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.3.6 -->
-## [v3.3.6](https://github.com/chef/mixlib-shellout/tree/v3.3.6) (2025-01-15)
-
-#### Merged Pull Requests
-- Fix quoting regression [#254](https://github.com/chef/mixlib-shellout/pull/254) ([thheinen](https://github.com/thheinen))
 <!-- latest_release -->
-<!-- release_rollup since=3.3.4 -->
-### Changes not yet released to rubygems.org
-
-#### Merged Pull Requests
-- Fix quoting regression [#254](https://github.com/chef/mixlib-shellout/pull/254) ([thheinen](https://github.com/thheinen)) <!-- 3.3.6 -->
-- [CI] Drop EOL Rubies [#253](https://github.com/chef/mixlib-shellout/pull/253) ([dafyddcrosby](https://github.com/dafyddcrosby)) <!-- 3.3.5 -->
+<!-- latest_release -->
+<!-- release_rollup -->
 <!-- release_rollup -->
 <!-- latest_stable_release -->
+## [v3.3.6](https://github.com/chef/mixlib-shellout/tree/v3.3.6) (2025-01-16)
+
+#### Merged Pull Requests
+- [CI] Drop EOL Rubies [#253](https://github.com/chef/mixlib-shellout/pull/253) ([dafyddcrosby](https://github.com/dafyddcrosby))
+- Fix quoting regression [#254](https://github.com/chef/mixlib-shellout/pull/254) ([thheinen](https://github.com/thheinen))
+<!-- latest_stable_release -->
+
 ## [v3.3.4](https://github.com/chef/mixlib-shellout/tree/v3.3.4) (2024-11-05)
 
 #### Merged Pull Requests
 - Fix quoting of command arguments in Target Mode [#251](https://github.com/chef/mixlib-shellout/pull/251) ([thheinen](https://github.com/thheinen))
-<!-- latest_stable_release -->
 
 ## [v3.3.3](https://github.com/chef/mixlib-shellout/tree/v3.3.3) (2024-10-14)
 
