@@ -131,7 +131,7 @@ module Mixlib
         reap_errant_child if should_reap?
         # make one more pass to get the last of the output after the
         # child process dies
-        attempt_buffer_read
+        attempt_buffer_read(0)
         # no matter what happens, turn the GC back on, and hope whatever busted
         # version of ruby we're on doesn't allocate some objects during the next
         # GC run.
@@ -265,8 +265,8 @@ module Mixlib
         child_stdin.close # Kick things off
       end
 
-      def attempt_buffer_read
-        ready = IO.select(open_pipes, nil, nil, READ_WAIT_TIME)
+      def attempt_buffer_read(timeout = READ_WAIT_TIME)
+        ready = IO.select(open_pipes, nil, nil, timeout)
         if ready
           read_stdout_to_buffer if ready.first.include?(child_stdout)
           read_stderr_to_buffer if ready.first.include?(child_stderr)
