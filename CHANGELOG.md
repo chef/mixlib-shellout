@@ -1,8 +1,16 @@
 # mixlib-shellout Changelog
 
+<!-- latest_release 3.3.7 -->
+## [v3.3.7](https://github.com/chef/mixlib-shellout/tree/v3.3.7) (2025-02-11)
+
+#### Merged Pull Requests
+- Set timeout to zero for last select (#245) [#255](https://github.com/chef/mixlib-shellout/pull/255) ([dafyddcrosby](https://github.com/dafyddcrosby))
 <!-- latest_release -->
-<!-- latest_release -->
-<!-- release_rollup -->
+<!-- release_rollup since=3.3.6 -->
+### Changes not yet released to rubygems.org
+
+#### Merged Pull Requests
+- Set timeout to zero for last select (#245) [#255](https://github.com/chef/mixlib-shellout/pull/255) ([dafyddcrosby](https://github.com/dafyddcrosby)) <!-- 3.3.7 -->
 <!-- release_rollup -->
 <!-- latest_stable_release -->
 ## [v3.3.6](https://github.com/chef/mixlib-shellout/tree/v3.3.6) (2025-01-16)
