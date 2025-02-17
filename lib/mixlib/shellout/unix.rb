@@ -16,7 +16,7 @@
 # limitations under the License.
 #
 
-require 'fileutils'
+require "fileutils" unless defined?(FileUtils)
 
 module Mixlib
   class ShellOut
@@ -317,7 +317,7 @@ module Mixlib
       end
 
       def cgroupv2_available?
-        return !File.read('/proc/mounts')[%r{^cgroup2}].nil?
+        !File.read("/proc/mounts")[/^cgroup2/].nil?
       end
 
       def fork_subprocess

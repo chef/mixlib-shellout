@@ -1591,7 +1591,7 @@ describe Mixlib::ShellOut do
     let(:options) { { cgroup: cgroup } }
 
     context "when cgroup exists" do
-      let(:cgroup) { "#{File.read('/proc/self/cgroup')[%r{(/.*)$}, 1]}" }
+      let(:cgroup) { "#{File.read("/proc/self/cgroup")[%r{(/.*)$}, 1]}" }
       let(:running_cgroup) { shell_cmd.run_command.stdout.chomp }
       it "should run the process under that cgroup" do
         expect(running_cgroup).to eql(cgroup.to_s)
@@ -1599,12 +1599,12 @@ describe Mixlib::ShellOut do
     end
 
     context "when cgroup does not exist" do
-      let(:cgroup) { "#{File.read('/proc/self/cgroup')[%r{(/.*)/[^/]+$}, 1]}/test" }
+      let(:cgroup) { "#{File.read("/proc/self/cgroup")[%r{(/.*)/[^/]+$}, 1]}/test" }
       let(:running_cgroup) { shell_cmd.run_command.stdout.chomp }
       it "should create the cgroup and run the process under it" do
         expect(running_cgroup).to eql(cgroup.to_s)
         Dir.rmdir("/sys/fs/cgroup/#{cgroup}")
-     end
+      end
     end
   end
 end
