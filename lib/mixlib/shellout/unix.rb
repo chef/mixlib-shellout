@@ -316,6 +316,10 @@ module Mixlib
         open_pipes.delete(child_process_status)
       end
 
+      def cgroupv2_available?
+        return !File.read('/proc/mounts')[%r{^cgroup2}].nil?
+      end
+
       def fork_subprocess
         initialize_ipc
 
@@ -333,7 +337,7 @@ module Mixlib
 
           configure_subprocess_file_descriptors
 
-          if cgroup
+          if cgroup && cgroupv2_available?
             set_cgroup
           end
 
