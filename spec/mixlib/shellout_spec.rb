@@ -1589,12 +1589,15 @@ describe Mixlib::ShellOut do
   context "when running on a cgroup", :linux_only do
     let(:cmd) { "cat /proc/self/cgroup | cut -c 4-" }
     let(:options) { { cgroup: cgroup } }
+    let(:cgroupv2_supported) { !File.read("/proc/mounts")[%r{^cgroup2 /sys/fs/cgroup}].nil? }
 
     context "when cgroup exists" do
       let(:cgroup) { "#{File.read("/proc/self/cgroup")[%r{(/.*)$}, 1]}" }
       let(:running_cgroup) { shell_cmd.run_command.stdout.chomp }
       it "should run the process under that cgroup" do
-        expect(running_cgroup).to eql(cgroup.to_s)
+        if cgroupv2_supported
+          expect(running_cgroup).to eql(cgroup.to_s)
+        end
       end
     end
 
@@ -1602,9 +1605,12 @@ describe Mixlib::ShellOut do
       let(:cgroup) { "#{File.read("/proc/self/cgroup")[%r{(/.*)/[^/]+$}, 1]}/test" }
       let(:running_cgroup) { shell_cmd.run_command.stdout.chomp }
       it "should create the cgroup and run the process under it" do
-        expect(running_cgroup).to eql(cgroup.to_s)
-        Dir.rmdir("/sys/fs/cgroup/#{cgroup}")
+        if cgroupv2_supported
+          expect(running_cgroup).to eql(cgroup.to_s)
+          Dir.rmdir("/sys/fs/cgroup/#{cgroup}")
+        end
       end
     end
   end
 end
+
