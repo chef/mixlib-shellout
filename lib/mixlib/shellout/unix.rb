@@ -317,7 +317,7 @@ module Mixlib
       end
 
       def cgroupv2_available?
-        !File.read("/proc/mounts")[/^cgroup2/].nil?
+        !File.read("/proc/mounts")[%r{^cgroup2 /sys/fs/cgroup}].nil?
       end
 
       def fork_subprocess
