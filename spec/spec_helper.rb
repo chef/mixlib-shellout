@@ -15,6 +15,7 @@ RSpec.configure do |config|
   # Add jruby filters here
   config.filter_run_excluding windows_only: true unless windows?
   config.filter_run_excluding unix_only: true unless unix?
+  config.filter_run_excluding linux_only: true unless linux?
   config.filter_run_excluding requires_root: true unless root?
   config.filter_run_excluding ruby: DependencyProc.with(RUBY_VERSION)
 
