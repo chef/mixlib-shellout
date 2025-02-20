@@ -1589,7 +1589,7 @@ describe Mixlib::ShellOut do
   context "when running on a cgroup", :linux_only do
     let(:cmd) { "cat /proc/self/cgroup | cut -c 4-" }
     let(:options) { { cgroup: cgroup } }
-    let(:cgroupv2_supported) { !File.read("/proc/mounts")[%r{^cgroup2 /sys/fs/cgroup}].nil? }
+    let(:cgroupv2_supported) { File.read("/proc/mounts").match(%r{^cgroup2 /sys/fs/cgroup}) }
 
     context "when cgroup exists" do
       let(:cgroup) { "#{File.read("/proc/self/cgroup")[%r{(/.*)$}, 1]}" }
