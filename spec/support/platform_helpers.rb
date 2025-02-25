@@ -6,6 +6,10 @@ def unix?
   !windows?
 end
 
+def linux?
+  !!(RUBY_PLATFORM =~ /linux/)
+end
+
 if windows?
   LINE_ENDING = "\r\n".freeze
   ECHO_LC_ALL = "echo %LC_ALL%".freeze

@@ -114,6 +114,9 @@ module Mixlib
 
     attr_accessor :sensitive
 
+    # Path to cgroupv2 that the process should run on
+    attr_accessor :cgroup
+
     # === Arguments:
     # Takes a single command, or a list of command fragments. These are used
     # as arguments to Kernel.exec. See the Kernel.exec documentation for more
@@ -179,6 +182,7 @@ module Mixlib
       @timeout = nil
       @elevated = false
       @sensitive = false
+      @cgroup = nil
 
       if command_args.last.is_a?(Hash)
         parse_options(command_args.pop)
@@ -303,7 +307,8 @@ module Mixlib
     def inspect
       "<#{self.class.name}##{object_id}: command: '#{@command}' process_status: #{@status.inspect} " +
         "stdout: '#{stdout.strip}' stderr: '#{stderr.strip}' child_pid: #{@child_pid.inspect} " +
-        "environment: #{@environment.inspect} timeout: #{timeout} user: #{@user} group: #{@group} working_dir: #{@cwd} >"
+        "environment: #{@environment.inspect} timeout: #{timeout} user: #{@user} group: #{@group} working_dir: #{@cwd} " +
+        "cgroup: #{@cgroup} >"
     end
 
     private
@@ -354,6 +359,8 @@ module Mixlib
           self.elevated = setting
         when "sensitive"
           self.sensitive = setting
+        when "cgroup"
+          self.cgroup = setting
         else
           raise InvalidCommandOption, "option '#{option.inspect}' is not a valid option for #{self.class.name}"
         end

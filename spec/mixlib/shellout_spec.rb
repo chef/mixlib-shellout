@@ -89,6 +89,11 @@ describe Mixlib::ShellOut do
         it { is_expected.to be_nil }
       end
 
+      describe "#cgroup" do
+        subject { super().input }
+        it { is_expected.to be_nil }
+      end
+
       it "should not set any default environmental variables" do
         expect(shell_cmd.environment).to eq({})
       end
@@ -319,6 +324,15 @@ describe Mixlib::ShellOut do
           is_expected.to eql(value)
         end
       end
+
+      context "when setting cgroup" do
+        let(:accessor) { :cgroup }
+        let(:value) { "test" }
+
+        it "should set the cgroup" do
+          is_expected.to eql(value)
+        end
+      end
     end
 
     context "testing login", :unix_only do
@@ -411,7 +425,7 @@ describe Mixlib::ShellOut do
       let(:options) do
         { cwd: cwd, user: user, login: true, domain: domain, password: password, group: group,
           umask: umask, timeout: timeout, environment: environment, returns: valid_exit_codes,
-          live_stream: stream, input: input }
+          live_stream: stream, input: input, cgroup: cgroup }
       end
 
       let(:cwd) { "/tmp" }
@@ -427,6 +441,7 @@ describe Mixlib::ShellOut do
       let(:valid_exit_codes) { [ 0, 1, 42 ] }
       let(:stream) { StringIO.new }
       let(:input) { 1.upto(10).map { "Data #{rand(100000)}" }.join("\n") }
+      let(:cgroup) { "test" }
 
       it "should set the working directory" do
         expect(shell_cmd.cwd).to eql(cwd)
@@ -512,6 +527,10 @@ describe Mixlib::ShellOut do
 
       it "should set the input" do
         expect(shell_cmd.input).to eql(input)
+      end
+
+      it "should set the cgroup" do
+        expect(shell_cmd.cgroup).to eql(cgroup)
       end
 
       context "with an invalid option" do
@@ -1310,6 +1329,7 @@ describe Mixlib::ShellOut do
             end
 
           end
+
         end
       end
 
@@ -1565,4 +1585,32 @@ describe Mixlib::ShellOut do
       end
     end
   end
+
+  context "when running on a cgroup", :linux_only do
+    let(:cmd) { "cat /proc/self/cgroup | cut -c 4-" }
+    let(:options) { { cgroup: cgroup } }
+    let(:cgroupv2_supported) { File.read("/proc/mounts").match(%r{^cgroup2 /sys/fs/cgroup}) }
+
+    context "when cgroup exists" do
+      let(:cgroup) { "#{File.read("/proc/self/cgroup")[%r{(/.*)$}, 1]}" }
+      let(:running_cgroup) { shell_cmd.run_command.stdout.chomp }
+      it "should run the process under that cgroup" do
+        if cgroupv2_supported
+          expect(running_cgroup).to eql(cgroup.to_s)
+        end
+      end
+    end
+
+    context "when cgroup does not exist" do
+      let(:cgroup) { "#{File.read("/proc/self/cgroup")[%r{(/.*)/[^/]+$}, 1]}/test" }
+      let(:running_cgroup) { shell_cmd.run_command.stdout.chomp }
+      it "should create the cgroup and run the process under it" do
+        if cgroupv2_supported
+          expect(running_cgroup).to eql(cgroup.to_s)
+          Dir.rmdir("/sys/fs/cgroup/#{cgroup}")
+        end
+      end
+    end
+  end
 end
+

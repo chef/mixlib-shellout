@@ -16,6 +16,8 @@
 # limitations under the License.
 #
 
+require "fileutils" unless defined?(FileUtils)
+
 module Mixlib
   class ShellOut
     module Unix
@@ -176,6 +178,16 @@ module Mixlib
         Dir.chdir(cwd) if cwd
       end
 
+      def set_cgroup
+        new_cgroup_path = "/sys/fs/cgroup/#{cgroup}"
+        # Create cgroup if missing
+        unless Dir.exist?(new_cgroup_path)
+          FileUtils.mkdir_p new_cgroup_path
+        end
+        # Migrate current process to newly cgroup, any subprocesses will run inside new cgroup
+        File.write("#{new_cgroup_path}/cgroup.procs", Process.pid.to_s)
+      end
+
       # Since we call setsid the child_pgid will be the child_pid, set to negative here
       # so it can be directly used in arguments to kill, wait, etc.
       def child_pgid
@@ -304,6 +316,10 @@ module Mixlib
         open_pipes.delete(child_process_status)
       end
 
+      def cgroupv2_available?
+        File.read("/proc/mounts").match?(%r{^cgroup2 /sys/fs/cgroup})
+      end
+
       def fork_subprocess
         initialize_ipc
 
@@ -320,6 +336,10 @@ module Mixlib
           Process.setsid
 
           configure_subprocess_file_descriptors
+
+          if cgroup && cgroupv2_available?
+            set_cgroup
+          end
 
           set_secondarygroups
           set_group
