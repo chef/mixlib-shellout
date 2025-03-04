@@ -1,25 +1,22 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.3.8 -->
-## [v3.3.8](https://github.com/chef/mixlib-shellout/tree/v3.3.8) (2025-02-25)
-
-#### Merged Pull Requests
-- Add cgroupv2 support for linux shellouts [#256](https://github.com/chef/mixlib-shellout/pull/256) ([ImanolBarba](https://github.com/ImanolBarba))
 <!-- latest_release -->
-<!-- release_rollup since=3.3.6 -->
-### Changes not yet released to rubygems.org
-
-#### Merged Pull Requests
-- Add cgroupv2 support for linux shellouts [#256](https://github.com/chef/mixlib-shellout/pull/256) ([ImanolBarba](https://github.com/ImanolBarba)) <!-- 3.3.8 -->
-- Set timeout to zero for last select (#245) [#255](https://github.com/chef/mixlib-shellout/pull/255) ([dafyddcrosby](https://github.com/dafyddcrosby)) <!-- 3.3.7 -->
+<!-- latest_release -->
+<!-- release_rollup -->
 <!-- release_rollup -->
 <!-- latest_stable_release -->
+## [v3.3.8](https://github.com/chef/mixlib-shellout/tree/v3.3.8) (2025-03-04)
+
+#### Merged Pull Requests
+- Set timeout to zero for last select (#245) [#255](https://github.com/chef/mixlib-shellout/pull/255) ([dafyddcrosby](https://github.com/dafyddcrosby))
+- Add cgroupv2 support for linux shellouts [#256](https://github.com/chef/mixlib-shellout/pull/256) ([ImanolBarba](https://github.com/ImanolBarba))
+<!-- latest_stable_release -->
+
 ## [v3.3.6](https://github.com/chef/mixlib-shellout/tree/v3.3.6) (2025-01-16)
 
 #### Merged Pull Requests
 - [CI] Drop EOL Rubies [#253](https://github.com/chef/mixlib-shellout/pull/253) ([dafyddcrosby](https://github.com/dafyddcrosby))
 - Fix quoting regression [#254](https://github.com/chef/mixlib-shellout/pull/254) ([thheinen](https://github.com/thheinen))
-<!-- latest_stable_release -->
 
 ## [v3.3.4](https://github.com/chef/mixlib-shellout/tree/v3.3.4) (2024-11-05)
 
