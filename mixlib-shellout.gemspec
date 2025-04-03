@@ -1,4 +1,8 @@
-$:.unshift(File.dirname(__FILE__) + "/lib")
+# frozen_string_literal: true
+
+lib = File.join(File.expand_path('.'), 'lib')
+$LOAD_PATH.unshift(lib)
+
 require "mixlib/shellout/version"
 
 Gem::Specification.new do |s|
