@@ -1,24 +1,21 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.3.9 -->
+<!-- latest_release -->
+<!-- latest_release -->
+<!-- release_rollup -->
+<!-- release_rollup -->
+<!-- latest_stable_release -->
 ## [v3.3.9](https://github.com/chef/mixlib-shellout/tree/v3.3.9) (2025-04-04)
 
 #### Merged Pull Requests
 - Drop the FFI pin [#259](https://github.com/chef/mixlib-shellout/pull/259) ([jaymzh](https://github.com/jaymzh))
-<!-- latest_release -->
-<!-- release_rollup since=3.3.8 -->
-### Changes not yet released to rubygems.org
-
-#### Merged Pull Requests
-- Drop the FFI pin [#259](https://github.com/chef/mixlib-shellout/pull/259) ([jaymzh](https://github.com/jaymzh)) <!-- 3.3.9 -->
-<!-- release_rollup -->
 <!-- latest_stable_release -->
+
 ## [v3.3.8](https://github.com/chef/mixlib-shellout/tree/v3.3.8) (2025-03-04)
 
 #### Merged Pull Requests
 - Set timeout to zero for last select (#245) [#255](https://github.com/chef/mixlib-shellout/pull/255) ([dafyddcrosby](https://github.com/dafyddcrosby))
 - Add cgroupv2 support for linux shellouts [#256](https://github.com/chef/mixlib-shellout/pull/256) ([ImanolBarba](https://github.com/ImanolBarba))
-<!-- latest_stable_release -->
 
 ## [v3.3.6](https://github.com/chef/mixlib-shellout/tree/v3.3.6) (2025-01-16)
 
