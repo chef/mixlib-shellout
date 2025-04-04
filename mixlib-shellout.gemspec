@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/chef/mixlib-shellout"
   s.license = "Apache-2.0"
 
-  s.required_ruby_version = ">= 2.5"
+  s.required_ruby_version = ">= 3.0"
 
   s.add_dependency "chef-utils"
   s.require_path = "lib"
