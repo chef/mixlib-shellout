@@ -33,4 +33,4 @@ task :console do
   IRB.start
 end
 
-task default: %i{spec style}
+task default: %i{spec}
