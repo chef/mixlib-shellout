@@ -11,5 +11,9 @@ echo "--- bundle install"
 bundle config --local path vendor/bundle
 bundle install --jobs=7 --retry=3
 
+echo "--- Running Cookstyle"
+gem install cookstyle
+cookstyle --chefstyle -c .rubocop.yml
+
 echo "+++ bundle exec task"
 bundle exec $@

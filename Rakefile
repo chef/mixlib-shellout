@@ -14,17 +14,6 @@ rescue LoadError
   end
 end
 
-begin
-  require "cookstyle/chefstyle"
-  require "rubocop/rake_task"
-  desc "Run Chefstyle tests"
-  RuboCop::RakeTask.new(:style) do |task|
-    task.options += ["--display-cop-names", "--no-color"]
-  end
-rescue LoadError
-  puts "cookstyle gem is not installed. bundle install first to make sure all dependencies are installed."
-end
-
 task :console do
   require "irb"
   require "irb/completion"
@@ -33,4 +22,4 @@ task :console do
   IRB.start
 end
 
-task default: %i{spec style}
+task default: %i{spec}
