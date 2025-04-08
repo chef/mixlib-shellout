@@ -1,8 +1,16 @@
 # mixlib-shellout Changelog
 
+<!-- latest_release 3.3.10 -->
+## [v3.3.10](https://github.com/chef/mixlib-shellout/tree/v3.3.10) (2025-04-08)
+
+#### Merged Pull Requests
+- migrating to cookstyle from chefstyle [#258](https://github.com/chef/mixlib-shellout/pull/258) ([johnmccrae](https://github.com/johnmccrae))
 <!-- latest_release -->
-<!-- latest_release -->
-<!-- release_rollup -->
+<!-- release_rollup since=3.3.9 -->
+### Changes not yet released to rubygems.org
+
+#### Merged Pull Requests
+- migrating to cookstyle from chefstyle [#258](https://github.com/chef/mixlib-shellout/pull/258) ([johnmccrae](https://github.com/johnmccrae)) <!-- 3.3.10 -->
 <!-- release_rollup -->
 <!-- latest_stable_release -->
 ## [v3.3.9](https://github.com/chef/mixlib-shellout/tree/v3.3.9) (2025-04-04)
