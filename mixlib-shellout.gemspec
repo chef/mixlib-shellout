@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-lib = File.join(File.expand_path('.'), 'lib')
+lib = File.join(File.expand_path("."), "lib")
 $LOAD_PATH.unshift(lib)
 
 require "mixlib/shellout/version"

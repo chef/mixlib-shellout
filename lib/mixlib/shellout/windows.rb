@@ -69,8 +69,8 @@ module Mixlib
           #
           app_name, command_line = command_to_run(combine_args(*command))
           create_process_args = {
-            app_name: app_name,
-            command_line: command_line,
+            app_name:,
+            command_line:,
             startup_info: {
               stdout: stdout_write,
               stderr: stderr_write,
