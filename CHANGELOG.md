@@ -1,15 +1,16 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.3.10 -->
-## [v3.3.10](https://github.com/chef/mixlib-shellout/tree/v3.3.10) (2025-04-08)
+<!-- latest_release 3.3.11 -->
+## [v3.3.11](https://github.com/chef/mixlib-shellout/tree/v3.3.11) (2025-04-14)
 
 #### Merged Pull Requests
-- migrating to cookstyle from chefstyle [#258](https://github.com/chef/mixlib-shellout/pull/258) ([johnmccrae](https://github.com/johnmccrae))
+- Adding cookstyle to the windows tester [#262](https://github.com/chef/mixlib-shellout/pull/262) ([johnmccrae](https://github.com/johnmccrae))
 <!-- latest_release -->
 <!-- release_rollup since=3.3.9 -->
 ### Changes not yet released to rubygems.org
 
 #### Merged Pull Requests
+- Adding cookstyle to the windows tester [#262](https://github.com/chef/mixlib-shellout/pull/262) ([johnmccrae](https://github.com/johnmccrae)) <!-- 3.3.11 -->
 - migrating to cookstyle from chefstyle [#258](https://github.com/chef/mixlib-shellout/pull/258) ([johnmccrae](https://github.com/johnmccrae)) <!-- 3.3.10 -->
 <!-- release_rollup -->
 <!-- latest_stable_release -->
