@@ -423,9 +423,9 @@ describe Mixlib::ShellOut do
     context "with options hash" do
       let(:cmd) { "brew install couchdb" }
       let(:options) do
-        { cwd: cwd, user: user, login: true, domain: domain, password: password, group: group,
-          umask: umask, timeout: timeout, environment: environment, returns: valid_exit_codes,
-          live_stream: stream, input: input, cgroup: cgroup }
+        { cwd:, user:, login: true, domain:, password:, group:,
+          umask:, timeout:, environment:, returns: valid_exit_codes,
+          live_stream: stream, input:, cgroup: }
       end
 
       let(:cwd) { "/tmp" }
@@ -579,7 +579,7 @@ describe Mixlib::ShellOut do
     context "with a current working directory" do
       subject { File.expand_path(chomped_stdout) }
       let(:fully_qualified_cwd) { File.expand_path(cwd) }
-      let(:options) { { cwd: cwd } }
+      let(:options) { { cwd: } }
 
       context "when running under Unix", :unix_only do
         # Use /bin for tests only if it is not a symlink. Some
@@ -676,7 +676,7 @@ describe Mixlib::ShellOut do
 
         let(:user) { "testuser" }
         let(:password) { "testpass1!" }
-        let(:options) { { user: user, password: password } }
+        let(:options) { { user:, password: } }
 
         it "should run as specified user" do
           expect(running_user).to eql("#{ENV["COMPUTERNAME"].downcase}\\#{user}")
@@ -699,7 +699,7 @@ describe Mixlib::ShellOut do
 
         context "when :elevated => true" do
           context "when user and password are passed" do
-            let(:options) { { user: user, password: password, elevated: true } }
+            let(:options) { { user:, password:, elevated: true } }
 
             it "raises permission related error" do
               expect { running_user }.to raise_error(/the user has not been granted the requested logon type at this computer/)
@@ -764,7 +764,7 @@ describe Mixlib::ShellOut do
 
       let(:input) { "hello" }
       let(:ruby_code) { "STDIN.sync = true; STDOUT.sync = true; puts gets" }
-      let(:options) { { input: input } }
+      let(:options) { { input: } }
 
       it "should copy the input to the child's stdin" do
         is_expected.to eql("hello#{LINE_ENDING}")
@@ -1012,7 +1012,7 @@ describe Mixlib::ShellOut do
           end
 
           context "with input data" do
-            let(:options) { { returns: valid_exit_codes, input: input } }
+            let(:options) { { returns: valid_exit_codes, input: } }
             let(:input) { "Random data #{rand(1000000)}" }
 
             it "should raise ShellCommandFailed" do
@@ -1241,7 +1241,7 @@ describe Mixlib::ShellOut do
             context "and a logger is configured" do
               let(:log_output) { StringIO.new }
               let(:logger) { Logger.new(log_output) }
-              let(:options) { { timeout: 1, logger: logger } }
+              let(:options) { { timeout: 1, logger: } }
 
               it "should log messages about killing the child process" do
                 # note: let blocks don't correctly memoize if an exception is raised,
@@ -1406,7 +1406,7 @@ describe Mixlib::ShellOut do
       context "with subprocess reading lots of data from stdin" do
         subject { stdout.to_i }
         let(:ruby_code) { "STDOUT.print gets.size" }
-        let(:options) { { input: input } }
+        let(:options) { { input: } }
         let(:input) { "f" * 20_000 }
         let(:input_size) { input.size }
 
@@ -1444,7 +1444,7 @@ describe Mixlib::ShellOut do
         # Use regex to work across Ruby versions
         let(:ruby_code) { "STDOUT.sync = STDERR.sync = true; while(input = gets) do ( input =~ /^f/ ? STDOUT : STDERR ).print input.chomp; end" }
 
-        let(:options) { { input: input } }
+        let(:options) { { input: } }
 
         context "when writing to STDOUT first" do
           let(:input) { [ "f" * multiplier, "u" * multiplier, "f" * multiplier, "u" * multiplier ].join(LINE_ENDING) }
@@ -1468,7 +1468,7 @@ describe Mixlib::ShellOut do
       context "when subprocess closes prematurely", :unix_only do
         context "with input data" do
           let(:ruby_code) { "bad_ruby { [ } ]" }
-          let(:options) { { input: input } }
+          let(:options) { { input: } }
           # https://github.com/chef/mixlib-shellout/issues/204
           let(:repeats) { 20_000 * (Etc.sysconf(Etc::SC_PAGESIZE) / 4096) }
           let(:input) { [ "f" * repeats, "u" * repeats, "f" * repeats, "u" * repeats ].join(LINE_ENDING) }
@@ -1503,7 +1503,7 @@ describe Mixlib::ShellOut do
         let(:ruby_code) { "sleep 0.5; print gets.size " }
         let(:input) { "c" * 1024 }
         let(:input_size) { input.size }
-        let(:options) { { input: input } }
+        let(:options) { { input: } }
 
         it "should not hang or lose output" do
           is_expected.to eql(input_size)
@@ -1519,7 +1519,7 @@ describe Mixlib::ShellOut do
           end
 
           context "with input" do
-            let(:options) { { input: input } }
+            let(:options) { { input: } }
             let(:input) { "Random input #{rand(1000000)}" }
 
             it "should recover the error message" do
@@ -1578,7 +1578,7 @@ describe Mixlib::ShellOut do
     context "when user is specified" do
       let(:user) { "nobody" }
 
-      let(:options) { { user: user } }
+      let(:options) { { user: } }
 
       it "should run as specified user" do
         expect(running_user).to eql(user.to_s)
@@ -1588,7 +1588,7 @@ describe Mixlib::ShellOut do
 
   context "when running on a cgroup", :linux_only do
     let(:cmd) { "cat /proc/self/cgroup | cut -c 4-" }
-    let(:options) { { cgroup: cgroup } }
+    let(:options) { { cgroup: } }
     let(:cgroupv2_supported) { File.read("/proc/mounts").match(%r{^cgroup2 /sys/fs/cgroup}) }
 
     context "when cgroup exists" do
