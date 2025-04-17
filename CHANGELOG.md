@@ -1,15 +1,16 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.3.12 -->
-## [v3.3.12](https://github.com/chef/mixlib-shellout/tree/v3.3.12) (2025-04-15)
+<!-- latest_release 3.3.13 -->
+## [v3.3.13](https://github.com/chef/mixlib-shellout/tree/v3.3.13) (2025-04-17)
 
 #### Merged Pull Requests
-- ruby 3.4 upgrade [#261](https://github.com/chef/mixlib-shellout/pull/261) ([rishichawda](https://github.com/rishichawda))
+- attempting to fix the bundler error [#263](https://github.com/chef/mixlib-shellout/pull/263) ([rishichawda](https://github.com/rishichawda))
 <!-- latest_release -->
 <!-- release_rollup since=3.3.9 -->
 ### Changes not yet released to rubygems.org
 
 #### Merged Pull Requests
+- attempting to fix the bundler error [#263](https://github.com/chef/mixlib-shellout/pull/263) ([rishichawda](https://github.com/rishichawda)) <!-- 3.3.13 -->
 - ruby 3.4 upgrade [#261](https://github.com/chef/mixlib-shellout/pull/261) ([rishichawda](https://github.com/rishichawda)) <!-- 3.3.12 -->
 - Adding cookstyle to the windows tester [#262](https://github.com/chef/mixlib-shellout/pull/262) ([johnmccrae](https://github.com/johnmccrae)) <!-- 3.3.11 -->
 - migrating to cookstyle from chefstyle [#258](https://github.com/chef/mixlib-shellout/pull/258) ([johnmccrae](https://github.com/johnmccrae)) <!-- 3.3.10 -->
