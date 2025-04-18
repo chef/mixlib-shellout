@@ -1,4 +1,5 @@
 # Mixlib::ShellOut
+
 [![Build Status](https://badge.buildkite.com/7051b7b35cc19076c35a6e6a9e996807b0c14475ca3f3acd86.svg?branch=main)](https://buildkite.com/chef-oss/chef-mixlib-shellout-master-verify) [![Gem Version](https://badge.fury.io/rb/mixlib-shellout.svg)](https://badge.fury.io/rb/mixlib-shellout)
 
 **Umbrella Project**: [Chef Foundation](https://github.com/chef/chef-oss-practices/blob/master/projects/chef-foundation.md)
