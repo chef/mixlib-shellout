@@ -10,6 +10,7 @@ if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.1")
 end
 gem "ffi-win32-extensions", "~> 1.0.4"
 gem "wmi-lite", "~> 1.0.7"
+gem "logger"
 
 group :test do
   gem "cookstyle", ">=7.32.8"
