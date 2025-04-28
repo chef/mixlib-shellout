@@ -1613,4 +1613,3 @@ describe Mixlib::ShellOut do
     end
   end
 end
-

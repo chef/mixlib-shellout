@@ -447,7 +447,6 @@ module Process
 
     def create_process_as_user(token, app, cmd, process_security,
       thread_security, inherit, creation_flags, env, cwd, startinfo, procinfo)
-
       bool = CreateProcessAsUserW(
         token,            # User token handle
         app,              # App name
@@ -479,7 +478,6 @@ module Process
 
     def create_process_with_logon(logon, domain, passwd, logon_flags, app, cmd,
       creation_flags, env, cwd, startinfo, procinfo)
-
       bool = CreateProcessWithLogonW(
         logon,           # User
         domain,          # Domain
@@ -501,7 +499,6 @@ module Process
 
     def create_process(app, cmd, process_security, thread_security, inherit,
       creation_flags, env, cwd, startinfo, procinfo)
-
       bool = CreateProcessW(
         app,               # App name
         cmd,               # Command line
