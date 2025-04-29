@@ -170,7 +170,8 @@ module Mixlib
     #   cmd = Mixlib::ShellOut.new("apachectl", "start", :user => 'www', :env => nil, :cwd => '/tmp')
     #   cmd.run_command # etc.
     def initialize(*command_args)
-      @stdout, @stderr, @process_status = "", "", ""
+      # Since ruby 4.0 will freeze string literals by default, we are assigning mutable strings here.
+      @stdout, @stderr, @process_status = String.new(""), String.new(""), String.new("")
       @live_stdout = @live_stderr = nil
       @input = nil
       @log_level = :debug
