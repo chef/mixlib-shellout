@@ -1,15 +1,16 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.4.0 -->
-## [v3.4.0](https://github.com/chef/mixlib-shellout/tree/v3.4.0) (2025-04-22)
+<!-- latest_release 3.4.1 -->
+## [v3.4.1](https://github.com/chef/mixlib-shellout/tree/v3.4.1) (2025-04-29)
 
 #### Merged Pull Requests
-- update readme.md [#264](https://github.com/chef/mixlib-shellout/pull/264) ([rishichawda](https://github.com/rishichawda))
+- add logger as an explicit dependency [#266](https://github.com/chef/mixlib-shellout/pull/266) ([rishichawda](https://github.com/rishichawda))
 <!-- latest_release -->
 <!-- release_rollup since=3.3.9 -->
 ### Changes not yet released to rubygems.org
 
 #### Merged Pull Requests
+- add logger as an explicit dependency [#266](https://github.com/chef/mixlib-shellout/pull/266) ([rishichawda](https://github.com/rishichawda)) <!-- 3.4.1 -->
 - update readme.md [#264](https://github.com/chef/mixlib-shellout/pull/264) ([rishichawda](https://github.com/rishichawda)) <!-- 3.4.0 -->
 - attempting to fix the bundler error [#263](https://github.com/chef/mixlib-shellout/pull/263) ([rishichawda](https://github.com/rishichawda)) <!-- 3.3.13 -->
 - ruby 3.4 upgrade [#261](https://github.com/chef/mixlib-shellout/pull/261) ([rishichawda](https://github.com/rishichawda)) <!-- 3.3.12 -->
