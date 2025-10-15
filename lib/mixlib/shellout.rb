@@ -240,7 +240,7 @@ module Mixlib
     def format_for_exception
       return "Command execution failed. STDOUT/STDERR suppressed for sensitive resource" if sensitive
 
-      msg = ""
+      msg = String.new
       msg << "#{@terminate_reason}\n" if @terminate_reason
       msg << "---- Begin output of #{command} ----\n"
       msg << "STDOUT: #{stdout.strip}\n"
@@ -270,7 +270,9 @@ module Mixlib
     #   within +timeout+ seconds (default: 600s)
     def run_command
       if logger
-        log_message = (log_tag.nil? ? "" : "#{@log_tag} ") << "sh(#{@command})"
+        prefix = log_tag.nil? ? "" : "#{@log_tag} "
+        log_message = prefix + "sh(#{@command})"
+        # log_message = (log_tag.nil? ? "" : "#{@log_tag} ") << "sh(#{@command})"
         logger.send(log_level, log_message)
       end
       super
