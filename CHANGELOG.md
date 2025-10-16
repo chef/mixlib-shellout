@@ -1,15 +1,16 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.4.5 -->
-## [v3.4.5](https://github.com/chef/mixlib-shellout/tree/v3.4.5) (2025-09-09)
+<!-- latest_release 3.4.6 -->
+## [v3.4.6](https://github.com/chef/mixlib-shellout/tree/v3.4.6) (2025-10-16)
 
 #### Merged Pull Requests
-- CHEF-25794 - standardize - remove_sla_from_readme [#269](https://github.com/chef/mixlib-shellout/pull/269) ([cgunasree08](https://github.com/cgunasree08))
+- adding a tweaks for stirng freezes [#272](https://github.com/chef/mixlib-shellout/pull/272) ([johnmccrae](https://github.com/johnmccrae))
 <!-- latest_release -->
 <!-- release_rollup since=3.3.9 -->
 ### Changes not yet released to rubygems.org
 
 #### Merged Pull Requests
+- adding a tweaks for stirng freezes [#272](https://github.com/chef/mixlib-shellout/pull/272) ([johnmccrae](https://github.com/johnmccrae)) <!-- 3.4.6 -->
 - CHEF-25794 - standardize - remove_sla_from_readme [#269](https://github.com/chef/mixlib-shellout/pull/269) ([cgunasree08](https://github.com/cgunasree08)) <!-- 3.4.5 -->
 - Add GitHub Security Actions Workflow [#267](https://github.com/chef/mixlib-shellout/pull/267) ([sean-sype-simmons](https://github.com/sean-sype-simmons)) <!-- 3.4.4 -->
 - add myself to codeowners [#260](https://github.com/chef/mixlib-shellout/pull/260) ([jaymzh](https://github.com/jaymzh)) <!-- 3.4.3 -->
