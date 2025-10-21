@@ -1,15 +1,16 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.4.7 -->
-## [v3.4.7](https://github.com/chef/mixlib-shellout/tree/v3.4.7) (2025-10-21)
+<!-- latest_release 3.4.8 -->
+## [v3.4.8](https://github.com/chef/mixlib-shellout/tree/v3.4.8) (2025-10-21)
 
 #### Merged Pull Requests
-- set up ai assisted development workflow [#271](https://github.com/chef/mixlib-shellout/pull/271) ([rishichawda](https://github.com/rishichawda))
+- CHEF-26031 - Replace CODE_OF_CONDUCT.md file [#270](https://github.com/chef/mixlib-shellout/pull/270) ([nandanhegde73](https://github.com/nandanhegde73))
 <!-- latest_release -->
 <!-- release_rollup since=3.3.9 -->
 ### Changes not yet released to rubygems.org
 
 #### Merged Pull Requests
+- CHEF-26031 - Replace CODE_OF_CONDUCT.md file [#270](https://github.com/chef/mixlib-shellout/pull/270) ([nandanhegde73](https://github.com/nandanhegde73)) <!-- 3.4.8 -->
 - set up ai assisted development workflow [#271](https://github.com/chef/mixlib-shellout/pull/271) ([rishichawda](https://github.com/rishichawda)) <!-- 3.4.7 -->
 - adding a tweaks for stirng freezes [#272](https://github.com/chef/mixlib-shellout/pull/272) ([johnmccrae](https://github.com/johnmccrae)) <!-- 3.4.6 -->
 - CHEF-25794 - standardize - remove_sla_from_readme [#269](https://github.com/chef/mixlib-shellout/pull/269) ([cgunasree08](https://github.com/cgunasree08)) <!-- 3.4.5 -->
