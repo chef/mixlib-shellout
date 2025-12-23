@@ -182,7 +182,10 @@ module Mixlib
 
         ready = IO.select(open_streams, nil, nil, READ_WAIT_TIME)
         return true unless ready
-
+            # The unary plus operator (+) creates a mutable copy of the string returned by readpartial.
+            # This is necessary because readpartial may return a frozen string, and we need to be able
+            # to modify the string (append to buffers, manipulate encoding, etc.) in subsequent operations.
+            # Without the +, attempting to modify a frozen string would raise a FrozenError.
         if ready.first.include?(stdout_read)
           begin
             next_chunk = +stdout_read.readpartial(READ_SIZE)
