@@ -20,13 +20,12 @@
 # limitations under the License.
 #
 
-require "win32/process"
-require_relative "windows/core_ext"
+require 'win32/process'
+require_relative 'windows/core_ext'
 
 module Mixlib
   class ShellOut
     module Windows
-
       include Process::Functions
       include Process::Constants
 
@@ -35,20 +34,20 @@ module Mixlib
       # Option validation that is windows specific
       def validate_options(opts)
         if opts[:user] && !opts[:password]
-          raise InvalidCommandOption, "You must supply a password when supplying a user in windows"
+          raise InvalidCommandOption, 'You must supply a password when supplying a user in windows'
         end
 
         if !opts[:user] && opts[:password]
-          raise InvalidCommandOption, "You must supply a user when supplying a password in windows"
+          raise InvalidCommandOption, 'You must supply a user when supplying a password in windows'
         end
 
         if opts[:elevated] && !opts[:user] && !opts[:password]
-          raise InvalidCommandOption, "`elevated` option should be passed only with `username` and `password`."
+          raise InvalidCommandOption, '`elevated` option should be passed only with `username` and `password`.'
         end
 
-        if opts[:elevated] && opts[:elevated] != true && opts[:elevated] != false
-          raise InvalidCommandOption, "Invalid value passed for `elevated`. Please provide true/false."
-        end
+        return unless opts[:elevated] && opts[:elevated] != true && opts[:elevated] != false
+
+        raise InvalidCommandOption, 'Invalid value passed for `elevated`. Please provide true/false.'
       end
 
       #--
@@ -61,11 +60,10 @@ module Mixlib
         stdout_read, stdout_write = IO.pipe
         stderr_read, stderr_write = IO.pipe
         stdin_read, stdin_write = IO.pipe
-        open_streams = [ stdout_read, stderr_read ]
+        open_streams = [stdout_read, stderr_read]
         @execution_time = 0
 
         begin
-
           #
           # Set cwd, environment, appname, etc.
           #
@@ -76,14 +74,14 @@ module Mixlib
             startup_info: {
               stdout: stdout_write,
               stderr: stderr_write,
-              stdin: stdin_read,
+              stdin: stdin_read
             },
             environment: inherit_environment.map { |k, v| "#{k}=#{v}" },
-            close_handles: false,
+            close_handles: false
           }
           create_process_args[:cwd] = cwd if cwd
           # default to local account database if domain is not specified
-          create_process_args[:domain] = domain.nil? ? "." : domain
+          create_process_args[:domain] = domain.nil? ? '.' : domain
           create_process_args[:with_logon] = with_logon if with_logon
           create_process_args[:password] = password if password
           create_process_args[:elevated] = elevated if elevated
@@ -111,20 +109,18 @@ module Mixlib
                 # Save the execution time
                 @execution_time = Time.now - start_wait
                 # Get process exit code
-                exit_code = [0].pack("l")
-                unless GetExitCodeProcess(process.process_handle, exit_code)
-                  raise get_last_error
-                end
+                exit_code = [0].pack('l')
+                raise get_last_error unless GetExitCodeProcess(process.process_handle, exit_code)
 
                 @status = ThingThatLooksSortOfLikeAProcessStatus.new
-                @status.exitstatus = exit_code.unpack("l").first
+                @status.exitstatus = exit_code.unpack1('l')
 
                 return self
               when WAIT_TIMEOUT
                 # Kill the process
                 if (Time.now - start_wait) > timeout
                   begin
-                    require "wmi-lite/wmi"
+                    require 'wmi-lite/wmi'
                     wmi = WmiLite::Wmi.new
                     kill_process_tree(process.process_id, wmi, logger)
                     Process.kill(:KILL, process.process_id)
@@ -136,9 +132,9 @@ module Mixlib
                   @execution_time = Time.now - start_wait
 
                   raise Mixlib::ShellOut::CommandTimeout, [
-                    "command timed out:",
+                    'command timed out:',
                     format_for_exception,
-                    format_process(process, app_name, command_line, timeout),
+                    format_process(process, app_name, command_line, timeout)
                   ].join("\n")
                 end
 
@@ -146,16 +142,13 @@ module Mixlib
               else
                 raise "Unknown response from WaitForSingleObject(#{process.process_handle}, #{timeout * 1000}): #{wait_status}"
               end
-
             end
-
           ensure
             CloseHandle(process.thread_handle) if process.thread_handle
             CloseHandle(process.process_handle) if process.process_handle
             Process.unload_user_profile(token, profile) if profile
             CloseHandle(token) if token
           end
-
         ensure
           #
           # Consume all remaining data from the pipes until they are closed
@@ -170,6 +163,7 @@ module Mixlib
 
       class ThingThatLooksSortOfLikeAProcessStatus
         attr_accessor :exitstatus
+
         def success?
           exitstatus == 0
         end
@@ -182,12 +176,13 @@ module Mixlib
 
         ready = IO.select(open_streams, nil, nil, READ_WAIT_TIME)
         return true unless ready
+
+        if ready.first.include?(stdout_read)
+          begin
             # The unary plus operator (+) creates a mutable copy of the string returned by readpartial.
             # This is necessary because readpartial may return a frozen string, and we need to be able
             # to modify the string (append to buffers, manipulate encoding, etc.) in subsequent operations.
             # Without the +, attempting to modify a frozen string would raise a FrozenError.
-        if ready.first.include?(stdout_read)
-          begin
             next_chunk = +stdout_read.readpartial(READ_SIZE)
             @stdout << next_chunk
             @live_stdout << next_chunk if @live_stdout
@@ -249,7 +244,7 @@ module Mixlib
           else
             arg
           end
-        end.join(" ")
+        end.join(' ')
       end
 
       def command_to_run(command)
@@ -266,7 +261,7 @@ module Mixlib
         if exe_needs_cmd?(exe)
           run_under_cmd(command)
         else
-          [ exe, command ]
+          [exe, command]
         end
       end
 
@@ -280,16 +275,16 @@ module Mixlib
       # https://github.com/chef/mixlib-shellout/pull/2#issuecomment-4837859
       # http://ss64.com/nt/syntax-esc.html
       def run_under_cmd(command)
-        [ ENV["COMSPEC"], "cmd /c \"#{command}\"" ]
+        [ENV['COMSPEC'], "cmd /c \"#{command}\""]
       end
 
       # FIXME: this extracts ARGV[0] but is it correct?
       def candidate_executable_for_command(command)
         if command =~ /^\s*"(.*?)"/ || command =~ /^\s*([^\s]+)/
           # If we have quotes, do an exact match, else pick the first word ignoring the leading spaces
-          $1
+          ::Regexp.last_match(1)
         else
-          ""
+          ''
         end
       end
 
@@ -331,9 +326,9 @@ module Mixlib
               quote = nil
             end
             next
-          when ">", "<", "|", "&", "\n"
+          when '>', '<', '|', '&', "\n"
             return true unless quote
-          when "%"
+          when '%'
             return true if env
 
             env = env_first_char = true
@@ -353,7 +348,7 @@ module Mixlib
 
       # FIXME: reduce code duplication with chef/chef
       def which(cmd)
-        exts = ENV["PATHEXT"] ? ENV["PATHEXT"].split(";") + [""] : [""]
+        exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') + [''] : ['']
         # windows always searches '.' first
         exts.each do |ext|
           filename = "#{cmd}#{ext}"
@@ -361,7 +356,7 @@ module Mixlib
         end
         # only search through the path if the Filename does not contain separators
         if File.basename(cmd) == cmd
-          paths = ENV["PATH"].split(File::PATH_SEPARATOR)
+          paths = ENV['PATH'].split(File::PATH_SEPARATOR)
           paths.each do |path|
             exts.each do |ext|
               filename = File.join(path, "#{cmd}#{ext}")
@@ -374,13 +369,13 @@ module Mixlib
 
       def system_required_processes
         [
-          "System Idle Process",
-          "System",
-          "spoolsv.exe",
-          "lsass.exe",
-          "csrss.exe",
-          "smss.exe",
-          "svchost.exe",
+          'System Idle Process',
+          'System',
+          'spoolsv.exe',
+          'lsass.exe',
+          'csrss.exe',
+          'smss.exe',
+          'svchost.exe'
         ]
       end
 
@@ -410,15 +405,15 @@ module Mixlib
       def kill_process(instance, logger)
         child_pid = instance.wmi_ole_object.processid
         logger&.debug([
-            "killing child process #{child_pid}::",
-            "#{instance.wmi_ole_object.Name} of parent #{pid}",
-          ].join)
+          "killing child process #{child_pid}::",
+          "#{instance.wmi_ole_object.Name} of parent #{pid}"
+        ].join)
         Process.kill(:KILL, instance.wmi_ole_object.processid)
       rescue SystemCallError
         logger&.debug([
-            "Failed to kill child process #{child_pid}::",
-            "#{instance.wmi_ole_object.Name} of parent #{pid}",
-          ].join)
+          "Failed to kill child process #{child_pid}::",
+          "#{instance.wmi_ole_object.Name} of parent #{pid}"
+        ].join)
       end
 
       def format_process(process, app_name, command_line, timeout)
