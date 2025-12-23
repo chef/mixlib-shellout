@@ -338,11 +338,11 @@ module Mixlib
         when "returns"
           self.valid_exit_codes = Array(setting)
         when "live_stream"
-          self.live_stdout = self.live_stderr = setting
+          self.live_stdout = self.live_stderr = setting.is_a?(String) ? String.new(setting) : setting
         when "live_stdout"
-          self.live_stdout = setting
+          self.live_stdout = setting.is_a?(String) ? String.new(setting) : setting
         when "live_stderr"
-          self.live_stderr = setting
+          self.live_stderr = setting.is_a?(String) ? String.new(setting) : setting
         when "input"
           self.input = setting
         when "logger"

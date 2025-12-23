@@ -1,4 +1,6 @@
 #
+# frozen_string_literal: true
+
 # Author:: Daniel DeLeo (<dan@chef.io>)
 # Author:: John Keiser (<jkeiser@chef.io>)
 # Author:: Ho-Sheng Hsiao (<hosh@chef.io>)
@@ -183,7 +185,7 @@ module Mixlib
 
         if ready.first.include?(stdout_read)
           begin
-            next_chunk = stdout_read.readpartial(READ_SIZE)
+            next_chunk = +stdout_read.readpartial(READ_SIZE)
             @stdout << next_chunk
             @live_stdout << next_chunk if @live_stdout
           rescue EOFError
@@ -194,7 +196,7 @@ module Mixlib
 
         if ready.first.include?(stderr_read)
           begin
-            next_chunk = stderr_read.readpartial(READ_SIZE)
+            next_chunk = +stderr_read.readpartial(READ_SIZE)
             @stderr << next_chunk
             @live_stderr << next_chunk if @live_stderr
           rescue EOFError

@@ -811,7 +811,7 @@ describe Mixlib::ShellOut do
             end
 
             context "when not using a batch file" do
-              let(:cmd) { "#{executable_file_name} -command #{script_content}" }
+              let(:cmd) { "#{executable_file_name} -NoProfile -NoLogo -command #{script_content}" }
               let(:executable_file_name) { "\"#{dir}/Powershell Parser.exe\"".tap(&make_executable!) }
               let(:make_executable!) { lambda { |filename| Mixlib::ShellOut.new("copy \"c:\\windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe\" #{filename}").run_command } }
               let(:script_content) { "Write-Host \"#{expected_output}\"" }
