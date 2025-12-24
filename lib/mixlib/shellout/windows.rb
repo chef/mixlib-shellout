@@ -20,8 +20,8 @@
 # limitations under the License.
 #
 
-require 'win32/process'
-require_relative 'windows/core_ext'
+require "win32/process"
+require_relative "windows/core_ext"
 
 module Mixlib
   class ShellOut
@@ -34,20 +34,20 @@ module Mixlib
       # Option validation that is windows specific
       def validate_options(opts)
         if opts[:user] && !opts[:password]
-          raise InvalidCommandOption, 'You must supply a password when supplying a user in windows'
+          raise InvalidCommandOption, "You must supply a password when supplying a user in windows"
         end
 
         if !opts[:user] && opts[:password]
-          raise InvalidCommandOption, 'You must supply a user when supplying a password in windows'
+          raise InvalidCommandOption, "You must supply a user when supplying a password in windows"
         end
 
         if opts[:elevated] && !opts[:user] && !opts[:password]
-          raise InvalidCommandOption, '`elevated` option should be passed only with `username` and `password`.'
+          raise InvalidCommandOption, "`elevated` option should be passed only with `username` and `password`."
         end
 
         return unless opts[:elevated] && opts[:elevated] != true && opts[:elevated] != false
 
-        raise InvalidCommandOption, 'Invalid value passed for `elevated`. Please provide true/false.'
+        raise InvalidCommandOption, "Invalid value passed for `elevated`. Please provide true/false."
       end
 
       #--
@@ -74,14 +74,14 @@ module Mixlib
             startup_info: {
               stdout: stdout_write,
               stderr: stderr_write,
-              stdin: stdin_read
+              stdin: stdin_read,
             },
             environment: inherit_environment.map { |k, v| "#{k}=#{v}" },
-            close_handles: false
+            close_handles: false,
           }
           create_process_args[:cwd] = cwd if cwd
           # default to local account database if domain is not specified
-          create_process_args[:domain] = domain.nil? ? '.' : domain
+          create_process_args[:domain] = domain.nil? ? "." : domain
           create_process_args[:with_logon] = with_logon if with_logon
           create_process_args[:password] = password if password
           create_process_args[:elevated] = elevated if elevated
@@ -109,18 +109,18 @@ module Mixlib
                 # Save the execution time
                 @execution_time = Time.now - start_wait
                 # Get process exit code
-                exit_code = [0].pack('l')
+                exit_code = [0].pack("l")
                 raise get_last_error unless GetExitCodeProcess(process.process_handle, exit_code)
 
                 @status = ThingThatLooksSortOfLikeAProcessStatus.new
-                @status.exitstatus = exit_code.unpack1('l')
+                @status.exitstatus = exit_code.unpack1("l")
 
                 return self
               when WAIT_TIMEOUT
                 # Kill the process
                 if (Time.now - start_wait) > timeout
                   begin
-                    require 'wmi-lite/wmi'
+                    require "wmi-lite/wmi"
                     wmi = WmiLite::Wmi.new
                     kill_process_tree(process.process_id, wmi, logger)
                     Process.kill(:KILL, process.process_id)
@@ -132,9 +132,9 @@ module Mixlib
                   @execution_time = Time.now - start_wait
 
                   raise Mixlib::ShellOut::CommandTimeout, [
-                    'command timed out:',
+                    "command timed out:",
                     format_for_exception,
-                    format_process(process, app_name, command_line, timeout)
+                    format_process(process, app_name, command_line, timeout),
                   ].join("\n")
                 end
 
@@ -244,7 +244,7 @@ module Mixlib
           else
             arg
           end
-        end.join(' ')
+        end.join(" ")
       end
 
       def command_to_run(command)
@@ -275,7 +275,7 @@ module Mixlib
       # https://github.com/chef/mixlib-shellout/pull/2#issuecomment-4837859
       # http://ss64.com/nt/syntax-esc.html
       def run_under_cmd(command)
-        [ENV['COMSPEC'], "cmd /c \"#{command}\""]
+        [ENV["COMSPEC"], "cmd /c \"#{command}\""]
       end
 
       # FIXME: this extracts ARGV[0] but is it correct?
@@ -284,7 +284,7 @@ module Mixlib
           # If we have quotes, do an exact match, else pick the first word ignoring the leading spaces
           ::Regexp.last_match(1)
         else
-          ''
+          ""
         end
       end
 
@@ -326,9 +326,9 @@ module Mixlib
               quote = nil
             end
             next
-          when '>', '<', '|', '&', "\n"
+          when ">", "<", "|", "&", "\n"
             return true unless quote
-          when '%'
+          when "%"
             return true if env
 
             env = env_first_char = true
@@ -348,7 +348,7 @@ module Mixlib
 
       # FIXME: reduce code duplication with chef/chef
       def which(cmd)
-        exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') + [''] : ['']
+        exts = ENV["PATHEXT"] ? ENV["PATHEXT"].split(";") + [""] : [""]
         # windows always searches '.' first
         exts.each do |ext|
           filename = "#{cmd}#{ext}"
@@ -356,7 +356,7 @@ module Mixlib
         end
         # only search through the path if the Filename does not contain separators
         if File.basename(cmd) == cmd
-          paths = ENV['PATH'].split(File::PATH_SEPARATOR)
+          paths = ENV["PATH"].split(File::PATH_SEPARATOR)
           paths.each do |path|
             exts.each do |ext|
               filename = File.join(path, "#{cmd}#{ext}")
@@ -369,13 +369,13 @@ module Mixlib
 
       def system_required_processes
         [
-          'System Idle Process',
-          'System',
-          'spoolsv.exe',
-          'lsass.exe',
-          'csrss.exe',
-          'smss.exe',
-          'svchost.exe'
+          "System Idle Process",
+          "System",
+          "spoolsv.exe",
+          "lsass.exe",
+          "csrss.exe",
+          "smss.exe",
+          "svchost.exe",
         ]
       end
 
@@ -406,13 +406,13 @@ module Mixlib
         child_pid = instance.wmi_ole_object.processid
         logger&.debug([
           "killing child process #{child_pid}::",
-          "#{instance.wmi_ole_object.Name} of parent #{pid}"
+          "#{instance.wmi_ole_object.Name} of parent #{pid}",
         ].join)
         Process.kill(:KILL, instance.wmi_ole_object.processid)
       rescue SystemCallError
         logger&.debug([
           "Failed to kill child process #{child_pid}::",
-          "#{instance.wmi_ole_object.Name} of parent #{pid}"
+          "#{instance.wmi_ole_object.Name} of parent #{pid}",
         ].join)
       end
 
