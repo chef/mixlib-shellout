@@ -1,15 +1,16 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.4.9 -->
-## [v3.4.9](https://github.com/chef/mixlib-shellout/tree/v3.4.9) (2025-11-14)
+<!-- latest_release 3.4.10 -->
+## [v3.4.10](https://github.com/chef/mixlib-shellout/tree/v3.4.10) (2025-12-29)
 
 #### Merged Pull Requests
-- Update copilot instructions with AI compliance workflow [#273](https://github.com/chef/mixlib-shellout/pull/273) ([rishichawda](https://github.com/rishichawda))
+- No Frozen String Warnings. UGH [#275](https://github.com/chef/mixlib-shellout/pull/275) ([johnmccrae](https://github.com/johnmccrae))
 <!-- latest_release -->
 <!-- release_rollup since=3.3.9 -->
 ### Changes not yet released to rubygems.org
 
 #### Merged Pull Requests
+- No Frozen String Warnings. UGH [#275](https://github.com/chef/mixlib-shellout/pull/275) ([johnmccrae](https://github.com/johnmccrae)) <!-- 3.4.10 -->
 - Update copilot instructions with AI compliance workflow [#273](https://github.com/chef/mixlib-shellout/pull/273) ([rishichawda](https://github.com/rishichawda)) <!-- 3.4.9 -->
 - CHEF-26031 - Replace CODE_OF_CONDUCT.md file [#270](https://github.com/chef/mixlib-shellout/pull/270) ([nandanhegde73](https://github.com/nandanhegde73)) <!-- 3.4.8 -->
 - set up ai assisted development workflow [#271](https://github.com/chef/mixlib-shellout/pull/271) ([rishichawda](https://github.com/rishichawda)) <!-- 3.4.7 -->
