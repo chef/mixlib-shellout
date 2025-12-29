@@ -1,4 +1,6 @@
 #
+# frozen_string_literal: true
+
 # Author:: Daniel DeLeo (<dan@chef.io>)
 # Author:: John Keiser (<jkeiser@chef.io>)
 # Author:: Ho-Sheng Hsiao (<hosh@chef.io>)
@@ -24,7 +26,6 @@ require_relative "windows/core_ext"
 module Mixlib
   class ShellOut
     module Windows
-
       include Process::Functions
       include Process::Constants
 
@@ -44,9 +45,9 @@ module Mixlib
           raise InvalidCommandOption, "`elevated` option should be passed only with `username` and `password`."
         end
 
-        if opts[:elevated] && opts[:elevated] != true && opts[:elevated] != false
-          raise InvalidCommandOption, "Invalid value passed for `elevated`. Please provide true/false."
-        end
+        return unless opts[:elevated] && opts[:elevated] != true && opts[:elevated] != false
+
+        raise InvalidCommandOption, "Invalid value passed for `elevated`. Please provide true/false."
       end
 
       #--
@@ -59,11 +60,10 @@ module Mixlib
         stdout_read, stdout_write = IO.pipe
         stderr_read, stderr_write = IO.pipe
         stdin_read, stdin_write = IO.pipe
-        open_streams = [ stdout_read, stderr_read ]
+        open_streams = [stdout_read, stderr_read]
         @execution_time = 0
 
         begin
-
           #
           # Set cwd, environment, appname, etc.
           #
@@ -110,12 +110,10 @@ module Mixlib
                 @execution_time = Time.now - start_wait
                 # Get process exit code
                 exit_code = [0].pack("l")
-                unless GetExitCodeProcess(process.process_handle, exit_code)
-                  raise get_last_error
-                end
+                raise get_last_error unless GetExitCodeProcess(process.process_handle, exit_code)
 
                 @status = ThingThatLooksSortOfLikeAProcessStatus.new
-                @status.exitstatus = exit_code.unpack("l").first
+                @status.exitstatus = exit_code.unpack1("l")
 
                 return self
               when WAIT_TIMEOUT
@@ -144,16 +142,13 @@ module Mixlib
               else
                 raise "Unknown response from WaitForSingleObject(#{process.process_handle}, #{timeout * 1000}): #{wait_status}"
               end
-
             end
-
           ensure
             CloseHandle(process.thread_handle) if process.thread_handle
             CloseHandle(process.process_handle) if process.process_handle
             Process.unload_user_profile(token, profile) if profile
             CloseHandle(token) if token
           end
-
         ensure
           #
           # Consume all remaining data from the pipes until they are closed
@@ -168,6 +163,7 @@ module Mixlib
 
       class ThingThatLooksSortOfLikeAProcessStatus
         attr_accessor :exitstatus
+
         def success?
           exitstatus == 0
         end
@@ -183,7 +179,11 @@ module Mixlib
 
         if ready.first.include?(stdout_read)
           begin
-            next_chunk = stdout_read.readpartial(READ_SIZE)
+            # The unary plus operator (+) creates a mutable copy of the string returned by readpartial.
+            # This is necessary because readpartial may return a frozen string, and we need to be able
+            # to modify the string (append to buffers, manipulate encoding, etc.) in subsequent operations.
+            # Without the +, attempting to modify a frozen string would raise a FrozenError.
+            next_chunk = +stdout_read.readpartial(READ_SIZE)
             @stdout << next_chunk
             @live_stdout << next_chunk if @live_stdout
           rescue EOFError
@@ -194,7 +194,7 @@ module Mixlib
 
         if ready.first.include?(stderr_read)
           begin
-            next_chunk = stderr_read.readpartial(READ_SIZE)
+            next_chunk = +stderr_read.readpartial(READ_SIZE)
             @stderr << next_chunk
             @live_stderr << next_chunk if @live_stderr
           rescue EOFError
@@ -261,7 +261,7 @@ module Mixlib
         if exe_needs_cmd?(exe)
           run_under_cmd(command)
         else
-          [ exe, command ]
+          [exe, command]
         end
       end
 
@@ -275,14 +275,14 @@ module Mixlib
       # https://github.com/chef/mixlib-shellout/pull/2#issuecomment-4837859
       # http://ss64.com/nt/syntax-esc.html
       def run_under_cmd(command)
-        [ ENV["COMSPEC"], "cmd /c \"#{command}\"" ]
+        [ENV["COMSPEC"], "cmd /c \"#{command}\""]
       end
 
       # FIXME: this extracts ARGV[0] but is it correct?
       def candidate_executable_for_command(command)
         if command =~ /^\s*"(.*?)"/ || command =~ /^\s*([^\s]+)/
           # If we have quotes, do an exact match, else pick the first word ignoring the leading spaces
-          $1
+          ::Regexp.last_match(1)
         else
           ""
         end
@@ -405,15 +405,15 @@ module Mixlib
       def kill_process(instance, logger)
         child_pid = instance.wmi_ole_object.processid
         logger&.debug([
-            "killing child process #{child_pid}::",
-            "#{instance.wmi_ole_object.Name} of parent #{pid}",
-          ].join)
+          "killing child process #{child_pid}::",
+          "#{instance.wmi_ole_object.Name} of parent #{pid}",
+        ].join)
         Process.kill(:KILL, instance.wmi_ole_object.processid)
       rescue SystemCallError
         logger&.debug([
-            "Failed to kill child process #{child_pid}::",
-            "#{instance.wmi_ole_object.Name} of parent #{pid}",
-          ].join)
+          "Failed to kill child process #{child_pid}::",
+          "#{instance.wmi_ole_object.Name} of parent #{pid}",
+        ].join)
       end
 
       def format_process(process, app_name, command_line, timeout)
