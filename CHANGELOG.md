@@ -1,37 +1,34 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.4.10 -->
-## [v3.4.10](https://github.com/chef/mixlib-shellout/tree/v3.4.10) (2025-12-29)
-
-#### Merged Pull Requests
-- No Frozen String Warnings. UGH [#275](https://github.com/chef/mixlib-shellout/pull/275) ([johnmccrae](https://github.com/johnmccrae))
 <!-- latest_release -->
-<!-- release_rollup since=3.3.9 -->
-### Changes not yet released to rubygems.org
-
-#### Merged Pull Requests
-- No Frozen String Warnings. UGH [#275](https://github.com/chef/mixlib-shellout/pull/275) ([johnmccrae](https://github.com/johnmccrae)) <!-- 3.4.10 -->
-- Update copilot instructions with AI compliance workflow [#273](https://github.com/chef/mixlib-shellout/pull/273) ([rishichawda](https://github.com/rishichawda)) <!-- 3.4.9 -->
-- CHEF-26031 - Replace CODE_OF_CONDUCT.md file [#270](https://github.com/chef/mixlib-shellout/pull/270) ([nandanhegde73](https://github.com/nandanhegde73)) <!-- 3.4.8 -->
-- set up ai assisted development workflow [#271](https://github.com/chef/mixlib-shellout/pull/271) ([rishichawda](https://github.com/rishichawda)) <!-- 3.4.7 -->
-- adding a tweaks for stirng freezes [#272](https://github.com/chef/mixlib-shellout/pull/272) ([johnmccrae](https://github.com/johnmccrae)) <!-- 3.4.6 -->
-- CHEF-25794 - standardize - remove_sla_from_readme [#269](https://github.com/chef/mixlib-shellout/pull/269) ([cgunasree08](https://github.com/cgunasree08)) <!-- 3.4.5 -->
-- Add GitHub Security Actions Workflow [#267](https://github.com/chef/mixlib-shellout/pull/267) ([sean-sype-simmons](https://github.com/sean-sype-simmons)) <!-- 3.4.4 -->
-- add myself to codeowners [#260](https://github.com/chef/mixlib-shellout/pull/260) ([jaymzh](https://github.com/jaymzh)) <!-- 3.4.3 -->
-- assign @stdout, @stderr and @process_status to mutable strings in preparation for ruby 4.0 [#265](https://github.com/chef/mixlib-shellout/pull/265) ([rishichawda](https://github.com/rishichawda)) <!-- 3.4.2 -->
-- add logger as an explicit dependency [#266](https://github.com/chef/mixlib-shellout/pull/266) ([rishichawda](https://github.com/rishichawda)) <!-- 3.4.1 -->
-- update readme.md [#264](https://github.com/chef/mixlib-shellout/pull/264) ([rishichawda](https://github.com/rishichawda)) <!-- 3.4.0 -->
-- attempting to fix the bundler error [#263](https://github.com/chef/mixlib-shellout/pull/263) ([rishichawda](https://github.com/rishichawda)) <!-- 3.3.13 -->
-- ruby 3.4 upgrade [#261](https://github.com/chef/mixlib-shellout/pull/261) ([rishichawda](https://github.com/rishichawda)) <!-- 3.3.12 -->
-- Adding cookstyle to the windows tester [#262](https://github.com/chef/mixlib-shellout/pull/262) ([johnmccrae](https://github.com/johnmccrae)) <!-- 3.3.11 -->
-- migrating to cookstyle from chefstyle [#258](https://github.com/chef/mixlib-shellout/pull/258) ([johnmccrae](https://github.com/johnmccrae)) <!-- 3.3.10 -->
+<!-- latest_release -->
+<!-- release_rollup -->
 <!-- release_rollup -->
 <!-- latest_stable_release -->
+## [v3.4.10](https://github.com/chef/mixlib-shellout/tree/v3.4.10) (2026-01-20)
+
+#### Merged Pull Requests
+- migrating to cookstyle from chefstyle [#258](https://github.com/chef/mixlib-shellout/pull/258) ([johnmccrae](https://github.com/johnmccrae))
+- Adding cookstyle to the windows tester [#262](https://github.com/chef/mixlib-shellout/pull/262) ([johnmccrae](https://github.com/johnmccrae))
+- ruby 3.4 upgrade [#261](https://github.com/chef/mixlib-shellout/pull/261) ([rishichawda](https://github.com/rishichawda))
+- attempting to fix the bundler error [#263](https://github.com/chef/mixlib-shellout/pull/263) ([rishichawda](https://github.com/rishichawda))
+- update readme.md [#264](https://github.com/chef/mixlib-shellout/pull/264) ([rishichawda](https://github.com/rishichawda))
+- add logger as an explicit dependency [#266](https://github.com/chef/mixlib-shellout/pull/266) ([rishichawda](https://github.com/rishichawda))
+- assign @stdout, @stderr and @process_status to mutable strings in preparation for ruby 4.0 [#265](https://github.com/chef/mixlib-shellout/pull/265) ([rishichawda](https://github.com/rishichawda))
+- add myself to codeowners [#260](https://github.com/chef/mixlib-shellout/pull/260) ([jaymzh](https://github.com/jaymzh))
+- Add GitHub Security Actions Workflow [#267](https://github.com/chef/mixlib-shellout/pull/267) ([sean-sype-simmons](https://github.com/sean-sype-simmons))
+- CHEF-25794 - standardize - remove_sla_from_readme [#269](https://github.com/chef/mixlib-shellout/pull/269) ([cgunasree08](https://github.com/cgunasree08))
+- adding a tweaks for stirng freezes [#272](https://github.com/chef/mixlib-shellout/pull/272) ([johnmccrae](https://github.com/johnmccrae))
+- set up ai assisted development workflow [#271](https://github.com/chef/mixlib-shellout/pull/271) ([rishichawda](https://github.com/rishichawda))
+- CHEF-26031 - Replace CODE_OF_CONDUCT.md file [#270](https://github.com/chef/mixlib-shellout/pull/270) ([nandanhegde73](https://github.com/nandanhegde73))
+- Update copilot instructions with AI compliance workflow [#273](https://github.com/chef/mixlib-shellout/pull/273) ([rishichawda](https://github.com/rishichawda))
+- No Frozen String Warnings. UGH [#275](https://github.com/chef/mixlib-shellout/pull/275) ([johnmccrae](https://github.com/johnmccrae))
+<!-- latest_stable_release -->
+
 ## [v3.3.9](https://github.com/chef/mixlib-shellout/tree/v3.3.9) (2025-04-04)
 
 #### Merged Pull Requests
 - Drop the FFI pin [#259](https://github.com/chef/mixlib-shellout/pull/259) ([jaymzh](https://github.com/jaymzh))
-<!-- latest_stable_release -->
 
 ## [v3.3.8](https://github.com/chef/mixlib-shellout/tree/v3.3.8) (2025-03-04)
 
