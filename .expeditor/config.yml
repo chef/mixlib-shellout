@@ -8,7 +8,6 @@ slack:
 # This publish is triggered by the `built_in:publish_rubygems` artifact_action.
 rubygems:
   - mixlib-shellout
-  - mixlib-shellout-universal-mingw32
   - mixlib-shellout-universal-mingw-ucrt
 
 github:
