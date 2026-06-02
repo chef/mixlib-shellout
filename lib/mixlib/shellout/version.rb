@@ -1,5 +1,5 @@
 module Mixlib
   class ShellOut
-    VERSION = "3.4.10".freeze
+    VERSION = "3.4.11".freeze
   end
 end
