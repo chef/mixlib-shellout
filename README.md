@@ -81,7 +81,6 @@ Mixlib::ShellOut does a standard fork/exec on Unix, and uses the Win32 API on Wi
 For information on contributing to this project see <https://github.com/chef/chef/blob/master/CONTRIBUTING.md>
 
 ## License
-- Copyright:: Copyright (c) 2011-2016 Chef Software, Inc.
 - License:: Apache License, Version 2.0
 
 ```text
@@ -97,3 +96,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
+# Copyright
+
+See [COPYRIGHT.md](./COPYRIGHT.md).
