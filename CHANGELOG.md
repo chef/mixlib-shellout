@@ -1,15 +1,16 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.4.11 -->
-## [v3.4.11](https://github.com/chef/mixlib-shellout/tree/v3.4.11) (2026-06-02)
+<!-- latest_release 3.4.12 -->
+## [v3.4.12](https://github.com/chef/mixlib-shellout/tree/v3.4.12) (2026-06-17)
 
 #### Merged Pull Requests
-- CHEF-27675 Update and standardize copyright notices to Progress Software Corporation - copyright_update [#276](https://github.com/chef/mixlib-shellout/pull/276) ([clintoncwolfe](https://github.com/clintoncwolfe))
+- Fix codeowners [#280](https://github.com/chef/mixlib-shellout/pull/280) ([jaymzh](https://github.com/jaymzh))
 <!-- latest_release -->
 <!-- release_rollup since=3.4.10 -->
 ### Changes not yet released to rubygems.org
 
 #### Merged Pull Requests
+- Fix codeowners [#280](https://github.com/chef/mixlib-shellout/pull/280) ([jaymzh](https://github.com/jaymzh)) <!-- 3.4.12 -->
 - CHEF-27675 Update and standardize copyright notices to Progress Software Corporation - copyright_update [#276](https://github.com/chef/mixlib-shellout/pull/276) ([clintoncwolfe](https://github.com/clintoncwolfe)) <!-- 3.4.11 -->
 <!-- release_rollup -->
 <!-- latest_stable_release -->
