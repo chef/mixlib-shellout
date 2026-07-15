@@ -830,7 +830,11 @@ describe Mixlib::ShellOut do
 
         # This number was chosen because it seems to be an actual maximum
         # in Windows--somewhere around 6-7K of command line
+        #
+        # Rubocop gets this wrong, you can't join on an Enumerator
+        # rubocop:disable Style/MapJoin
         let(:echotext) { 10000.upto(11340).map(&:to_s).join(" ") }
+        # rubocop:enable Style/MapJoin
         let(:cmd) { "echo #{echotext}" }
 
         it "should execute" do
