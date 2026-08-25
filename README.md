@@ -33,7 +33,7 @@ Raise an exception if it didn't exit with 0
 ```
 
 ### Advanced Shellout
-In addition to the command to run there are other options that can be set to change the shellout behavior. The complete list of options can be found here: https://github.com/chef/mixlib-shellout/blob/master/lib/mixlib/shellout.rb
+In addition to the command to run there are other options that can be set to change the shellout behavior. The complete list of options can be found here: https://github.com/chef/mixlib-shellout/blob/main/lib/mixlib/shellout.rb
 
 Run a command as the `www` user with no extra ENV settings from `/tmp` with a 1s timeout
 
@@ -78,7 +78,7 @@ Mixlib::ShellOut does a standard fork/exec on Unix, and uses the Win32 API on Wi
 
 ## Contributing
 
-For information on contributing to this project see <https://github.com/chef/chef/blob/master/CONTRIBUTING.md>
+For information on contributing to this project see <https://github.com/chef/chef/blob/main/CONTRIBUTING.md>
 
 ## License
 - License:: Apache License, Version 2.0
