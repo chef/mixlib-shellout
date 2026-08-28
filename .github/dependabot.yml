@@ -1,0 +1,15 @@
+---
+version: 2
+updates:
+  - package-ecosystem: bundler
+    directory: "/"
+    schedule:
+      interval: weekly
+
+  # Workflow actions are pinned to immutable commit SHAs, so nothing bumps them
+  # without Dependabot. It reads the trailing "# vX.Y.Z" comment on each `uses:`
+  # to know the current version and rewrites both the SHA and the comment.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: weekly
