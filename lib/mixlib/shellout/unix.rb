@@ -17,8 +17,6 @@
 # limitations under the License.
 #
 
-require "fileutils" unless defined?(FileUtils)
-
 module Mixlib
   class ShellOut
     module Unix
@@ -112,7 +110,7 @@ module Mixlib
           unless ready_buffers
             @execution_time += READ_WAIT_TIME
             if @execution_time >= timeout && !@result
-              # kill the bad proccess
+              # kill the bad process
               reap_errant_child
               # read anything it wrote when we killed it
               attempt_buffer_read
@@ -323,6 +321,10 @@ module Mixlib
 
       def fork_subprocess
         initialize_ipc
+
+        # FileUtils is only used by #set_cgroup. Load it here, in the parent, rather
+        # than post-fork where acquiring the require lock is not guaranteed safe.
+        require "fileutils" if cgroup && !defined?(FileUtils)
 
         fork do
           # Child processes may themselves fork off children. A common case

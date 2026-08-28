@@ -18,7 +18,6 @@
 #
 
 require "etc" unless defined?(Etc)
-require "tmpdir" unless defined?(Dir.mktmpdir)
 require "fcntl"
 require_relative "shellout/exceptions"
 
