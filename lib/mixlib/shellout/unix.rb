@@ -17,8 +17,6 @@
 # limitations under the License.
 #
 
-require "fileutils" unless defined?(FileUtils)
-
 module Mixlib
   class ShellOut
     module Unix
@@ -323,6 +321,10 @@ module Mixlib
 
       def fork_subprocess
         initialize_ipc
+
+        # FileUtils is only used by #set_cgroup. Load it here, in the parent, rather
+        # than post-fork where acquiring the require lock is not guaranteed safe.
+        require "fileutils" if cgroup && !defined?(FileUtils)
 
         fork do
           # Child processes may themselves fork off children. A common case
