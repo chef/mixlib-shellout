@@ -107,12 +107,31 @@ module Mixlib
 
         write_to_child_stdin
 
+        reap_wait = REAP_WAIT_TIME
+
         until @status
-          ready_buffers = attempt_buffer_read
-          unless ready_buffers
-            @execution_time += READ_WAIT_TIME
+          if open_pipes.empty?
+            # Every pipe has hit EOF, so IO.select has nothing left to wait on
+            # and would just sleep away a whole READ_WAIT_TIME. The only thing
+            # left to do is reap the child, and a child that has closed all of
+            # its descriptors is normally already on its way out, so poll for
+            # it much more finely than that.
+            #
+            # Back off toward READ_WAIT_TIME as we go, so a child that closed
+            # its descriptors but kept running -- one that detaches itself, say --
+            # settles back to the old polling rate instead of spinning the CPU
+            # for the rest of the timeout.
+            sleep reap_wait
+            waited = reap_wait
+            reap_wait = [reap_wait * 2, READ_WAIT_TIME].min
+          else
+            waited = attempt_buffer_read ? nil : READ_WAIT_TIME
+          end
+
+          if waited
+            @execution_time += waited
             if @execution_time >= timeout && !@result
-              # kill the bad proccess
+              # kill the bad process
               reap_errant_child
               # read anything it wrote when we killed it
               attempt_buffer_read

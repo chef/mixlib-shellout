@@ -1334,6 +1334,36 @@ describe Mixlib::ShellOut do
 
           end
 
+          # Closing both descriptors leaves open_pipes empty, so run_command
+          # has nothing left to select on and is only waiting to reap. Note
+          # this has to be done by the shell -- Ruby's STDOUT.close does not
+          # close the underlying descriptor, so the pipe never sees EOF.
+          context "and the child closes stdout and stderr but keeps running" do
+            let(:cmd) { [ "sh", "-c", "exec 1>&- 2>&-; sleep 30" ] }
+
+            it "should still time out" do
+              # note: let blocks don't correctly memoize if an exception is raised,
+              # so can't use executed_cmd
+              expect { shell_cmd.run_command }.to raise_error(Mixlib::ShellOut::CommandTimeout)
+              expect(shell_cmd.execution_time).to be >= 1
+            end
+
+            it "should back off rather than spin while waiting to reap it" do
+              # With nothing to select on we poll for the child's exit status,
+              # and that poll has to back off -- otherwise a child which never
+              # exits spins at REAP_WAIT_TIME for the whole timeout. One reap
+              # attempt per loop, so cap them near the pre-existing rate.
+              reaps = 0
+              allow(shell_cmd).to receive(:attempt_reap).and_wrap_original do |original|
+                reaps += 1
+                original.call
+              end
+
+              expect { shell_cmd.run_command }.to raise_error(Mixlib::ShellOut::CommandTimeout)
+              expect(reaps).to be < 2 * (1 / Mixlib::ShellOut::READ_WAIT_TIME)
+            end
+          end
+
         end
       end
 

@@ -26,6 +26,10 @@ module Mixlib
 
   class ShellOut
     READ_WAIT_TIME = 0.01
+    # Initial interval for polling the child's exit status once every pipe has
+    # hit EOF and there is nothing left to select on. Backs off toward
+    # READ_WAIT_TIME. See Unix#run_command.
+    REAP_WAIT_TIME = 0.0005
     READ_SIZE = 4096
     DEFAULT_READ_TIMEOUT = 600
 
