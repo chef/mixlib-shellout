@@ -1,15 +1,16 @@
 # mixlib-shellout Changelog
 
-<!-- latest_release 3.4.13 -->
-## [v3.4.13](https://github.com/chef/mixlib-shellout/tree/v3.4.13) (2026-07-15)
+<!-- latest_release 3.4.14 -->
+## [v3.4.14](https://github.com/chef/mixlib-shellout/tree/v3.4.14) (2026-08-28)
 
 #### Merged Pull Requests
-- Normalize GH workflows [#279](https://github.com/chef/mixlib-shellout/pull/279) ([jaymzh](https://github.com/jaymzh))
+- Don&#39;t load tmpdir and fileutils at require time [#282](https://github.com/chef/mixlib-shellout/pull/282) ([tas50](https://github.com/tas50))
 <!-- latest_release -->
 <!-- release_rollup since=3.4.10 -->
 ### Changes not yet released to rubygems.org
 
 #### Merged Pull Requests
+- Don&#39;t load tmpdir and fileutils at require time [#282](https://github.com/chef/mixlib-shellout/pull/282) ([tas50](https://github.com/tas50)) <!-- 3.4.14 -->
 - Normalize GH workflows [#279](https://github.com/chef/mixlib-shellout/pull/279) ([jaymzh](https://github.com/jaymzh)) <!-- 3.4.13 -->
 - Fix codeowners [#280](https://github.com/chef/mixlib-shellout/pull/280) ([jaymzh](https://github.com/jaymzh)) <!-- 3.4.12 -->
 - CHEF-27675 Update and standardize copyright notices to Progress Software Corporation - copyright_update [#276](https://github.com/chef/mixlib-shellout/pull/276) ([clintoncwolfe](https://github.com/clintoncwolfe)) <!-- 3.4.11 -->
