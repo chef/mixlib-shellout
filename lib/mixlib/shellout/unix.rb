@@ -286,30 +286,50 @@ module Mixlib
         ready
       end
 
-      def read_stdout_to_buffer
-        while ( chunk = child_stdout.read_nonblock(READ_SIZE) )
-          @stdout << chunk
-          @live_stdout << chunk if @live_stdout
+      # Drain everything currently readable on +io+ into +buffer+, and into
+      # +live+ as well when a live stream is attached.
+      #
+      # Without a live stream we can hand read_nonblock a scratch buffer to
+      # read into and reuse it for every read, rather than letting it allocate
+      # a fresh READ_SIZE String each time -- for an output-heavy command that
+      # is nearly all of the garbage this class produces. Reuse is safe here
+      # only because #<< copies the bytes into +buffer+.
+      #
+      # A live stream is free to hold onto whatever it is handed, so when one
+      # is attached each read gets its own String, exactly as before.
+      def drain(io, buffer, live, scratch)
+        if live
+          while ( chunk = io.read_nonblock(READ_SIZE) )
+            buffer << chunk
+            live << chunk
+          end
+        else
+          while ( chunk = io.read_nonblock(READ_SIZE, scratch) )
+            buffer << chunk
+          end
         end
+      end
+
+      def read_buffer(name)
+        (@read_buffers ||= {})[name] ||= String.new
+      end
+
+      def read_stdout_to_buffer
+        drain(child_stdout, @stdout, @live_stdout, read_buffer(:stdout))
       rescue Errno::EAGAIN
       rescue EOFError
         open_pipes.delete(child_stdout)
       end
 
       def read_stderr_to_buffer
-        while ( chunk = child_stderr.read_nonblock(READ_SIZE) )
-          @stderr << chunk
-          @live_stderr << chunk if @live_stderr
-        end
+        drain(child_stderr, @stderr, @live_stderr, read_buffer(:stderr))
       rescue Errno::EAGAIN
       rescue EOFError
         open_pipes.delete(child_stderr)
       end
 
       def read_process_status_to_buffer
-        while ( chunk = child_process_status.read_nonblock(READ_SIZE) )
-          @process_status << chunk
-        end
+        drain(child_process_status, @process_status, nil, read_buffer(:process_status))
       rescue Errno::EAGAIN
       rescue EOFError
         open_pipes.delete(child_process_status)
