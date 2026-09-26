@@ -3,7 +3,7 @@ require "etc"
 require "logger"
 require "timeout"
 
-describe Mixlib::ShellOut do
+RSpec.describe Mixlib::ShellOut do
   let(:shell_cmd) { options ? shell_cmd_with_options : shell_cmd_without_options }
   let(:executed_cmd) { shell_cmd.tap(&:run_command) }
   let(:stdout) { executed_cmd.stdout }
@@ -1567,6 +1567,103 @@ describe Mixlib::ShellOut do
         end
       end
     end
+
+    context "with an array of command and args", :unix_only do
+      # Nothing here should be interpreted by a shell: this is what makes the
+      # array form safe to use with untrusted arguments.
+      let(:shell_cmd) { Mixlib::ShellOut.new("echo", "$HOME", "|", "cat", ";", "exit 3") }
+
+      it "passes the arguments to the command verbatim without a shell" do
+        expect(stdout).to eql("$HOME | cat ; exit 3\n")
+        expect(executed_cmd.exitstatus).to eql(0)
+      end
+    end
+
+    context "with environment variables" do
+      let(:ruby_code) { %q{print ENV["MIXLIB_SHELLOUT_SPEC"]} }
+      let(:options) { { environment: { "MIXLIB_SHELLOUT_SPEC" => "from-parent" } } }
+
+      it "sets them in the child" do
+        expect(stdout).to eql("from-parent")
+      end
+
+      it "does not leak them into the parent's environment" do
+        executed_cmd
+        expect(ENV).not_to have_key("MIXLIB_SHELLOUT_SPEC")
+      end
+    end
+
+    context "with a umask", :unix_only do
+      let(:ruby_code) { %q{printf("%04o", File.umask)} }
+      let(:options) { { umask: "0027" } }
+
+      it "applies it to the child" do
+        expect(stdout).to eql("0027")
+      end
+    end
+
+    context "when the child is killed by a signal", :unix_only do
+      # No shell: dash (/bin/sh on Debian/Ubuntu) forks rather than execs, so
+      # it would survive and report 128+9 instead of being the killed process.
+      let(:shell_cmd) { Mixlib::ShellOut.new(RbConfig.ruby, "-e", "Process.kill(:KILL, Process.pid)") }
+
+      it "has no exit status" do
+        expect(executed_cmd.exitstatus).to be_nil
+        expect(executed_cmd.status.termsig).to eql(9)
+      end
+
+      it "is treated as an error" do
+        expect(executed_cmd.error?).to be(true)
+        expect { executed_cmd.error! }.to raise_error(Mixlib::ShellOut::ShellCommandFailed)
+      end
+    end
+
+    context "with sensitive output" do
+      let(:ruby_code) { %q{puts "s3cr3t"; exit 1} }
+      let(:options) { { sensitive: true } }
+
+      it "still captures stdout" do
+        expect(stdout).to include("s3cr3t")
+      end
+
+      it "keeps the output out of the exception message" do
+        expect { executed_cmd.error! }.to raise_error(Mixlib::ShellOut::ShellCommandFailed) do |e|
+          expect(e.message).not_to include("s3cr3t")
+          expect(e.message).to include("STDOUT/STDERR suppressed for sensitive resource")
+        end
+      end
+    end
+
+    context "with a logger" do
+      let(:log_output) { StringIO.new }
+      let(:logger) { Logger.new(log_output).tap { |l| l.level = Logger::INFO } }
+      let(:ruby_code) { "exit 0" }
+
+      context "with a log level and tag" do
+        let(:options) { { logger:, log_level: :info, log_tag: "my-tag" } }
+
+        it "logs the command before running it" do
+          executed_cmd
+          expect(log_output.string).to include("INFO -- : my-tag sh(#{cmd})")
+        end
+      end
+
+      context "with the default log level" do
+        let(:options) { { logger: } }
+
+        it "logs at debug" do
+          executed_cmd
+          expect(log_output.string).to be_empty
+        end
+      end
+    end
+  end
+
+  context "with the elevated option on unix", :unix_only do
+    it "is rejected" do
+      expect { Mixlib::ShellOut.new("true", elevated: true) }
+        .to raise_error(Mixlib::ShellOut::InvalidCommandOption, /elevated/)
+    end
   end
 
   context "when running under *nix", :requires_root, :unix_only do
@@ -1588,31 +1685,64 @@ describe Mixlib::ShellOut do
         expect(running_user).to eql(user.to_s)
       end
     end
+
+    # Ordering matters in the child: groups must be dropped while still root,
+    # before the uid switch. These catch that being reordered.
+    context "when user and group are given as ids" do
+      let(:nobody) { Etc.getpwnam("nobody") }
+      let(:cmd) { "id -u; id -g" }
+      let(:options) { { user: nobody.uid, group: nobody.gid } }
+
+      it "should drop to that uid and gid" do
+        expect(shell_cmd.run_command.stdout.split).to eql([nobody.uid.to_s, nobody.gid.to_s])
+      end
+    end
+
+    context "when simulating a login" do
+      let(:nobody) { Etc.getpwnam("nobody") }
+      let(:cmd) { %q{echo "$USER $LOGNAME $HOME"; id -G} }
+      let(:options) { { user: "nobody", login: true } }
+      let(:output) { shell_cmd.run_command.stdout.lines.map(&:chomp) }
+      let(:expected_groups) do
+        secondary = []
+        Etc.group { |g| secondary << g.gid if g.mem.include?("nobody") }
+        [nobody.gid, *secondary].uniq
+      end
+
+      it "should set the login environment for the user" do
+        expect(output.first).to eql("nobody nobody #{nobody.dir}")
+      end
+
+      it "should use only the user's groups, dropping root's" do
+        expect(output.last.split.map(&:to_i)).to match_array(expected_groups)
+      end
+    end
   end
 
-  context "when running on a cgroup", :linux_only do
+  context "when running on a cgroup", :linux_only, :requires_root do
     let(:cmd) { "cat /proc/self/cgroup | cut -c 4-" }
     let(:options) { { cgroup: } }
-    let(:cgroupv2_supported) { File.read("/proc/mounts").match(%r{^cgroup2 /sys/fs/cgroup}) }
+    let(:running_cgroup) { shell_cmd.run_command.stdout.chomp }
+
+    before do
+      skip "cgroup v2 is not mounted at /sys/fs/cgroup" unless File.read("/proc/mounts").match?(%r{^cgroup2 /sys/fs/cgroup})
+    end
 
     context "when cgroup exists" do
       let(:cgroup) { "#{File.read("/proc/self/cgroup")[%r{(/.*)$}, 1]}" }
-      let(:running_cgroup) { shell_cmd.run_command.stdout.chomp }
+
       it "should run the process under that cgroup" do
-        if cgroupv2_supported
-          expect(running_cgroup).to eql(cgroup.to_s)
-        end
+        expect(running_cgroup).to eql(cgroup.to_s)
       end
     end
 
     context "when cgroup does not exist" do
-      let(:cgroup) { "#{File.read("/proc/self/cgroup")[%r{(/.*)/[^/]+$}, 1]}/test" }
-      let(:running_cgroup) { shell_cmd.run_command.stdout.chomp }
+      let(:cgroup) { "#{File.read("/proc/self/cgroup")[%r{(/.*)/[^/]+$}, 1]}/mixlib-shellout-test" }
+
+      after { Dir.rmdir("/sys/fs/cgroup/#{cgroup}") if Dir.exist?("/sys/fs/cgroup/#{cgroup}") }
+
       it "should create the cgroup and run the process under it" do
-        if cgroupv2_supported
-          expect(running_cgroup).to eql(cgroup.to_s)
-          Dir.rmdir("/sys/fs/cgroup/#{cgroup}")
-        end
+        expect(running_cgroup).to eql(cgroup.to_s)
       end
     end
   end

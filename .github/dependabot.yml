@@ -1,0 +1,25 @@
+---
+version: 2
+updates:
+  # Actions are pinned to commit SHAs with a version comment; dependabot
+  # updates both together.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  - package-ecosystem: bundler
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      development-dependencies:
+        dependency-type: development

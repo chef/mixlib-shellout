@@ -2,7 +2,7 @@ require "spec_helper"
 
 # FIXME: these are stubby enough unit tests that they almost run under unix, but the
 # Mixlib::ShellOut object does not mixin the Windows behaviors when running on unix.
-describe "Mixlib::ShellOut::Windows", :windows_only do
+RSpec.describe "Mixlib::ShellOut::Windows", :windows_only do
 
   describe "Utils" do
     describe ".should_run_under_cmd?" do
@@ -113,10 +113,10 @@ describe "Mixlib::ShellOut::Windows", :windows_only do
 
     describe ".kill_process_tree" do
       let(:shell_out) { Mixlib::ShellOut.new }
-      let(:wmi) { Object.new }
-      let(:wmi_ole_object) { Object.new }
-      let(:wmi_process) { Object.new }
-      let(:logger) { Object.new }
+      let(:wmi) { double("wmi") }
+      let(:wmi_ole_object) { double("wmi_ole_object") }
+      let(:wmi_process) { double("wmi_process") }
+      let(:logger) { double("logger") }
 
       before do
         allow(wmi).to receive(:query).and_return([wmi_process])

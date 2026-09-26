@@ -1,6 +1,8 @@
 # Mixlib::ShellOut
 
-[![Build Status](https://badge.buildkite.com/7051b7b35cc19076c35a6e6a9e996807b0c14475ca3f3acd86.svg?branch=main)](https://buildkite.com/chef-oss/chef-mixlib-shellout-master-verify) [![Gem Version](https://badge.fury.io/rb/mixlib-shellout.svg)](https://badge.fury.io/rb/mixlib-shellout)
+[![CI](https://github.com/chef/mixlib-shellout/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/chef/mixlib-shellout/actions/workflows/ci.yml)
+[![Gem Version](https://img.shields.io/gem/v/mixlib-shellout)](https://rubygems.org/gems/mixlib-shellout)
+[![License](https://img.shields.io/github/license/chef/mixlib-shellout)](LICENSE)
 
 Provides a simplified interface to shelling out while still collecting both standard out and standard error and providing full control over environment, working directory, uid, gid, etc.
 
@@ -33,7 +35,7 @@ Raise an exception if it didn't exit with 0
 ```
 
 ### Advanced Shellout
-In addition to the command to run there are other options that can be set to change the shellout behavior. The complete list of options can be found here: https://github.com/chef/mixlib-shellout/blob/main/lib/mixlib/shellout.rb
+In addition to the command to run there are other options that can be set to change the shellout behavior. The complete list of options is documented in [`lib/mixlib/shellout.rb`](lib/mixlib/shellout.rb).
 
 Run a command as the `www` user with no extra ENV settings from `/tmp` with a 1s timeout
 
@@ -73,8 +75,27 @@ Invoke "whoami.exe" with elevated privileges:
 Mixlib::ShellOut does a standard fork/exec on Unix, and uses the Win32 API on Windows. There is not currently support for JRuby.
 
 ## See Also
-- `Process.spawn` in Ruby 1.9+
-- [https://github.com/rtomayko/posix-spawn](https://github.com/rtomayko/posix-spawn)
+- Ruby's built-in [`Process.spawn`](https://docs.ruby-lang.org/en/master/Process.html#method-c-spawn) and [`Open3`](https://docs.ruby-lang.org/en/master/Open3.html)
+
+## Development
+
+```shell
+bundle install
+bundle exec rake          # cookstyle + specs
+bundle exec rspec         # specs only
+bundle exec rspec --only-failures
+```
+
+Specs that switch users, groups or cgroups are tagged `:requires_root` and are
+skipped unless run as root. On Linux you can run them with:
+
+```shell
+sudo --preserve-env env "PATH=$PATH" bundle exec rspec
+```
+
+CI runs the suite on Linux, macOS and Windows across every supported Ruby, as
+root on Linux, with frozen string literals forced on, and against the built gem.
+See [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
 ## Contributing
 
@@ -88,7 +109,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+    https://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,

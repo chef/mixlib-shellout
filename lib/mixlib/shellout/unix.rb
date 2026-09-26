@@ -149,10 +149,13 @@ module Mixlib
         end
       end
 
+      # gid also resolves the user's primary group when simulating a login, so
+      # check it rather than group or a login would keep the parent's group.
       def set_group
-        if group
-          Process.egid = gid
-          Process.gid = gid
+        new_gid = gid
+        if new_gid
+          Process.egid = new_gid
+          Process.gid = new_gid
         end
       end
 

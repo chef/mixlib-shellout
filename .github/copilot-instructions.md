@@ -10,15 +10,15 @@
 mixlib-shellout/
 ├── .expeditor/                    # Expeditor CI/CD configuration
 │   ├── config.yml                # Main Expeditor configuration
-│   ├── verify.pipeline.yml       # Build pipeline definition
-│   ├── run_linux_tests.sh        # Linux test runner
-│   ├── run_windows_tests.ps1     # Windows test runner
 │   └── update_version.sh         # Version update script
 ├── .github/
 │   ├── CODEOWNERS               # Code ownership definitions
 │   ├── ISSUE_TEMPLATE/          # Issue templates
+│   ├── dependabot.yml           # Keeps actions and gems up to date
 │   ├── workflows/               # GitHub Actions workflows
-│   │   └── ci-main-pull-request-checks.yml
+│   │   ├── ci.yml               # Specs across OS/Ruby matrix, as root, packaging
+│   │   ├── lint.yml             # Cookstyle, spellcheck, linelint
+│   │   └── ci-main-pull-request-stub-*.yml  # Shared chef security/quality checks
 │   └── copilot-instructions.md  # This file
 ├── lib/mixlib/
 │   ├── shellout.rb             # Main ShellOut class
@@ -36,6 +36,7 @@ mixlib-shellout/
 │   │   ├── shellout_spec.rb  # Main test file
 │   │   └── shellout/
 │   │       ├── helper_spec.rb    # Helper tests
+│   │       ├── packaging_spec.rb # Gemspec, version and load-time tests
 │   │       └── windows_spec.rb   # Windows-specific tests
 │   └── support/              # Test support files
 ├── vendor/bundle/            # Bundled gems (gitignored in production)
@@ -128,12 +129,12 @@ Signed-off-by: Your Name <your.email@example.com>
 The repository uses **Expeditor** for automated CI/CD:
 
 - **Main config**: `.expeditor/config.yml`
-- **Build pipeline**: `.expeditor/verify.pipeline.yml`
 - **Notifications**: Sent to `#chef-found-notify` Slack channel
 - **Auto-versioning**: Supports major/minor version bumps via labels
 
 ### GitHub Actions
-- **Workflow**: `.github/workflows/ci-main-pull-request-checks.yml`
+- **Tests**: `.github/workflows/ci.yml` runs specs on Linux, macOS and Windows for every supported Ruby, as root on Linux, with frozen string literals, and against the built gem
+- **Workflow**: `.github/workflows/ci-main-pull-request-stub-*.yml`
 - **Triggers**: Pull requests and pushes to `main` and `release/**` branches
 - **Features**: Complexity checks, TruffleHog scanning, SBOM generation
 
