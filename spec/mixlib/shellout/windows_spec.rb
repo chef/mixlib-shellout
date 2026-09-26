@@ -2,7 +2,7 @@ require "spec_helper"
 
 # FIXME: these are stubby enough unit tests that they almost run under unix, but the
 # Mixlib::ShellOut object does not mixin the Windows behaviors when running on unix.
-describe "Mixlib::ShellOut::Windows", :windows_only do
+RSpec.describe "Mixlib::ShellOut::Windows", :windows_only do
 
   describe "Utils" do
     describe ".should_run_under_cmd?" do
