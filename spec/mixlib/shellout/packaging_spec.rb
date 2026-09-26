@@ -58,7 +58,7 @@ RSpec.describe "mixlib-shellout packaging" do
 
     it "adds the win32 dependencies used by lib/mixlib/shellout/windows.rb" do
       expect(spec.runtime_dependencies.map(&:name))
-        .to contain_exactly("chef-utils", "win32-process", "wmi-lite", "ffi-win32-extensions")
+        .to contain_exactly("chef-utils", "win32-process", "wmi-lite", "win32ole", "ffi-win32-extensions")
     end
 
     it "ships the same files as the ruby platform gem" do
@@ -91,7 +91,10 @@ RSpec.describe "mixlib-shellout packaging" do
     end
 
     it "loads and runs a command with frozen string literals and warnings enabled" do
-      out = ruby_in_clean_process("-W:deprecated", "-w", "--enable-frozen-string-literal", <<~RUBY)
+      # windows/core_ext.rb deliberately redefines win32-process's Process.create,
+      # which -w reports, so only check frozen string literals there.
+      flags = windows? ? [] : ["-W:deprecated", "-w"]
+      out = ruby_in_clean_process(*flags, "--enable-frozen-string-literal", <<~RUBY)
         require "mixlib/shellout"
         require "mixlib/shellout/helper"
         cmd = Mixlib::ShellOut.new(#{RbConfig.ruby.dump}, "-e", "print :ok")
