@@ -7,40 +7,44 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 concurrency:
-  group: lint-${{ github.event.pull_request.number || github.run_id }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   cookstyle:
     runs-on: ubuntu-latest
     env:
-      BUNDLE_WITHOUT: ruby_shadow:packaging
+      BUNDLE_WITHOUT: debug
     steps:
-      - uses: actions/checkout@v6
-      - uses: ruby/setup-ruby@v1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ruby-version: 3.4
-          bundler-cache: false
-      - uses: r7kamura/rubocop-problem-matchers-action@v1  # this shows the failures in the PR
-      - run: |
-          bundle install
-          bundle exec cookstyle --chefstyle -c .rubocop.yml
+          persist-credentials: false
+      - uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1.327.0
+        with:
+          ruby-version: "4.0"
+          bundler-cache: true
+      - uses: r7kamura/rubocop-problem-matchers-action@59f1a0759f50cc2649849fd850b8487594bb5a81 # v1.2.2
+      - run: bundle exec cookstyle --chefstyle -c .rubocop.yml
 
   spellcheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - run: |
           curl --location 'https://raw.githubusercontent.com/chef/chef_dictionary/main/chef.txt' --output chef_dictionary.txt
-      - uses: streetsidesoftware/cspell-action@v8.4.0
+      - uses: streetsidesoftware/cspell-action@6f3c77c1406bc930f944ba97e9801a22e42caf58 # v9.1.0
 
   linelint:
     runs-on: ubuntu-latest
     name: Check if all files end in newline
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - name: Linelint
-        uses: fernandrone/linelint@master
-        id: linelint
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: fernandrone/linelint@7907a5dca0c28ea7dd05c6d8d8cacded713aca11 # 0.0.6
