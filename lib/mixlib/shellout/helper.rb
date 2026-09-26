@@ -207,6 +207,14 @@ module Mixlib
       end
 
       class FakeShellOut
+        # Minimal stand-in for Process::Status. Avoids OpenStruct, which is not
+        # loaded by default and is no longer a default gem as of Ruby 3.5.
+        FakeStatus = Struct.new(:success) do
+          def success?
+            success
+          end
+        end
+
         attr_reader :stdout, :stderr, :exitstatus, :status
 
         def initialize(args, options, result)
@@ -216,7 +224,7 @@ module Mixlib
           @stderr = result.stderr
           @exitstatus = result.exit_status
           @valid_exit_codes = Array(options[:returns] || 0)
-          @status = OpenStruct.new(success?: (@valid_exit_codes.include? exitstatus))
+          @status = FakeStatus.new(@valid_exit_codes.include?(exitstatus))
         end
 
         def error?
