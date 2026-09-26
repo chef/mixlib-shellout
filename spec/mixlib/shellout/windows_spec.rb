@@ -113,10 +113,10 @@ RSpec.describe "Mixlib::ShellOut::Windows", :windows_only do
 
     describe ".kill_process_tree" do
       let(:shell_out) { Mixlib::ShellOut.new }
-      let(:wmi) { Object.new }
-      let(:wmi_ole_object) { Object.new }
-      let(:wmi_process) { Object.new }
-      let(:logger) { Object.new }
+      let(:wmi) { double("wmi") }
+      let(:wmi_ole_object) { double("wmi_ole_object") }
+      let(:wmi_process) { double("wmi_process") }
+      let(:logger) { double("logger") }
 
       before do
         allow(wmi).to receive(:query).and_return([wmi_process])

@@ -1603,7 +1603,9 @@ RSpec.describe Mixlib::ShellOut do
     end
 
     context "when the child is killed by a signal", :unix_only do
-      let(:ruby_code) { "Process.kill(:KILL, Process.pid)" }
+      # No shell: dash (/bin/sh on Debian/Ubuntu) forks rather than execs, so
+      # it would survive and report 128+9 instead of being the killed process.
+      let(:shell_cmd) { Mixlib::ShellOut.new(RbConfig.ruby, "-e", "Process.kill(:KILL, Process.pid)") }
 
       it "has no exit status" do
         expect(executed_cmd.exitstatus).to be_nil
